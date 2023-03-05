@@ -24,3 +24,10 @@
 `api` will contain anything related to API, enums, models, resources, query string params.
 `tests` will contain all tests.
 ```
+
+## Response validation plan
+1. Validate HTTP status code
+2. Validate schema: convert response.json() to pydantic model to check data types, and verify that all fields are present. 
+   1. `status` and `message` fields content are checked via pydantic.
+   2. Error messages content for error responses are checked via pydantic.
+3. Validate data, and assert result with expected.

@@ -11,6 +11,7 @@ class HTTPClient:
         headers = {
             'Content-Type': 'application/json',
         }
+        self.remove_headers()
         self.update_headers(headers)
 
     def get(self, path: str, params: dict = None, headers: dict = None) -> Response:
