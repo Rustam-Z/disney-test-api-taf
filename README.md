@@ -35,3 +35,10 @@
    1. `status` and `message` fields content are checked via pydantic.
    2. Error messages content for error responses are checked via pydantic.
 3. Validate data, and assert result with expected.
+
+
+## How to write test for new feature?
+1. Learn new feature, create test scenarios, test cases.
+2. Create success & error response models in `api/responses`.
+3. Create requests, API services, helper functions in `api/requests`. Validate status code, schema inside these helpers.
+4. Write tests in `tests` folder.
