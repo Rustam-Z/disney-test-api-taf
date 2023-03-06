@@ -1,3 +1,12 @@
+"""
+Usage:
+    data_ = {"status": False, "message": "Error", "data": None,
+             "error": {"detail": "No active account found with the given credentials"}}
+    model_ = TokenErrorResponse(**data_)
+
+"""
+from typing import Dict
+
 from pydantic import BaseModel, validator, StrictStr, StrictInt, StrictBool
 
 from api.responses.response_model import SuccessResponse, ErrorResponse
@@ -8,10 +17,6 @@ class _DataField(BaseModel):
     access: StrictStr
     id: StrictInt
     is_superuser: StrictBool
-
-
-class _ErrorField(BaseModel):
-    detail: StrictStr
 
 
 class TokenSuccessResponse(SuccessResponse):
@@ -26,7 +31,7 @@ class TokenSuccessResponse(SuccessResponse):
 
 
 class TokenErrorResponse(ErrorResponse):
-    error: _ErrorField
+    error: Dict
 
     @validator('message')
     def check_message(cls, value):
