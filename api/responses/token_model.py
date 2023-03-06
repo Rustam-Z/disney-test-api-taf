@@ -1,6 +1,6 @@
 from pydantic import BaseModel, validator, StrictStr, StrictInt, StrictBool
 
-from api.models.response_model import SuccessResponse, ErrorResponse
+from api.responses.response_model import SuccessResponse, ErrorResponse
 
 
 class _DataField(BaseModel):

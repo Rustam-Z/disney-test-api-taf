@@ -1,9 +1,7 @@
 """
 Test user authentication. Access token and refresh token.
 """
-
-from api.models.token_model import TokenSuccessResponse
-from api.api_response import APIResponse
+from api.requests.token_api import TokenAPI
 from core.config.users import get_random_user
 from core.enums.auth import Auth
 from core.helpers.jwt_helpers import decode_jwt
@@ -18,15 +16,8 @@ class TestToken:
         AND response body contains access and refresh tokens.
         """
         email, password = get_random_user(Auth.SUPERUSER)
-        payload = {
-            'email': email,
-            'password': password
-        }
+        model = TokenAPI(client).login(email=email, password=password)  # Send request.
 
-        response = client.post('/user/token/', data=payload)
-        APIResponse(response).check_status(200)
-
-        model = TokenSuccessResponse(**response.json())
         assert model.data.is_superuser is True, '`is_superuser` should be True for superuser'
 
         access_jwt_data = decode_jwt(model.data.access)

@@ -1,9 +1,13 @@
 # Disney's API Test Automation Framework
 
 ## Configuration 
-1. Edit `.config.yaml`.
-   Config file includes `API `
-   If you change the content and schema of this file, you need to change following files too. 
+1. `.config.yaml` includes `API URLs` for DEV, STAGING and PROD envs. 
+   It includes users credentials for superuser, facility admin, facility driver, facility simple user.
+   - Superuser -> can control all facilities. Superuser can create a new facility, and facility admin.
+   - Facility admin -> can control all users only for his/her facility. 
+   - Facility driver -> this type of user, has driver user role.
+   - Facility user -> this type of user has limited edit, view authorization only for assigned facility. 
+2. If you change the content and schema of config file, you need to change following files too:
    ```text
    /core/enums/environments.py # The list of env: DEV, STAGING, PROD.
    /core/config/__init__.py # Change this file, if you change the schema of config file.
@@ -14,8 +18,8 @@
 ## Constraints
 ```text
 1. @mobile() # Fixture for mobile which uses `/?is_for_mobile=true`
-2. Auth -> auth, unauth requests. We will not separate users. Because super user has different request body.
-3. Endpoints, endpoints with schema, response model. We will not create request model.
+2. Authentication -> auth, unauth requests. We will not separate users. Because super user has different request body.
+3. Endpoints, endpoints with schema, request & response model.
 ```
 
 ## Project structure
