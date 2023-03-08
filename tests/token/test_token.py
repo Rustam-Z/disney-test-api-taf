@@ -3,11 +3,11 @@ Test user authentication. Access token and refresh token.
 """
 import pytest
 
-from api.api_response import APIResponse
-from api.http_client import HTTPClient
+from core.api_response import APIResponse
+from core.http_client import HTTPClient
 from api.requests.token_api import TokenAPI
 from core.config.users import get_random_user
-from core.enums.auth import Auth
+from core.enums.authz import Authz
 from core.helpers.jwt_helpers import decode_jwt
 import data
 
@@ -20,7 +20,7 @@ class TestToken:
         THEN response code = 200,
         AND response body contains access and refresh tokens.
         """
-        email, password = get_random_user(Auth.SUPERUSER)
+        email, password = get_random_user(Authz.SUPERUSER)
         response, model = TokenAPI(client).login(email=email, password=password)  # Send request.
 
         APIResponse(response).check_status(200)
@@ -41,7 +41,7 @@ class TestToken:
         THEN response code = 200,
         AND response body contains access and refresh tokens.
         """
-        email, password = get_random_user(Auth.SUPERUSER)
+        email, password = get_random_user(Authz.SUPERUSER)
         password = data.fake.password()
 
         response, model = TokenAPI(client).login(email=email, password=password)
@@ -72,7 +72,7 @@ class TestToken:
 class TestRefreshToken:
     @staticmethod
     def get_refresh_token(client: HTTPClient) -> str:
-        email, password = get_random_user(Auth.SUPERUSER)
+        email, password = get_random_user(Authz.SUPERUSER)
         response, model = TokenAPI(client).login(email=email, password=password)
         return model.data.refresh
 

@@ -1,11 +1,12 @@
 """
-Enumerators for subscription types.
+Authz = authorization.
+Authn = authentication.
 """
 
 from enum import Enum
 
 
-class Auth(Enum):
+class Authz(Enum):
     NONE = None  # Unauthenticated user.
     SUPERUSER = 'superuser'
     FACILITY_ADMIN = 'facility_admin'

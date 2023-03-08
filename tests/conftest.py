@@ -2,7 +2,7 @@ import pytest
 
 from core.config import CONFIG
 from core.enums.environments import Environment
-from api.http_client import HTTPClient
+from core.http_client import HTTPClient
 
 
 @pytest.hookimpl

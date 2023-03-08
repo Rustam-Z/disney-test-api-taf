@@ -1,20 +1,10 @@
 """
-Usage:
-    data_ = {"status": False, "message": "Error", "data": None,
-             "error": {"detail": "No active account found with the given credentials"}}
-    model_ = TokenErrorResponse(**data_)
-
+Token and refresh token responses.
 """
-from typing import Dict
 
-from pydantic import BaseModel, validator, StrictStr, StrictInt, StrictBool
+from pydantic import BaseModel, StrictStr, StrictInt, StrictBool
 
-from api.responses.response_model import SuccessResponse, ErrorResponse
-
-
-"""
-Token
-"""
+from api.responses.response_models import SuccessResponse
 
 
 class _TokenDataField(BaseModel):
@@ -24,46 +14,14 @@ class _TokenDataField(BaseModel):
     is_superuser: StrictBool
 
 
-class TokenSuccessResponse(SuccessResponse):
-    data: _TokenDataField
-
-    @validator('message')
-    def check_message(cls, value):
-        expected_message = 'Successfully'
-        if value != expected_message:
-            raise ValueError(f'message must be "{expected_message}"')
-        return value
-
-
-class TokenErrorResponse(ErrorResponse):
-    error: Dict
-
-    @validator('message')
-    def check_message(cls, value):
-        expected_message = 'Error'
-        if value != expected_message:
-            raise ValueError(f'message must be "{expected_message}"')
-        return value
-
-
-"""
-Refresh token
-
-Error response is the same for Token and Refresh token.
-"""
-
-
 class _RefreshTokenDataField(BaseModel):
     refresh: StrictStr
     access: StrictStr
 
 
+class TokenSuccessResponse(SuccessResponse):
+    data: _TokenDataField
+
+
 class RefreshTokenSuccessResponse(SuccessResponse):
     data: _RefreshTokenDataField
-
-    @validator('message')
-    def check_message(cls, value):
-        expected_message = 'Successfully'
-        if value != expected_message:
-            raise ValueError(f'message must be "{expected_message}"')
-        return value

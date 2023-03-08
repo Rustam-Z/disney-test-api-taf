@@ -1,10 +1,10 @@
 import random
 
 from core.config import CONFIG
-from core.enums.auth import Auth
+from core.enums.authz import Authz
 
 
-def get_random_user(user_type: Auth) -> tuple:
+def get_random_user(user_type: Authz) -> tuple:
     users = CONFIG.users.get(user_type.value)
 
     user = random.choice(users)

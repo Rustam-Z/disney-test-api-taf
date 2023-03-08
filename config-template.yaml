@@ -1,0 +1,52 @@
+env: dev # default env in which tests will run, available options [qa, prod, dev].
+
+dev:
+  hosts:
+    api: ""
+  users:
+    superuser:
+      - email: ""
+        password: ""
+    facility_admin:
+      - email: ""
+        password: ""
+    facility_driver:
+      - email: ""
+        password: ""
+    facility_user:
+      - email: ""
+        password: ""
+
+staging:
+  hosts:
+    api: ""
+  users:
+    superuser:
+      - email: ""
+        password: ""
+    facility_admin:
+      - email: ""
+        password: ""
+    facility_driver:
+      - email: ""
+        password: ""
+    facility_user:
+      - email: ""
+        password: ""
+
+prod:
+  hosts:
+    api: ""
+  users:
+    superuser:
+      - email: ""
+        password: ""
+    facility_admin:
+      - email: ""
+        password: ""
+    facility_driver:
+      - email: ""
+        password: ""
+    facility_user:
+      - email: ""
+        password: ""
