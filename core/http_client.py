@@ -11,7 +11,7 @@ class HTTPClient:
         headers = {
             'Content-Type': 'application/json',
         }
-        self.remove_headers()
+        self.remove_all_headers()
         self.update_headers(headers)
 
     def get(self, path: str, params: dict = None, headers: dict = None) -> Response:
@@ -38,7 +38,14 @@ class HTTPClient:
         # Needed for authentication purposes
         self.session.headers.update(headers)
 
-    def remove_headers(self) -> None:
+    def remove_headers(self, *headers) -> None:
+        for header in headers:
+            try:
+                del self.session.headers[header]
+            except KeyError:
+                print(f'{header}: header does\'s exist.')  # Only for debugging purposes.
+
+    def remove_all_headers(self) -> None:
         self.session.headers = {}
 
     @staticmethod

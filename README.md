@@ -42,6 +42,7 @@ python -m pytest -n auto --reruns 3 -s --env=dev -v -m smoke tests/  # Run all s
 `\data` includes test data.
 `.config.yaml` config file.
 ```
+
 ## Markers in code
 You can use project search to find these markers.
 ```text
@@ -76,6 +77,7 @@ Other response models are created for successful responses per API.
 ## Constraints
 ```text
 1. @mobile() # Fixture for mobile which uses `/?is_for_mobile=true`
-2. Authentication -> auth, unauth requests. We will not separate users. Because super user has different request body.
+2. Authentication -> auth, unauth requests. Users should be created automatically by superuser. 
+   - How the new user is created? Superuser creates facility, new role, then new user. Then config.users is updated. Users should be created by pytest hook.
 3. Endpoints, endpoints with schema, request & response model.
 ```

@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel, validator, StrictStr, StrictInt, StrictBool
 
-from api.responses.response_models import SuccessResponse, ErrorResponse
+from api.responses.response_models import SuccessResponse
 
 
 """

@@ -1,12 +1,16 @@
 """
-Authz = authorization.
-Authn = authentication.
+Authorized user types.
+The values in User enum fields should be synchronized with the configuration file (.config.yaml).
+
+NOTE!
+    Authz = authorization.
+    Authn = authentication.
 """
 
 from enum import Enum
 
 
-class Authz(Enum):
+class User(Enum):
     NONE = None  # Unauthenticated user.
     SUPERUSER = 'superuser'
     FACILITY_ADMIN = 'facility_admin'

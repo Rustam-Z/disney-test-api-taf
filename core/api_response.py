@@ -1,4 +1,4 @@
-from core.enums.assertion_enums import AssertionEnums
+from core.enums.assertion_enums import AssertionEnum
 
 
 class APIResponse:
@@ -9,4 +9,4 @@ class APIResponse:
         return self._response.json()
 
     def check_status(self, status_code: int):
-        assert self._response.status_code == status_code, AssertionEnums.WRONG_STATUS_CODE.value
+        assert self._response.status_code == status_code, AssertionEnum.WRONG_STATUS_CODE.value

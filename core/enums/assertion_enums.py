@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class AssertionEnums(Enum):
+class AssertionEnum(Enum):
     WRONG_STATUS_CODE = 'Status code is different than expected.'
     RESPONSE_HEADERS = 'Expected response headers discrepancy.'
     JSON_ELEMENT_VALUE = 'JSON element value is different than expected.'

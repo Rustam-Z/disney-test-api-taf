@@ -4,23 +4,25 @@ Test user authentication. Access token and refresh token.
 import pytest
 
 from core.api_response import APIResponse
+from core.decorators import users
 from core.http_client import HTTPClient
 from api.requests.token_api import TokenAPI
 from core.config.users import get_random_user
-from core.enums.authz import Authz
+from core.enums.users import User
 from core.helpers.jwt_helper import decode_jwt
 import data
 
 
 class TestToken:
-    def test_superUserValidEmailAndValidPassword_returnsToken(self, client):
+    @users(User.NONE)
+    def test_superUserValidEmailAndValidPassword_returnsToken(self, client, user):
         """
         GIVEN valid email and valid password,
         WHEN POST request is executed,
         THEN response code = 200,
         AND response body contains access and refresh tokens.
         """
-        email, password = get_random_user(Authz.SUPERUSER)
+        email, password = get_random_user(User.SUPERUSER)
         response, model = TokenAPI(client).login(email=email, password=password)  # Send request.
 
         APIResponse(response).check_status(200)
@@ -34,14 +36,15 @@ class TestToken:
         assert refresh_jwt_data.get('user_id') == model.data.id, 'ids are not matching in refresh token and response id'
         assert refresh_jwt_data.get('token_type') == 'refresh'
 
-    def test_validEmailAndWrongPassword_returnsError(self, client):
+    @users(User.NONE)
+    def test_validEmailAndWrongPassword_returnsError(self, client, user):
         """
         GIVEN valid email and valid password,
         WHEN POST request is executed,
         THEN response code = 200,
         AND response body contains access and refresh tokens.
         """
-        email, password = get_random_user(Authz.SUPERUSER)
+        email, password = get_random_user(User.SUPERUSER)
         password = data.fake.password()
 
         response, model = TokenAPI(client).login(email=email, password=password)
@@ -51,7 +54,8 @@ class TestToken:
         (data.fake.email(), data.fake.password()),
         (data.fake.name(), data.fake.password()),  # Wrong email format.
     ])
-    def test_wrongEmailAndWrongPassword_returnsError(self, client, email, password):
+    @users(User.NONE)
+    def test_wrongEmailAndWrongPassword_returnsError(self, client, user, email, password):
         response, model = TokenAPI(client).login(email=email, password=password)
 
         APIResponse(response).check_status(401)
@@ -62,7 +66,8 @@ class TestToken:
         (data.fake.password(), ' ', {"password": ["This field may not be blank."]}),
         (' ', ' ', {"email": ["This field may not be blank."], "password": ["This field may not be blank."]}),
     ])
-    def test_emptyFields_returnsError(self, client, email, password, error):
+    @users(User.NONE)
+    def test_emptyFields_returnsError(self, client, user, email, password, error):
         response, model = TokenAPI(client).login(email=email, password=password)
 
         APIResponse(response).check_status(400)
@@ -72,11 +77,12 @@ class TestToken:
 class TestRefreshToken:
     @staticmethod
     def get_refresh_token(client: HTTPClient) -> str:
-        email, password = get_random_user(Authz.SUPERUSER)
+        email, password = get_random_user(User.SUPERUSER)
         response, model = TokenAPI(client).login(email=email, password=password)
         return model.data.refresh
 
-    def test_validRefreshToken_returnsToken(self, client):
+    @users(User.NONE)
+    def test_validRefreshToken_returnsToken(self, client, user):
         refresh_token = self.get_refresh_token(client)
         response, model = TokenAPI(client).refresh_token(refresh=refresh_token)
 
@@ -89,7 +95,8 @@ class TestRefreshToken:
                new_access_jwt_data.get('user_id') == \
                new_refresh_jwt_data.get('user_id')
 
-    def test_wrongRefreshToken_returnsError(self, client):
+    @users(User.NONE)
+    def test_wrongRefreshToken_returnsError(self, client, user):
         refresh_token = data.fake.jwt_token()
         response, model = TokenAPI(client).refresh_token(refresh=refresh_token)
 
