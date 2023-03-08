@@ -8,7 +8,7 @@ from core.http_client import HTTPClient
 from api.requests.token_api import TokenAPI
 from core.config.users import get_random_user
 from core.enums.authz import Authz
-from core.helpers.jwt_helpers import decode_jwt
+from core.helpers.jwt_helper import decode_jwt
 import data
 
 
