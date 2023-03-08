@@ -2,21 +2,21 @@
 Token and refresh token responses.
 """
 
-from pydantic import BaseModel, StrictStr, StrictInt, StrictBool
+from pydantic import BaseModel, StrictInt, StrictBool, constr
 
 from api.responses.response_models import SuccessResponse
 
 
 class _TokenDataField(BaseModel):
-    refresh: StrictStr
-    access: StrictStr
+    refresh: constr(min_length=1)
+    access: constr(min_length=1)
     id: StrictInt
     is_superuser: StrictBool
 
 
 class _RefreshTokenDataField(BaseModel):
-    refresh: StrictStr
-    access: StrictStr
+    refresh: constr(min_length=1)
+    access: constr(min_length=1)
 
 
 class TokenSuccessResponse(SuccessResponse):

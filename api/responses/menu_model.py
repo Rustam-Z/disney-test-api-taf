@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from pydantic import BaseModel, validator, StrictStr, StrictInt, StrictBool
+from pydantic import BaseModel, constr, validator, StrictStr, StrictInt, StrictBool
 
 from api.responses.response_models import SuccessResponse
 
@@ -12,8 +12,8 @@ Menu list
 
 class _MenuListResultField(BaseModel):
     id: StrictInt
-    title: StrictStr
-    route: StrictStr
+    title: constr(min_length=1)  # If an empty string is passed in, a validation error will be raised.
+    route: constr(min_length=1)
     icon: Optional[str]
     order: StrictInt
 
@@ -39,8 +39,8 @@ User menus
 
 
 class _UserMenusResultField(BaseModel):
-    title: StrictStr
-    route: StrictStr
+    title: constr(min_length=1)
+    route: constr(min_length=1)
     icon: Optional[str] = None
     order: StrictInt
     children: List
