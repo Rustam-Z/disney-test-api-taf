@@ -29,3 +29,19 @@ def users(*args):
         return dec_var(for_deco)
 
     return deco
+
+
+def mobile():
+    """
+    Creates the parametrized mark for test.
+
+    Two examples below are the same:
+        @pytest.mark.parametrize('is_for_mobile', [False, True])
+        @is_for_mobile()
+
+    """
+    def deco(for_deco):
+        dec_var = pytest.mark.parametrize('is_for_mobile', [False, True])
+        return dec_var(for_deco)
+
+    return deco

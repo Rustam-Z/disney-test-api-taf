@@ -1,3 +1,4 @@
+from api.enums.params import Param
 from core.http_client import HTTPClient
 from api.responses.response_models import ErrorResponse
 from api.responses.menu_model import (MenuListSuccessResponse,
@@ -22,8 +23,11 @@ class MenuAPI:
 
         return response, model
 
-    def get_user_menus(self) -> tuple:
-        response = self.client.get(self.MENU_LIST)
+    def get_user_menus(self, is_for_mobile: bool = False) -> tuple:
+        params = {
+            Param.IS_FOR_MOBILE.value: is_for_mobile
+        }
+        response = self.client.get(self.USER_MENUS, params=params)
 
         if response.status_code == 200:
             model = UserMenusSuccessResponse(**response.json())

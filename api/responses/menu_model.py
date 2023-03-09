@@ -53,7 +53,7 @@ class _UserMenusDataField(BaseModel):
 
 
 class UserMenusSuccessResponse(SuccessResponse):
-    data: _MenuListDataField
+    data: _UserMenusDataField
 
     @validator('message')
     def check_message(cls, value):
