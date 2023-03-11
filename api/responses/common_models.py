@@ -31,3 +31,18 @@ class AuthErrorResponse(ErrorResponse):
             return value
 
         raise ValueError('error should include detail key')
+
+
+class UnauthRequestErrorResponse(ErrorResponse):
+    @validator('error')
+    def check_message(cls, value):
+        """
+        Validate that the value in the "detail" key == expected_message.
+        """
+        detail = value.get('message')
+        expected_message = "'AnonymousUser' object has no attribute 'role'"
+
+        if detail == expected_message:
+            return value
+
+        raise ValueError('error should include message key')

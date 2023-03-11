@@ -11,3 +11,4 @@ from enum import Enum
 
 class Param(Enum):
     IS_FOR_MOBILE = 'is_for_mobile'
+    SECTION = 'section'

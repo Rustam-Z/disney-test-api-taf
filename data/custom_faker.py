@@ -11,7 +11,6 @@ class CustomFaker(Faker):
 
     def jwt_token(self) -> str:
         exp_time = datetime.utcnow() + timedelta(hours=1)
-
         payload = {
             'sub': self.uuid4(),
             'name': self.name(),
@@ -19,6 +18,9 @@ class CustomFaker(Faker):
             'iat': datetime.utcnow(),
             'exp': exp_time
         }
-        token = jwt.encode(payload, self.text(), algorithm='HS256')
+        fake_jwt_token = jwt.encode(payload, self.text(), algorithm='HS256')
+        return fake_jwt_token
 
-        return token
+    def custom_phone_number(self):
+        fake_phone_number = self.numerify('###-###-####')
+        return fake_phone_number
