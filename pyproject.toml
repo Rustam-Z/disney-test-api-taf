@@ -18,6 +18,7 @@ jsonpath-ng = "^1.5"
 munch = "^2.5"
 pydantic = "^1.10"
 pyjwt = "^2.6.0"
+pytest-dependency = "^0.5"
 
 [tool.pytest.ini_options]
 minversion = "7.2"

@@ -39,7 +39,7 @@ python -m pytest -n auto --reruns 3 -s --env=dev -v -m smoke tests/  # Run all s
 `\core` includes anything related to framework (HTTP client, API general responses validation, helpers, config).
 `\api` contains anything related to product API models, endpoints, query string params.
 `\tests` contains all tests.
-`\data` includes test data.
+`\data` includes test data, and fake request models.
 `.config.yaml` config file.
 ```
 
@@ -57,6 +57,7 @@ You can use project search to find these markers.
 
 ## Models
 ```text
+Request -> fake request models are inside test data layer.
 Response -> status, message, data, error.
 SuccessResponse, checks that status is False, data should be object.
 ErrorResponse, checks that status is True, error should be object.
