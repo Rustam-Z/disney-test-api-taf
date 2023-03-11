@@ -13,13 +13,13 @@ class TokenAPI:
         self.client = client
 
     def login(self, email: str, password: str) -> tuple:
-        payload = {
+        data = {
             'email': email,
             'password': password
         }
-        response = self.client.post(self.USER_TOKEN, data=payload)
+        response = self.client.post(self.USER_TOKEN, data=data)
 
-        if response.status_code == 200:
+        if response.status_code in range(200, 300):
             model = TokenSuccessResponse(**response.json())
         else:
             model = ErrorResponse(**response.json())
@@ -27,12 +27,12 @@ class TokenAPI:
         return response, model
 
     def refresh_token(self, refresh: str) -> tuple:
-        payload = {
+        data = {
             'refresh': refresh,
         }
-        response = self.client.post(self.USER_TOKEN_REFRESH, data=payload)
+        response = self.client.post(self.USER_TOKEN_REFRESH, data=data)
 
-        if response.status_code == 200:
+        if response.status_code in range(200, 300):
             model = RefreshTokenSuccessResponse(**response.json())
         else:
             model = ErrorResponse(**response.json())

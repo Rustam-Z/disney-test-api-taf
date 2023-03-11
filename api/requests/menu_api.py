@@ -16,7 +16,7 @@ class MenuAPI:
     def get_menu_list(self) -> tuple:
         response = self.client.get(self.MENU_LIST)
 
-        if response.status_code == 200:
+        if response.status_code in range(200, 300):
             model = MenuListSuccessResponse(**response.json())
         else:
             model = ErrorResponse(**response.json())
@@ -29,7 +29,7 @@ class MenuAPI:
         }
         response = self.client.get(self.USER_MENUS, params=params)
 
-        if response.status_code == 200:
+        if response.status_code in range(200, 300):
             model = UserMenusSuccessResponse(**response.json())
         else:
             model = ErrorResponse(**response.json())

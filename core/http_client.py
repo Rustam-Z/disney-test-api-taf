@@ -3,6 +3,8 @@ from requests import Response
 
 
 class HTTPClient:
+    VALID_METHODS = ('GET', 'POST', 'PUT', 'PATCH', 'DELETE')
+
     def __init__(self, base_url: str):
         self.base_url = base_url
         self.session = requests.Session()
@@ -14,6 +16,14 @@ class HTTPClient:
         self.remove_all_headers()
         self.update_headers(headers)
 
+    def send_request(self, method: str, path: str, **kwargs) -> Response:
+        if method not in self.VALID_METHODS:
+            raise ValueError(f'Invalid HTTP method "{method}"')
+
+        url = self.build_url(self.base_url, path)
+        response = self.session.request(method, url, **kwargs)
+        return response
+
     def get(self, path: str, params: dict = None, headers: dict = None) -> Response:
         url = self.build_url(self.base_url, path)
         response = self.session.get(url, params=params, headers=headers)
@@ -24,14 +34,14 @@ class HTTPClient:
         response = self.session.post(url, json=data, params=params, headers=headers)
         return response
 
-    def patch(self, path: str, data: dict = None, headers: dict = None) -> Response:
+    def patch(self, path: str, data: dict = None, params: dict = None, headers: dict = None) -> Response:
         url = self.build_url(self.base_url, path)
-        response = self.session.patch(url, json=data, headers=headers)
+        response = self.session.patch(url, json=data, params=params, headers=headers)
         return response
 
-    def delete(self, path: str, headers: dict = None) -> Response:
+    def delete(self, path: str, params: dict = None, headers: dict = None) -> Response:
         url = self.build_url(self.base_url, path)
-        response = self.session.delete(url, headers=headers)
+        response = self.session.delete(url, params=params, headers=headers)
         return response
 
     def update_headers(self, headers: dict) -> None:
