@@ -11,6 +11,30 @@ from core.enums.users import User
 import data
 
 
+@pytest.fixture()
+def _create_fake_customer(client):
+    def _fixture(**kwargs):
+        payload = data.fake.model.customer(**kwargs)  # Request body JSON
+        response, model = CustomerAPI(client).create_customer(data=payload)
+        yield payload, response, model
+        CustomerAPI(client).delete_customer(id=model.data.id)
+
+    return _fixture
+
+
+@pytest.fixture()
+def create_fake_customer(request):
+    """
+    This fixture was created to skip -> next(fake_customer).
+    """
+    def _fixture(**kwargs):
+        fake_customer = request.getfixturevalue('_create_fake_customer')(**kwargs)
+        payload, response, model = next(fake_customer)
+        return payload, response, model
+
+    return _fixture
+
+
 class TestCustomer:
     @users(User.SUPERUSER)
     def test_createNewCustomer_returns201AndData(self, client, user):
@@ -68,6 +92,9 @@ class TestCustomer:
         response, model = CustomerAPI(client).get_customer(id=customer_id)
         APIResponse(response).check_status(200)
 
+        # Cleanup
+        CustomerAPI(client).delete_customer(id=customer_id)
+
     @users(User.SUPERUSER)
     def test_updateCustomerByID_returns200AndData(self, client, user):
         # Setup
@@ -83,7 +110,7 @@ class TestCustomer:
         assert payload['name'] == model.data.name
         assert payload['barcode'] == model.data.barcode
 
-        # Clean up
+        # Cleanup
         CustomerAPI(client).delete_customer(id=customer_id)
 
     @users(User.SUPERUSER)
@@ -103,7 +130,7 @@ class TestCustomer:
             'barcode': ['customer with this barcode already exists.']
         }
 
-        # Clean up
+        # Cleanup
         CustomerAPI(client).delete_customer(id=model_1.data.id)
         CustomerAPI(client).delete_customer(id=model_2.data.id)
 
@@ -131,11 +158,11 @@ class TestCustomer:
         response, model = CustomerAPI(client).create_customer(data=payload)
         UnauthRequestErrorResponse(**response.json())
 
-    @users(User.SUPERUSER)
-    def test_authRequestWithoutSection_returns400AndError(self, client, user):
+    @users(User.SUPERUSER, User.FACILITY_ADMIN, User.NONE)
+    def test_authRequestWithoutSectionParam_returns400AndError(self, client, user):
         response, model = CustomerAPI(client).send_request_without_section_param('GET', 1)
         APIResponse(response).check_status(400)
-        assert model.error['message'] == 'There is no such menu route available.'
+        assert 'There is no such menu route available.' in model.error['message']
 
     @pytest.mark.skip(reason="Facility user should be created automatically")
     @users(User.FACILITY_USER)
