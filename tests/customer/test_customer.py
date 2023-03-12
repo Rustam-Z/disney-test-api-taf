@@ -1,5 +1,7 @@
 """
 Test customer CRUD.
+
+TODO: test pagination in get all customers.
 """
 import pytest
 
@@ -152,17 +154,13 @@ class TestCustomer:
         APIResponse(response).check_status(404)
         assert model.error['detail'] == 'Not found.'
 
+
+class TestCustomerAuth:
     @users(User.NONE)
     def test_unauthCRUDRequest_returns401AndError(self, client, user):
         payload = data.fake.model.customer()
         response, model = CustomerAPI(client).create_customer(data=payload)
         UnauthRequestErrorResponse(**response.json())
-
-    @users(User.SUPERUSER, User.FACILITY_ADMIN, User.NONE)
-    def test_authRequestWithoutSectionParam_returns400AndError(self, client, user):
-        response, model = CustomerAPI(client).send_request_without_section_param('GET', 1)
-        APIResponse(response).check_status(400)
-        assert 'There is no such menu route available.' in model.error['message']
 
     @pytest.mark.skip(reason="Facility user should be created automatically")
     @users(User.FACILITY_USER)
@@ -173,3 +171,34 @@ class TestCustomer:
     @users(User.FACILITY_USER)
     def test_userWithNoPermissionToEdit_returns403AndError(self, client, user):
         ...
+
+
+class TestCustomerWithoutSectionParam:
+    """
+    For testing requests without section query param we don't need:
+        - Request body for POST and PATCH.
+        - ID for GET, DELETE, PATCH.
+
+    Because existence of section param in URL is validated first.
+    """
+
+    @pytest.mark.skip(reason='Get all customers is allowed without section param.')
+    @users(User.SUPERUSER, User.FACILITY_ADMIN)
+    def test_GET_ALL_returns400AndError(self, client, user):
+        response, model = CustomerAPI(client).send_request_without_section_param('GET')
+        APIResponse(response).check_status(400)
+        assert 'There is no such menu route available.' in model.error['message']
+
+    @users(User.SUPERUSER, User.FACILITY_ADMIN)
+    def test_POST_returns400AndError(self, client, user):
+        response, model = CustomerAPI(client).send_request_without_section_param('POST')
+        APIResponse(response).check_status(400)
+        assert 'There is no such menu route available.' in model.error['message']
+
+    @pytest.mark.parametrize('method', ['GET', 'PATCH', 'DELETE'])
+    @users(User.SUPERUSER, User.FACILITY_ADMIN)
+    def test_GET_PATCH_DELETE_returns400AndError(self, client, user, method):
+        not_existing_id = data.fake.uuid4()
+        response, model = CustomerAPI(client).send_request_without_section_param(method, id=not_existing_id)
+        APIResponse(response).check_status(400)
+        assert 'There is no such menu route available.' in model.error['message']
