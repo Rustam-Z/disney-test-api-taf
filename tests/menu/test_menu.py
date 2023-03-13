@@ -31,8 +31,7 @@ class TestMenu:
         response, model = MenuAPI(client).get_menu_list()
 
         APIResponse(response).check_status(401)
-        assert model.error['detail'] == "Authentication credentials were not provided."
-        # AuthErrorResponse(**response.json())
+        AuthErrorResponse(**response.json())
 
     @mobile()
     @users(User.NONE)
@@ -40,5 +39,4 @@ class TestMenu:
         response, model = MenuAPI(client).get_user_menus(is_for_mobile=is_for_mobile)
 
         APIResponse(response).check_status(401)
-        assert model.error['detail'] == "Authentication credentials were not provided."
-        # AuthErrorResponse(**response.json())
+        AuthErrorResponse(**response.json())
