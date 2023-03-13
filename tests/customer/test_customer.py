@@ -1,43 +1,28 @@
 """
 Test customer CRUD.
 
-TODO: test pagination in get all customers.
+TODO: test pagination in get all customers, test creating without mandatory fields.
 """
 import pytest
 
 from api.requests.customer_api import CustomerAPI
-from api.responses.common_models import UnauthRequestErrorResponse
+from api.responses.common_models import AuthErrorResponse, RequestWithoutSectionParamErrorResponse
 from core.api_response import APIResponse
 from core.decorators import users
 from core.enums.users import User
 import data
 
 
-@pytest.fixture()
-def _create_fake_customer(client):
-    def _fixture(**kwargs):
-        payload = data.fake.model.customer(**kwargs)  # Request body JSON
-        response, model = CustomerAPI(client).create_customer(data=payload)
-        yield payload, response, model
-        CustomerAPI(client).delete_customer(id=model.data.id)
+class TestCustomerCRUD:
 
-    return _fixture
+    @users(User.SUPERUSER)
+    def test_createNewCustomer_returns201AndData_withFixture(self, client, user, request):
+        # Act and assert
+        payload, response, model = request.getfixturevalue('create_fake_customer')()
+        APIResponse(response).check_status(201)
+        assert payload['name'] == model.data.name
+        assert payload['barcode'] == model.data.barcode
 
-
-@pytest.fixture()
-def create_fake_customer(request):
-    """
-    This fixture was created to skip -> next(fake_customer).
-    """
-    def _fixture(**kwargs):
-        fake_customer = request.getfixturevalue('_create_fake_customer')(**kwargs)
-        payload, response, model = next(fake_customer)
-        return payload, response, model
-
-    return _fixture
-
-
-class TestCustomer:
     @users(User.SUPERUSER)
     def test_createNewCustomer_returns201AndData(self, client, user):
         # Act and assert
@@ -157,10 +142,11 @@ class TestCustomer:
 
 class TestCustomerAuth:
     @users(User.NONE)
-    def test_unauthCRUDRequest_returns401AndError(self, client, user):
+    def test_unauthCRUDRequest_returns400AndError(self, client, user):
         payload = data.fake.model.customer()
         response, model = CustomerAPI(client).create_customer(data=payload)
-        UnauthRequestErrorResponse(**response.json())
+        APIResponse(response).check_status(400)
+        AuthErrorResponse(**response.json())
 
     @pytest.mark.skip(reason="Facility user should be created automatically")
     @users(User.FACILITY_USER)
@@ -187,13 +173,13 @@ class TestCustomerWithoutSectionParam:
     def test_GET_ALL_returns400AndError(self, client, user):
         response, model = CustomerAPI(client).send_request_without_section_param('GET')
         APIResponse(response).check_status(400)
-        assert 'There is no such menu route available.' in model.error['message']
+        RequestWithoutSectionParamErrorResponse(**response.json())
 
     @users(User.SUPERUSER, User.FACILITY_ADMIN)
     def test_POST_returns400AndError(self, client, user):
         response, model = CustomerAPI(client).send_request_without_section_param('POST')
         APIResponse(response).check_status(400)
-        assert 'There is no such menu route available.' in model.error['message']
+        RequestWithoutSectionParamErrorResponse(**response.json())
 
     @pytest.mark.parametrize('method', ['GET', 'PATCH', 'DELETE'])
     @users(User.SUPERUSER, User.FACILITY_ADMIN)
@@ -201,4 +187,4 @@ class TestCustomerWithoutSectionParam:
         not_existing_id = data.fake.uuid4()
         response, model = CustomerAPI(client).send_request_without_section_param(method, id=not_existing_id)
         APIResponse(response).check_status(400)
-        assert 'There is no such menu route available.' in model.error['message']
+        RequestWithoutSectionParamErrorResponse(**response.json())

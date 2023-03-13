@@ -25,7 +25,7 @@ class AuthErrorResponse(ErrorResponse):
         Validate that the value in the "detail" key == expected_message.
         """
         detail = value.get('detail')
-        expected_message = 'Authentication credentials were not provided.'
+        expected_message = ['Authentication credentials were not provided.']
 
         if detail == expected_message:
             return value
@@ -33,16 +33,46 @@ class AuthErrorResponse(ErrorResponse):
         raise ValueError('error should include detail key')
 
 
-class UnauthRequestErrorResponse(ErrorResponse):
+class NoPermissionErrorResponse(ErrorResponse):
     @validator('error')
     def check_message(cls, value):
         """
         Validate that the value in the "detail" key == expected_message.
         """
-        detail = value.get('message')
-        expected_message = "'AnonymousUser' object has no attribute 'role'"
+        detail = value.get('detail')
+        expected_message = ["'AnonymousUser' object has no attribute 'role'"]
 
         if detail == expected_message:
             return value
 
-        raise ValueError('error should include message key')
+        raise ValueError('error should include detail key')
+
+
+class OnlySuperuserCanPerformErrorResponse(ErrorResponse):
+    @validator('error')
+    def check_message(cls, value):
+        """
+        Validate that the value in the "detail" key == expected_message.
+        """
+        detail = value.get('detail')
+        expected_message = ['Only Superuser can perform this action!']
+
+        if detail == expected_message:
+            return value
+
+        raise ValueError('error should include detail key')
+
+
+class RequestWithoutSectionParamErrorResponse(ErrorResponse):
+    @validator('error')
+    def check_message(cls, value):
+        """
+        Validate that the value in the "detail" key == expected_message.
+        """
+        detail = value.get('detail')
+        expected_message = ['There is no such menu route available.']
+
+        if detail == expected_message:
+            return value
+
+        raise ValueError('error should include detail key')

@@ -1,5 +1,11 @@
 from api.enums.params import Param
 from api.enums.sections import Section
+from api.responses.facility_model import (GetAllFacilitiesSuccessResponse,
+                                          GetFacilitySuccessResponse,
+                                          CreateFacilitySuccessResponse,
+                                          UpdateFacilitySuccessResponse,
+                                          )
+from api.responses.response_models import ErrorResponse
 from core.http_client import HTTPClient
 
 
@@ -17,9 +23,9 @@ class FacilityAPI:
         response = self.client.get(path, params=self.params)
 
         if response.status_code in range(200, 300):
-            model = response.json()
+            model = GetAllFacilitiesSuccessResponse(**response.json())
         else:
-            model = response.json()
+            model = ErrorResponse(**response.json())
 
         return response, model
 
@@ -28,9 +34,9 @@ class FacilityAPI:
         response = self.client.get(path, params=self.params)
 
         if response.status_code in range(200, 300):
-            model = response.json()
+            model = GetFacilitySuccessResponse(**response.json())
         else:
-            model = response.json()
+            model = ErrorResponse(**response.json())
 
         return response, model
 
@@ -39,9 +45,9 @@ class FacilityAPI:
         response = self.client.post(path, data=data, params=self.params)
 
         if response.status_code in range(200, 300):
-            model = response.json()
+            model = CreateFacilitySuccessResponse(**response.json())
         else:
-            model = response.json()
+            model = ErrorResponse(**response.json())
 
         return response, model
 
@@ -50,9 +56,9 @@ class FacilityAPI:
         response = self.client.patch(path, data=data, params=self.params)
 
         if response.status_code in range(200, 300):
-            model = response.json()
+            model = UpdateFacilitySuccessResponse(**response.json())
         else:
-            model = response.json()
+            model = ErrorResponse(**response.json())
 
         return response, model
 
@@ -61,8 +67,16 @@ class FacilityAPI:
         response = self.client.delete(path, params=self.params)
 
         if response.status_code in range(200, 300):
-            model = response.json()
+            model = None
         else:
-            model = response.json()
+            model = ErrorResponse(**response.json())
+
+        return response, model
+
+    def send_request_without_section_param(self, method: str, id: int = None, **kwargs):
+        # TODO: think about logic for tests without section
+        path = f'{self.FACILITY}{id}' if id else self.FACILITY
+        response = self.client.send_request(method, path, **kwargs)
+        model = ErrorResponse(**response.json())
 
         return response, model
