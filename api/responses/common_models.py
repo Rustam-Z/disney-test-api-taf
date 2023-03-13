@@ -25,7 +25,7 @@ class AuthErrorResponse(ErrorResponse):
         Validate that the value in the "detail" key == expected_message.
         """
         detail = value.get('detail')
-        expected_message = ['Authentication credentials were not provided.']
+        expected_message = 'Authentication credentials were not provided.'
 
         if detail == expected_message:
             return value
@@ -40,7 +40,7 @@ class NoPermissionErrorResponse(ErrorResponse):
         Validate that the value in the "detail" key == expected_message.
         """
         detail = value.get('detail')
-        expected_message = ["'AnonymousUser' object has no attribute 'role'"]
+        expected_message = "'AnonymousUser' object has no attribute 'role'"
 
         if detail == expected_message:
             return value
@@ -55,7 +55,7 @@ class OnlySuperuserCanPerformErrorResponse(ErrorResponse):
         Validate that the value in the "detail" key == expected_message.
         """
         detail = value.get('detail')
-        expected_message = ['Only Superuser can perform this action!']
+        expected_message = 'Only Superuser can perform this action!'
 
         if detail == expected_message:
             return value
@@ -70,7 +70,7 @@ class RequestWithoutSectionParamErrorResponse(ErrorResponse):
         Validate that the value in the "detail" key == expected_message.
         """
         detail = value.get('detail')
-        expected_message = ['There is no such menu route available.']
+        expected_message = 'There is no such menu route available.'
 
         if detail == expected_message:
             return value
