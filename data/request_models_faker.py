@@ -1,3 +1,6 @@
+import random
+from typing import List
+
 from data.custom_faker import CustomFaker
 
 
@@ -26,4 +29,24 @@ class RequestModelsFaker:
         }
 
         data.update(kwargs)   # Update data with kwargs values
+        return data
+
+    def facility(self, customers=None, **kwargs) -> dict:
+        if customers is None:
+            customers = []
+
+        data = {
+            "name": self.fake.name(),
+            "phone_number": self.fake.custom_phone_number(),
+            "turnaround_time": random.choice([48, 72]),
+            "country": self.fake.country(),
+            "state": self.fake.state(),
+            "city": self.fake.city(),
+            "address_line1": self.fake.address(),
+            "address_line2": self.fake.address(),
+            "zip_code": self.fake.zipcode(),
+            "customers": customers
+        }
+
+        data.update(kwargs)
         return data

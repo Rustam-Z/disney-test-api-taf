@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from pydantic import BaseModel, StrictInt, constr
+from pydantic import BaseModel, StrictInt, constr, StrictStr
 
 from api.responses.response_models import SuccessResponse
 
@@ -10,7 +10,7 @@ class _Customer(BaseModel):
     name: constr(min_length=1, strict=True)
     barcode: constr(min_length=1, strict=True)
     address_line1: constr(min_length=1, strict=True)
-    address_line2: Optional[str]
+    address_line2: Optional[StrictStr]
     replenishment_threshold: Optional[float]
     city: constr(min_length=1, strict=True)
     state: constr(min_length=1, strict=True)
@@ -45,8 +45,8 @@ Get all customers
 
 class _GetAllCustomersDataField(BaseModel):
     count: StrictInt
-    next: Optional[str]
-    previous: Optional[str]
+    next: Optional[StrictStr]
+    previous: Optional[StrictStr]
     results: List[_Customer]
 
 
@@ -65,7 +65,7 @@ class _CreateCustomerDataField(BaseModel):
     barcode: constr(min_length=1, strict=True)
     timezone: constr(min_length=1, strict=True)
     address_line1: constr(min_length=1, strict=True)
-    address_line2: constr(min_length=1, strict=True)
+    address_line2: Optional[StrictStr]
     par_level: Optional[StrictInt] = None
     replenishment_threshold: Optional[StrictInt] = None
     city: constr(min_length=1, strict=True)

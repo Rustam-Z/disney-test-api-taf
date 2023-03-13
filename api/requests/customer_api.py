@@ -22,7 +22,7 @@ class CustomerAPI:
         response = self.client.get(path, params=self.params)
 
         if response.status_code in range(200, 300):
-            model = GetAllCustomersSuccessResponse(**response.json()) # Success model
+            model = GetAllCustomersSuccessResponse(**response.json())
         else:
             model = ErrorResponse(**response.json())
 
@@ -33,7 +33,7 @@ class CustomerAPI:
         response = self.client.get(path, params=self.params)
 
         if response.status_code in range(200, 300):
-            model = GetCustomerSuccessResponse(**response.json())  # Success model
+            model = GetCustomerSuccessResponse(**response.json())
         else:
             model = ErrorResponse(**response.json())
 
@@ -55,7 +55,7 @@ class CustomerAPI:
         response = self.client.patch(path, data=data, params=self.params)
 
         if response.status_code in range(200, 300):
-            model = UpdateCustomerSuccessResponse(**response.json())  # Success model
+            model = UpdateCustomerSuccessResponse(**response.json())
         else:
             model = ErrorResponse(**response.json())
 
