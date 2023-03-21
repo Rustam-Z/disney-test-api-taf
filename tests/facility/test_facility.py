@@ -5,7 +5,10 @@ import pytest
 
 import data
 from api.requests.facility_api import FacilityAPI
-from api.responses.common_models import AuthErrorResponse, RequestWithoutSectionParamErrorResponse
+from api.responses.common_models import (AuthErrorResponse,
+                                         RequestWithoutSectionParamErrorResponse, \
+                                         OnlySuperuserCanPerformErrorResponse,
+                                         )
 from core.api_response import APIResponse
 from core.decorators import users
 from core.enums.users import User
@@ -119,23 +122,35 @@ class TestFacilityAuth:
 
 
 class TestFacilityWithoutSectionParam:
-    @pytest.mark.skip(reason='Get all facilities is allowed without section param.')
     @users(User.SUPERUSER, User.FACILITY_ADMIN)
     def test_GET_ALL_returns400AndError(self, client, user):
-        response, model = FacilityAPI(client).send_request_without_section_param('GET')
-        APIResponse(response).check_status(400)
-        RequestWithoutSectionParamErrorResponse(**response.json())
+        response, model = FacilityAPI(client).send_request_without_section_param('GET', is_error=False)
+        APIResponse(response).check_status(200)
 
-    @users(User.SUPERUSER, User.FACILITY_ADMIN)
+    @users(User.SUPERUSER)
     def test_POST_returns400AndError(self, client, user):
         response, model = FacilityAPI(client).send_request_without_section_param('POST')
         APIResponse(response).check_status(400)
         RequestWithoutSectionParamErrorResponse(**response.json())
 
+    @users(User.FACILITY_ADMIN)
+    def test_POST_withFacilityAdmin_returns400AndError(self, client, user):
+        response, model = FacilityAPI(client).send_request_without_section_param('POST')
+        APIResponse(response).check_status(400)
+        OnlySuperuserCanPerformErrorResponse(**response.json())
+
     @pytest.mark.parametrize('method', ['GET', 'PATCH', 'DELETE'])
-    @users(User.SUPERUSER, User.FACILITY_ADMIN)
+    @users(User.SUPERUSER)
     def test_GET_PATCH_DELETE_returns400AndError(self, client, user, method):
         not_existing_id = data.fake.uuid4()
         response, model = FacilityAPI(client).send_request_without_section_param(method, id=not_existing_id)
         APIResponse(response).check_status(400)
         RequestWithoutSectionParamErrorResponse(**response.json())
+
+    @pytest.mark.parametrize('method', ['PATCH', 'DELETE'])
+    @users(User.FACILITY_ADMIN)
+    def test_GET_PATCH_DELETE_withFacilityAdmin_returns400AndError(self, client, user, method):
+        not_existing_id = data.fake.uuid4()
+        response, model = FacilityAPI(client).send_request_without_section_param(method, id=not_existing_id)
+        APIResponse(response).check_status(400)
+        OnlySuperuserCanPerformErrorResponse(**response.json())

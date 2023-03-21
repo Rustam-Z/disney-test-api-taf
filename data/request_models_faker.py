@@ -31,7 +31,7 @@ class RequestModelsFaker:
         data.update(kwargs)   # Update data with kwargs values
         return data
 
-    def facility(self, customers=None, **kwargs) -> dict:
+    def facility(self, customers: List[int] = None, **kwargs) -> dict:
         if customers is None:
             customers = []
 
@@ -46,6 +46,38 @@ class RequestModelsFaker:
             "address_line2": self.fake.address(),
             "zip_code": self.fake.zipcode(),
             "customers": customers
+        }
+
+        data.update(kwargs)
+        return data
+
+    def role(self, sections: List, permissions: dict = None, facility_id: int = None, is_driver: bool = False, **kwargs) -> dict:
+        """
+        menu_list: the ids of menu lists to give permission. It is a menu list results model.
+        permissions: section_id: [is_editable, is_viewable]
+        facility_id: if None then it is not assigned to facility.
+
+        """
+        if permissions is None:
+            permissions = {}
+
+        section_permissions = []
+        section_ids: List[int] = [section.id for section in sections]
+        for section_id in section_ids:
+            section_permissions.append(
+                {
+                    'section': section_id,
+                    'is_editable': permissions.get(section_id)[0] if permissions.get(section_id) else True,
+                    'is_viewable': permissions.get(section_id)[1] if permissions.get(section_id) else True,
+                }
+            )
+
+        data = {
+            'name': self.fake.name(),
+            'description': self.fake.text(),
+            'is_driver': is_driver,
+            'facility': facility_id,
+            'section_permissions': section_permissions,
         }
 
         data.update(kwargs)
