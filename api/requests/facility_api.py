@@ -73,10 +73,13 @@ class FacilityAPI:
 
         return response, model
 
-    def send_request_without_section_param(self, method: str, id: int = None, **kwargs):
+    def send_request_without_section_param(self, method: str,
+                                           id: int = None,
+                                           is_error: bool = True,
+                                           **kwargs):
         # TODO: think about logic for tests without section
         path = f'{self.FACILITY}{id}' if id else self.FACILITY
         response = self.client.send_request(method, path, **kwargs)
-        model = ErrorResponse(**response.json())
+        model = ErrorResponse(**response.json()) if is_error else response.json()
 
         return response, model

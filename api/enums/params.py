@@ -12,3 +12,10 @@ from enum import Enum
 class Param(Enum):
     IS_FOR_MOBILE = 'is_for_mobile'
     SECTION = 'section'
+    FACILITY = 'facility'
+    CUSTOMER = 'customer'
+    SEARCH = 'search'
+    PAGE = 'page'
+    PAGE_SIZE = 'page_size'
+
+    IS_DRIVER = 'is_driver'
