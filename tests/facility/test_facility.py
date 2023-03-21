@@ -9,6 +9,7 @@ from api.responses.common_models import AuthErrorResponse, RequestWithoutSection
 from core.api_response import APIResponse
 from core.decorators import users
 from core.enums.users import User
+from tests.facility.facility_fixtures import create_fake_facility
 
 
 class TestFacilityCRUD:

@@ -11,6 +11,7 @@ from core.api_response import APIResponse
 from core.decorators import users
 from core.enums.users import User
 import data
+from tests.customer.customer_fixtures import create_fake_customer
 
 
 class TestCustomerCRUD:
@@ -63,7 +64,7 @@ class TestCustomerCRUD:
         # Cleanup
         CustomerAPI(client).delete_customer(id=customer_id)
 
-    @users(User.SUPERUSER)
+    @users(User.SUPERUSER, User.FACILITY_USER)
     def test_getAllCustomers_return200AndData(self, client, user):
         response, model = CustomerAPI(client).get_all_customers()
         APIResponse(response).check_status(200)
