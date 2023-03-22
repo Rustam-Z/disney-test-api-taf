@@ -82,3 +82,18 @@ class RequestModelsFaker:
 
         data.update(kwargs)
         return data
+
+    def user(self, role_id: int, facility_id: int = None, **kwargs) -> dict:
+        data = {
+            "facility": facility_id,
+            "first_name": self.fake.first_name(),
+            "last_name": self.fake.last_name(),
+            "title": self.fake.name(),
+            "role": role_id,
+            "email": self.fake.email(),
+            "phone_number": self.fake.custom_phone_number(),
+            "password": self.fake.password()
+        }
+
+        data.update(kwargs)   # Update data with kwargs values
+        return data

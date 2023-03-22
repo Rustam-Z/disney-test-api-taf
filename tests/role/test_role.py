@@ -1,6 +1,9 @@
 """
 TODO: test pagination in get all roles
+TODO: create a role with facility id
+TODO: create a role, and a user, assign role to that user, remove the role, what will happen with this user?
 """
+
 import data
 from api.requests.menu_api import MenuAPI
 from api.requests.role_api import RoleAPI
@@ -67,5 +70,5 @@ class TestRoleAuth:
     ...
 
 
-class TestCustomerWithoutSectionParam:
+class TestRoleWithoutSectionParam:
     ...
