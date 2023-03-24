@@ -59,7 +59,7 @@ class TestFacilityCRUD:
     @users(User.SUPERUSER)
     def test_getFacilityByID_returns200AndData(self, client, user, request):
         # Setup
-        payload, response, model = request.getfixturevalue('create_fake_facility')(no_of_customers=1)
+        payload, response, model = request.getfixturevalue('create_fake_facility')()
         existing_facility_id = model.data.id
 
         # Act and assert
@@ -70,7 +70,7 @@ class TestFacilityCRUD:
     @users(User.SUPERUSER)
     def test_updateFacilityByID_returns200AndData(self, client, user, request):
         # Setup
-        payload, response, model = request.getfixturevalue('create_fake_facility')(no_of_customers=1)
+        payload, response, model = request.getfixturevalue('create_fake_facility')()
         existing_facility_id = model.data.id
 
         # Act and assert
@@ -81,6 +81,22 @@ class TestFacilityCRUD:
         assert existing_facility_id == model.data.id, 'Old ID and new ID are not matching.'
         assert payload['name'] == model.data.name
 
+    @users(User.SUPERUSER)
+    def test_updateFacilityStatusByID_returns200AndData(self, client, user, request):
+        # Setup
+        payload, response, model = request.getfixturevalue('create_fake_facility')()
+        existing_facility_id = model.data.id
+
+        # Act and assert
+        payload = {
+            'status': 'inactive'
+        }
+        response, model = FacilityAPI(client).update_facility(id=existing_facility_id,
+                                                              data=payload)
+        APIResponse(response).check_status(200)
+        assert existing_facility_id == model.data.id, 'Old ID and new ID are not matching.'
+        assert payload['status'] == model.data.status
+
     @pytest.mark.skip(reason="TODO")
     @users(User.SUPERUSER)
     def test_updateFacilityByIDWithExistingName_returns400AndError(self, client, user):
@@ -89,7 +105,7 @@ class TestFacilityCRUD:
     @users(User.SUPERUSER)
     def test_deleteFacilityByID_returns204(self, client, user, request):
         # Setup
-        payload, response, model = request.getfixturevalue('create_fake_facility')(no_of_customers=1)
+        payload, response, model = request.getfixturevalue('create_fake_facility')()
         existing_facility_id = model.data.id
 
         # Act and assert

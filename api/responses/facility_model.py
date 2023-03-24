@@ -19,6 +19,7 @@ class _Facility(BaseModel):
     address_line2: Optional[StrictStr]
     zip_code: str
     customers: List[StrictInt]
+    status: Optional[StrictStr]
 
 
 class _Customers(BaseModel):
