@@ -12,7 +12,7 @@ from api.responses.common_models import (AuthErrorResponse,
 from core.api_response import APIResponse
 from core.decorators import users
 from core.enums.users import User
-from tests.facility.facility_fixtures import create_fake_facility
+from tests.fixtures.facility_fixtures import create_fake_facility
 
 
 class TestFacilityCRUD:
@@ -41,7 +41,7 @@ class TestFacilityCRUD:
         payload = data.fake.model.facility(name=existing_facility_name)
         response, model = FacilityAPI(client).create_facility(data=payload)
         APIResponse(response).check_status(400)
-        assert model.error['name'] == ['facility with this name already exists.']
+        assert model.error.get('name') == ['facility with this name already exists.']
 
     @users(User.SUPERUSER)
     def test_createFacilityWithWrongTurnaroundTime_returns400AndError(self, client, user, request):
@@ -49,7 +49,7 @@ class TestFacilityCRUD:
         payload = data.fake.model.facility(turnaround_time=wrong_turnaround_time)
         response, model = FacilityAPI(client).create_facility(data=payload)
         APIResponse(response).check_status(400)
-        assert model.error['turnaround_time'] == ['"13" is not a valid choice.']
+        assert model.error.get('turnaround_time') == ['"13" is not a valid choice.']
 
     @users(User.SUPERUSER)
     def test_getAllFacilities_return200AndData(self, client, user):
@@ -79,7 +79,7 @@ class TestFacilityCRUD:
                                                               data=payload)
         APIResponse(response).check_status(200)
         assert existing_facility_id == model.data.id, 'Old ID and new ID are not matching.'
-        assert payload['name'] == model.data.name
+        assert payload.get('name') == model.data.name
 
     @users(User.SUPERUSER)
     def test_updateFacilityStatusByID_returns200AndData(self, client, user, request):
@@ -95,7 +95,7 @@ class TestFacilityCRUD:
                                                               data=payload)
         APIResponse(response).check_status(200)
         assert existing_facility_id == model.data.id, 'Old ID and new ID are not matching.'
-        assert payload['status'] == model.data.status
+        assert payload.get('status') == model.data.status
 
     @pytest.mark.skip(reason="TODO")
     @users(User.SUPERUSER)
@@ -109,7 +109,7 @@ class TestFacilityCRUD:
         existing_facility_id = model.data.id
 
         # Act and assert
-        response, model = FacilityAPI(client).delete_facility(id=existing_facility_id)
+        response, _ = FacilityAPI(client).delete_facility(id=existing_facility_id)
         APIResponse(response).check_status(204)
 
     @pytest.mark.skip(reason="TODO")

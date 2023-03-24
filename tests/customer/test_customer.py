@@ -12,30 +12,18 @@ from core.api_response import APIResponse
 from core.decorators import users
 from core.enums.users import User
 import data
-from tests.customer.customer_fixtures import create_fake_customer
+from tests.fixtures.customer_fixtures import create_fake_customer
 
 
 class TestCustomerCRUD:
 
     @users(User.SUPERUSER)
-    def test_createNewCustomer_returns201AndData_withFixture(self, client, user, request):
+    def test_createNewCustomer_returns201AndData(self, client, user, request):
         # Act and assert
         payload, response, model = request.getfixturevalue('create_fake_customer')()
         APIResponse(response).check_status(201)
-        assert payload['name'] == model.data.name
-        assert payload['barcode'] == model.data.barcode
-
-    @users(User.SUPERUSER)
-    def test_createNewCustomer_returns201AndData(self, client, user):
-        # Act and assert
-        payload = data.fake.model.customer()
-        response, model = CustomerAPI(client).create_customer(data=payload)
-        APIResponse(response).check_status(201)
-        assert payload['name'] == model.data.name
-        assert payload['barcode'] == model.data.barcode
-
-        # Cleanup
-        CustomerAPI(client).delete_customer(id=model.data.id)
+        assert payload.get('name') == model.data.name
+        assert payload.get('barcode') == model.data.barcode
 
     @pytest.mark.parametrize('existing_data, error', [
         ({'name': data.fake.name(), 'barcode': data.fake.ean13()}, {
@@ -50,11 +38,16 @@ class TestCustomerCRUD:
         }),
     ])
     @users(User.SUPERUSER)
-    def test_createCustomerWithExistingNameAndBarcode_returns400AndError(self, client, user, existing_data, error):
+    def test_createCustomerWithExistingNameAndBarcode_returns400AndError(
+            self,
+            client,
+            user,
+            existing_data,
+            error,
+            request
+    ):
         # Setup
-        payload = data.fake.model.customer(**existing_data)
-        response, model = CustomerAPI(client).create_customer(data=payload)
-        customer_id = model.data.id
+        request.getfixturevalue('create_fake_customer')(**existing_data)
 
         # Act and assert
         payload = data.fake.model.customer(**existing_data)
@@ -62,33 +55,25 @@ class TestCustomerCRUD:
         APIResponse(response).check_status(400)
         assert model.error == error
 
-        # Cleanup
-        CustomerAPI(client).delete_customer(id=customer_id)
-
     @users(User.SUPERUSER)
     def test_getAllCustomers_return200AndData(self, client, user):
         response, model = CustomerAPI(client).get_all_customers()
         APIResponse(response).check_status(200)
 
     @users(User.SUPERUSER)
-    def test_getCustomerByID_returns200AndData(self, client, user):
+    def test_getCustomerByID_returns200AndData(self, client, user, request):
         # Setup
-        payload = data.fake.model.customer()
-        response, model = CustomerAPI(client).create_customer(data=payload)
+        payload, response, model = request.getfixturevalue('create_fake_customer')()
         customer_id = model.data.id
 
         # Act and assert
         response, model = CustomerAPI(client).get_customer(id=customer_id)
         APIResponse(response).check_status(200)
 
-        # Cleanup
-        CustomerAPI(client).delete_customer(id=customer_id)
-
     @users(User.SUPERUSER)
-    def test_updateCustomerByID_returns200AndData(self, client, user):
+    def test_updateCustomerByID_returns200AndData(self, client, user, request):
         # Setup
-        payload = data.fake.model.customer()
-        response, model = CustomerAPI(client).create_customer(data=payload)
+        payload, response, model = request.getfixturevalue('create_fake_customer')()
         customer_id = model.data.id
 
         # Act and assert
@@ -96,19 +81,14 @@ class TestCustomerCRUD:
         response, model = CustomerAPI(client).update_customer(id=customer_id, data=payload)
         APIResponse(response).check_status(200)
         assert customer_id == model.data.id, 'Old ID and new ID are not matching.'
-        assert payload['name'] == model.data.name
-        assert payload['barcode'] == model.data.barcode
-
-        # Cleanup
-        CustomerAPI(client).delete_customer(id=customer_id)
+        assert payload.get('name') == model.data.name
+        assert payload.get('barcode') == model.data.barcode
 
     @users(User.SUPERUSER)
-    def test_updateCustomerByIDWithExistingNameAndBarcode_returns400AndError(self, client, user):
+    def test_updateCustomerByIDWithExistingNameAndBarcode_returns400AndError(self, client, user, request):
         # Setup
-        payload = data.fake.model.customer()
-        response, model_1 = CustomerAPI(client).create_customer(data=payload)
-        payload = data.fake.model.customer()
-        response, model_2 = CustomerAPI(client).create_customer(data=payload)
+        payload, response, model_1 = request.getfixturevalue('create_fake_customer')()
+        payload, response, model_2 = request.getfixturevalue('create_fake_customer')()
 
         # Act and assert
         payload = data.fake.model.customer(name=model_1.data.name, barcode=model_1.data.barcode)
@@ -118,10 +98,6 @@ class TestCustomerCRUD:
             'name': ['customer with this name already exists.'],
             'barcode': ['customer with this barcode already exists.']
         }
-
-        # Cleanup
-        CustomerAPI(client).delete_customer(id=model_1.data.id)
-        CustomerAPI(client).delete_customer(id=model_2.data.id)
 
     @users(User.SUPERUSER)
     def test_deleteCustomerByID_returns204(self, client, user):
@@ -139,7 +115,7 @@ class TestCustomerCRUD:
         not_existing_customer_id = data.fake.uuid4()
         response, model = CustomerAPI(client).delete_customer(id=not_existing_customer_id)
         APIResponse(response).check_status(404)
-        assert model.error['detail'] == 'Not found.'
+        assert model.error.get('detail') == 'Not found.'
 
 
 class TestCustomerAuth:

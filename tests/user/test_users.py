@@ -7,7 +7,7 @@ from api.requests.users_api import UsersAPI
 from core.api_response import APIResponse
 from core.decorators import users
 from core.enums.users import User
-from tests.users.users_fixtures import create_fake_user, create_fake_user_without_facility
+from tests.fixtures.users_fixtures import create_fake_user, create_fake_user_without_facility
 
 
 class TestUsersCRUD:
@@ -70,13 +70,13 @@ class TestUsersCRUD:
         existing_id = model.data.id
 
         # Act and assert
-        response, model = UsersAPI(client).delete_user(id=existing_id)
+        response, _ = UsersAPI(client).delete_user(id=existing_id)
         APIResponse(response).check_status(204)
 
         # Fetching removed item
         response, model = UsersAPI(client).get_user(id=existing_id)
         APIResponse(response).check_status(404)
-        assert model.error['detail'] == 'Not found.'  # TODO: error message should not be validated here.
+        assert model.error.get('detail') == 'Not found.'  # TODO: error message should not be validated here.
 
 
 class TestUsersAuth:

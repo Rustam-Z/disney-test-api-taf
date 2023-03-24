@@ -28,7 +28,7 @@ class RequestModelsFaker:
             'main_phone_number': self.fake.custom_phone_number(),
         }
 
-        data.update(kwargs)   # Update data with kwargs values
+        data.update(kwargs)  # Update data with kwargs values
         return data
 
     def facility(self, customers: List[int] = None, **kwargs) -> dict:
@@ -51,7 +51,13 @@ class RequestModelsFaker:
         data.update(kwargs)
         return data
 
-    def role(self, sections: List, permissions: dict = None, facility_id: int = None, is_driver: bool = False, **kwargs) -> dict:
+    def role(self,
+             sections: List,
+             permissions: dict = None,
+             facility_id: int = None,
+             is_driver: bool = False,
+             **kwargs
+             ) -> dict:
         """
         menu_list: the ids of menu lists to give permission. It is a menu list results model.
         permissions: section_id: [is_editable, is_viewable]
@@ -95,5 +101,12 @@ class RequestModelsFaker:
             "password": self.fake.password()
         }
 
-        data.update(kwargs)   # Update data with kwargs values
+        data.update(kwargs)
+        return data
+
+    def inventory_category(self, **kwargs) -> dict:
+        data = {
+            "name": self.fake.name()
+        }
+        data.update(kwargs)
         return data

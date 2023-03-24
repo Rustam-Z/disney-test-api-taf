@@ -10,7 +10,7 @@ from api.requests.role_api import RoleAPI
 from core.api_response import APIResponse
 from core.decorators import users
 from core.enums.users import User
-from tests.role.role_fixtures import create_fake_role
+from tests.fixtures.role_fixtures import create_fake_role
 
 
 class TestRoleCRUD:
@@ -48,7 +48,7 @@ class TestRoleCRUD:
                                                       data=payload)
         APIResponse(response).check_status(200)
         assert existing_role_id == model.data.id, 'Old ID and new ID are not matching.'
-        assert payload['name'] == model.data.name
+        assert payload.get('name') == model.data.name
 
     @users(User.SUPERUSER)
     def test_deleteRoleByID_returns204(self, client, user, request):
@@ -57,13 +57,13 @@ class TestRoleCRUD:
         existing_role_id = model.data.id
 
         # Act and assert
-        response, model = RoleAPI(client).delete_role(id=existing_role_id)
+        response, _ = RoleAPI(client).delete_role(id=existing_role_id)
         APIResponse(response).check_status(204)
 
         # Fetching removed item
         response, model = RoleAPI(client).get_role(id=existing_role_id)
         APIResponse(response).check_status(404)
-        assert model.error['detail'] == 'Not found.'  # TODO: error message should not be validated here.
+        assert model.error.get('detail') == 'Not found.'  # TODO: error message should not be validated here.
 
 
 class TestRoleAuth:
