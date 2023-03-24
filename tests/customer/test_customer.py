@@ -2,6 +2,7 @@
 Test customer CRUD.
 
 TODO: test pagination in get all customers, test creating without mandatory fields.
+TODO: add test to check status update.
 """
 import pytest
 
