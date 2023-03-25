@@ -108,5 +108,16 @@ class RequestModelsFaker:
         data = {
             "name": self.fake.name()
         }
+
+        data.update(kwargs)
+        return data
+
+    def inventory_item_type(self, category_id: int, **kwargs) -> dict:
+        data = {
+            "name": self.fake.name(),
+            "description": self.fake.text(),
+            "category": category_id
+        }
+
         data.update(kwargs)
         return data

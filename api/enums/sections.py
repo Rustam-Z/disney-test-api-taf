@@ -15,3 +15,4 @@ class Section(Enum):
     ROLES = 'roles'
     USERS = 'users'
     INVENTORY_CATEGORY = 'inventory-category'
+    INVENTORY_ITEM_TYPE = 'inventory-item-type'
