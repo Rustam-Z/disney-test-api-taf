@@ -7,7 +7,7 @@ repository = "https://github.com/Rustam-Z/disney-test-api-taf"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.11"
 pytest = "^7.2"
 pytest-xdist = "^3.2"
 pytest-rerunfailures = "^11.1"
