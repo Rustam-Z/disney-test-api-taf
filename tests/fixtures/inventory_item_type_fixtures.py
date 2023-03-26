@@ -6,7 +6,7 @@ from api.requests.inventory_category_api import InventoryCategoryAPI
 
 
 @pytest.fixture()
-def create_fake_facility(client):
+def create_fake_inventory_item_type(client):
     category_id = -1
     item_type_id = -1
 

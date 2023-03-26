@@ -121,3 +121,14 @@ class RequestModelsFaker:
 
         data.update(kwargs)
         return data
+
+    def facility_item_type(self, item_type_id: int, facility_id: int = None, **kwargs) -> dict:
+        data = {
+            "facility": facility_id,
+            "item_type": item_type_id,  # Inventory item type id
+            "name": self.fake.name(),
+            "weight": self.fake.pyint()
+        }
+
+        data.update(kwargs)
+        return data
