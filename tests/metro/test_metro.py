@@ -1,0 +1,4 @@
+class TestMetroCRUD:
+    """
+    Only web
+    """
