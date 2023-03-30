@@ -1,6 +1,7 @@
 import random
 from typing import List
 
+from api.enums.metro import MetroLaundryStatuses, MetroProcessStatuses
 from data.custom_faker import CustomFaker
 
 
@@ -128,6 +129,43 @@ class RequestModelsFaker:
             "item_type": item_type_id,  # Inventory item type id
             "name": self.fake.name(),
             "weight": self.fake.pyint()
+        }
+
+        data.update(kwargs)
+        return data
+
+    def metro(
+            self,
+            facility_id: int,
+            laundry_status: str = MetroLaundryStatuses.NONE.value,
+            process_status: str = MetroProcessStatuses.STAGED_IN_INVENTORY.value,
+            **kwargs
+    ) -> dict:
+        """
+        MetroLaundryStatuses
+            clean
+            soiled
+            none
+
+
+        MetroProcessStatuses
+            staged_in_inventory
+            ready_for_delivery
+            out_for_delivery
+            delivered
+            arrived_at_facility
+            ready_for_cart_build
+
+        NOTE! Check https://github.com/Laundris/disney-backend/blob/dev/metro/enums.py for status updates.
+
+        """
+        data = {
+            "facility": facility_id,
+            "human_readable": self.fake.name(),
+            "qr_code": self.fake.ean(),
+            "rfid_tag_id": self.fake.ean(),
+            "laundry_status": laundry_status,
+            "process_status": process_status
         }
 
         data.update(kwargs)

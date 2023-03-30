@@ -1,0 +1,4 @@
+class TestCartBuild:
+    """
+    Only mobile
+    """

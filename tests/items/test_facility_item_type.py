@@ -32,4 +32,4 @@ class TestInventoryCategoryCRUD:
         # Act and assert
         response, _ = FacilityItemTypeAPI(client).delete_item_type(id=existing_id)
         APIResponse(response).check_status(204)
-        # NOTE! In teardown stage deletion will return 4xx error, because we already deleted this ite,
+        # NOTE! In teardown stage deletion will return 4xx error, because we already deleted this item.

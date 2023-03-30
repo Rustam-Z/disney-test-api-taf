@@ -1,0 +1,4 @@
+class TestMetroDecommission:
+    """
+    Only mobile
+    """
