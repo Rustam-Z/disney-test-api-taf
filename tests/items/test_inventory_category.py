@@ -6,7 +6,7 @@ TODO:
 """
 import data
 from api.requests.inventory_category_api import InventoryCategoryAPI
-from core.api_response import APIResponse
+from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
 

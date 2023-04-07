@@ -11,7 +11,7 @@ TODO:
 import data
 from api.requests.inventory_category_api import InventoryCategoryAPI
 from api.requests.inventory_item_type_api import InventoryItemTypeAPI
-from core.api_response import APIResponse
+from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
 from tests.fixtures.inventory_item_type_fixtures import create_fake_inventory_item_type

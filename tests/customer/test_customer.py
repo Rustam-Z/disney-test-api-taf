@@ -8,7 +8,7 @@ import pytest
 
 from api.requests.customer_api import CustomerAPI
 from api.responses.common_models import AuthErrorResponse, RequestWithoutSectionParamErrorResponse
-from core.api_response import APIResponse
+from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
 import data
