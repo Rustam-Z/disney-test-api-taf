@@ -8,7 +8,7 @@ TODO:
 - Section
 """
 
-from core.api_response import APIResponse
+from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
 from api.requests.facility_item_type_api import FacilityItemTypeAPI

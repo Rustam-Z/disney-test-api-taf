@@ -46,7 +46,10 @@ class RequestModelsFaker:
             "address_line1": self.fake.address(),
             "address_line2": self.fake.address(),
             "zip_code": self.fake.zipcode(),
-            "customers": customers
+            "customers": customers,
+            "threshold": self.fake.pyint(),
+            "warning_threshold": self.fake.pyint(),
+            "critical_threshold": self.fake.pyint(),
         }
 
         data.update(kwargs)

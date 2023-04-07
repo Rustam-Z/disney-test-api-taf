@@ -15,9 +15,11 @@ class _Customer(BaseModel):
     city: constr(min_length=1, strict=True)
     state: constr(min_length=1, strict=True)
     country: constr(min_length=1, strict=True)
-    zip_code: Optional[str]
+    zip_code: Optional[StrictStr]
     status: constr(min_length=1, strict=True)
     main_phone_number: constr(min_length=1, strict=True)
+    brand: Optional[StrictStr]
+    hotel_ownership: List[StrictInt] = []
 
 
 """

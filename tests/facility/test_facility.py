@@ -9,7 +9,7 @@ from api.responses.common_models import (AuthErrorResponse,
                                          RequestWithoutSectionParamErrorResponse, \
                                          OnlySuperuserCanPerformErrorResponse,
                                          )
-from core.api_response import APIResponse
+from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
 from tests.fixtures.facility_fixtures import create_fake_facility

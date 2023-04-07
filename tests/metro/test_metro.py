@@ -1,6 +1,5 @@
 from api.requests.metro_api import MetroAPI
-from core.api_response import APIResponse
-from core.asserters import check_model_common_values
+from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
 from tests.fixtures.metro_fixtures import create_fake_metro
@@ -12,7 +11,7 @@ class TestMetroCRUD:
         # Act and assert
         payload, response, model = request.getfixturevalue('create_fake_metro')()
         APIResponse(response).check_status(201)
-        check_model_common_values(request_model=payload, response_model=model.data)
+        APIResponse(response).check_model_values(request_model=payload)
 
     @users(User.SUPERUSER)
     def test_deleteMetro_returns204(self, client, user, request):

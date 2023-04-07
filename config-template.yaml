@@ -2,24 +2,8 @@ env: dev # default env in which tests will run, available options [qa, prod, dev
 
 dev:
   hosts:
-    api: ""
-  users:
-    superuser:
-      - email: ""
-        password: ""
-    facility_admin:
-      - email: ""
-        password: ""
-    facility_driver:
-      - email: ""
-        password: ""
-    facility_user:
-      - email: ""
-        password: ""
-
-staging:
-  hosts:
-    api: ""
+    api: disney-backend-dev.azurewebsites.net
+    web: disney-laundry-dev.netlify.app
   users:
     superuser:
       - email: ""
@@ -36,7 +20,8 @@ staging:
 
 prod:
   hosts:
-    api: ""
+    api: disney-backend.azurewebsites.net
+    web: disney-laundry.netlify.app
   users:
     superuser:
       - email: ""

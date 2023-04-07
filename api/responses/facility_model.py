@@ -1,6 +1,7 @@
+import re
 from typing import List, Optional
 
-from pydantic import BaseModel, StrictInt, constr, StrictStr
+from pydantic import BaseModel, StrictInt, constr, StrictStr, validator
 
 from api.responses.response_models import SuccessResponse
 
@@ -19,7 +20,9 @@ class _Facility(BaseModel):
     address_line2: Optional[StrictStr]
     zip_code: str
     customers: List[StrictInt]
-    status: Optional[StrictStr]
+    threshold: float
+    warning_threshold: float
+    critical_threshold: float
 
 
 class _Customers(BaseModel):

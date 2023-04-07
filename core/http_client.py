@@ -3,21 +3,22 @@ from requests import Response
 
 
 class HTTPClient:
-    VALID_METHODS = ('GET', 'POST', 'PUT', 'PATCH', 'DELETE')
+    _VALID_HTTP_METHODS = ('GET', 'POST', 'PUT', 'PATCH', 'DELETE')
+    _DEFAULT_HTTP_HEADERS = {
+        'Content-Type': 'application/json',
+        'accept': '*/*',
+    }
 
     def __init__(self, base_url: str):
         self.base_url = base_url
         self.session = requests.Session()
 
         # Set up initial headers.
-        headers = {
-            'Content-Type': 'application/json',
-        }
         self.remove_all_headers()
-        self.update_headers(headers)
+        self.update_headers(self._DEFAULT_HTTP_HEADERS)
 
     def send_request(self, method: str, path: str, **kwargs) -> Response:
-        if method not in self.VALID_METHODS:
+        if method not in self._VALID_HTTP_METHODS:
             raise ValueError(f'Invalid HTTP method "{method}"')
 
         url = self.build_url(self.base_url, path)
@@ -45,26 +46,55 @@ class HTTPClient:
         return response
 
     def update_headers(self, headers: dict) -> None:
-        # Needed for authentication purposes
+        """Updates HTTP request headers.
+
+        Args:
+            headers: Dictionary, headers and values.
+
+        Returns:
+            None
+        """
         self.session.headers.update(headers)
 
     def remove_headers(self, *headers) -> None:
+        """Removes HTTP headers. Just pass headers name as arguments which calling this method.
+
+        Example usage:
+            self.remove_headers('Authorization', 'website')
+
+        Args:
+            *headers: Headers names as positional argument.
+
+        Returns:
+            None
+        """
         for header in headers:
-            try:
-                del self.session.headers[header]
-            except KeyError:
-                print(f'{header}: header does\'s exist.')  # Only for debugging purposes.
+            self.session.headers.pop(header, None)
 
     def remove_all_headers(self) -> None:
+        """Removes all HTTP headers from request.
+
+        Returns:
+            None
+        """
         self.session.headers = {}
 
     @staticmethod
-    def build_url(base_url: str, path: str) -> str:
+    def build_url(base_url: str, path: str, protocol: str = 'https') -> str:
+        """Build the full URL, handling trailing/leading slashes and allowing specification of the protocol.
+
+        Args:
+            base_url: The API host URL, and any other info like API version. Example: test.com/api/v1
+            path: The path to resource. Example: /path/1/version/2
+            protocol: Data transfer protocols HTTPS, HTTP, FTP, TCP, etc.
+
+        Returns:
+
         """
-        Should build the full path, handle / (slash).
-        The path should end with /.
-        """
-        base_url = base_url[:-1] if base_url.endswith('/') else base_url
-        path = '/' + path if not path.startswith('/') else path
-        path += '/' if not path.endswith('/') else ''
-        return base_url + path
+        if base_url.endswith('/'):
+            base_url = base_url[:-1]  # Remove trailing slash.
+        if not path.startswith('/'):
+            path = '/' + path  # Add leading slash.
+        if not path.endswith('/'):
+            path = path + '/'
+        return f"{protocol}://{base_url}{path}"
