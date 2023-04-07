@@ -19,17 +19,17 @@ class TestFacilityCRUD:
     @users(User.SUPERUSER)
     def test_createNewFacility_returns201AndData(self, client, user, request):
         payload, response, model = request.getfixturevalue('create_fake_facility')(no_of_customers=1)
-        APIResponse(response).check_status(201)
+        APIResponse(response).assert_status(201)
 
     @users(User.SUPERUSER)
     def test_createNewFacilityWithNoCustomers_returns201AndError(self, client, user, request):
         payload, response, model = request.getfixturevalue('create_fake_facility')(no_of_customers=0)
-        APIResponse(response).check_status(201)
+        APIResponse(response).assert_status(201)
 
     @users(User.SUPERUSER)
     def test_createNewFacilityWithMultipleCustomers_returns201AndData(self, client, user, request):
         payload, response, model = request.getfixturevalue('create_fake_facility')(no_of_customers=2)
-        APIResponse(response).check_status(201)
+        APIResponse(response).assert_status(201)
 
     @users(User.SUPERUSER)
     def test_createFacilityWithExistingName_returns400AndError(self, client, user, request):
@@ -40,7 +40,7 @@ class TestFacilityCRUD:
         # Act and assert
         payload = data.fake.model.facility(name=existing_facility_name)
         response, model = FacilityAPI(client).create_facility(data=payload)
-        APIResponse(response).check_status(400)
+        APIResponse(response).assert_status(400)
         assert model.error.get('name') == ['facility with this name already exists.']
 
     @users(User.SUPERUSER)
@@ -48,13 +48,13 @@ class TestFacilityCRUD:
         wrong_turnaround_time = 13
         payload = data.fake.model.facility(turnaround_time=wrong_turnaround_time)
         response, model = FacilityAPI(client).create_facility(data=payload)
-        APIResponse(response).check_status(400)
+        APIResponse(response).assert_status(400)
         assert model.error.get('turnaround_time') == ['"13" is not a valid choice.']
 
     @users(User.SUPERUSER)
     def test_getAllFacilities_return200AndData(self, client, user):
         response, model = FacilityAPI(client).get_all_facilities()
-        APIResponse(response).check_status(200)
+        APIResponse(response).assert_status(200)
 
     @users(User.SUPERUSER)
     def test_getFacilityByID_returns200AndData(self, client, user, request):
@@ -64,7 +64,7 @@ class TestFacilityCRUD:
 
         # Act and assert
         response, model = FacilityAPI(client).get_facility(id=existing_facility_id)
-        APIResponse(response).check_status(200)
+        APIResponse(response).assert_status(200)
         assert model.data.id == existing_facility_id, 'IDs are not matching.'
 
     @users(User.SUPERUSER)
@@ -77,7 +77,7 @@ class TestFacilityCRUD:
         payload = data.fake.model.facility()
         response, model = FacilityAPI(client).update_facility(id=existing_facility_id,
                                                               data=payload)
-        APIResponse(response).check_status(200)
+        APIResponse(response).assert_status(200)
         assert existing_facility_id == model.data.id, 'Old ID and new ID are not matching.'
         assert payload.get('name') == model.data.name
 
@@ -93,7 +93,7 @@ class TestFacilityCRUD:
         }
         response, model = FacilityAPI(client).update_facility(id=existing_facility_id,
                                                               data=payload)
-        APIResponse(response).check_status(200)
+        APIResponse(response).assert_status(200)
         assert existing_facility_id == model.data.id, 'Old ID and new ID are not matching.'
         assert payload.get('status') == model.data.status
 
@@ -110,7 +110,7 @@ class TestFacilityCRUD:
 
         # Act and assert
         response, _ = FacilityAPI(client).delete_facility(id=existing_facility_id)
-        APIResponse(response).check_status(204)
+        APIResponse(response).assert_status(204)
 
     @pytest.mark.skip(reason="TODO")
     @users(User.SUPERUSER)
@@ -123,7 +123,7 @@ class TestFacilityAuth:
     def test_unauthCRUDRequest_returns400AndError(self, client, user):
         payload = data.fake.model.facility()
         response, model = FacilityAPI(client).create_facility(data=payload)
-        APIResponse(response).check_status(400)
+        APIResponse(response).assert_status(400)
         AuthErrorResponse(**response.json())
 
     @pytest.mark.skip(reason="User should be created with no view permission automatically")
@@ -141,18 +141,18 @@ class TestFacilityWithoutSectionParam:
     @users(User.SUPERUSER, User.FACILITY_ADMIN)
     def test_GET_ALL_returns400AndError(self, client, user):
         response, model = FacilityAPI(client).send_request_without_section_param('GET', is_error=False)
-        APIResponse(response).check_status(200)
+        APIResponse(response).assert_status(200)
 
     @users(User.SUPERUSER)
     def test_POST_returns400AndError(self, client, user):
         response, model = FacilityAPI(client).send_request_without_section_param('POST')
-        APIResponse(response).check_status(400)
+        APIResponse(response).assert_status(400)
         RequestWithoutSectionParamErrorResponse(**response.json())
 
     @users(User.FACILITY_ADMIN)
     def test_POST_withFacilityAdmin_returns400AndError(self, client, user):
         response, model = FacilityAPI(client).send_request_without_section_param('POST')
-        APIResponse(response).check_status(400)
+        APIResponse(response).assert_status(400)
         OnlySuperuserCanPerformErrorResponse(**response.json())
 
     @pytest.mark.parametrize('method', ['GET', 'PATCH', 'DELETE'])
@@ -160,7 +160,7 @@ class TestFacilityWithoutSectionParam:
     def test_GET_PATCH_DELETE_returns400AndError(self, client, user, method):
         not_existing_id = data.fake.uuid4()
         response, model = FacilityAPI(client).send_request_without_section_param(method, id=not_existing_id)
-        APIResponse(response).check_status(400)
+        APIResponse(response).assert_status(400)
         RequestWithoutSectionParamErrorResponse(**response.json())
 
     @pytest.mark.parametrize('method', ['PATCH', 'DELETE'])
@@ -168,5 +168,5 @@ class TestFacilityWithoutSectionParam:
     def test_GET_PATCH_DELETE_withFacilityAdmin_returns400AndError(self, client, user, method):
         not_existing_id = data.fake.uuid4()
         response, model = FacilityAPI(client).send_request_without_section_param(method, id=not_existing_id)
-        APIResponse(response).check_status(400)
+        APIResponse(response).assert_status(400)
         OnlySuperuserCanPerformErrorResponse(**response.json())

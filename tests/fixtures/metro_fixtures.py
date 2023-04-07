@@ -30,5 +30,8 @@ def create_fake_metro(client):
     yield _fixture
 
     # Cleanup
-    MetroAPI(client).delete_metro(id=metro_id)
-    FacilityAPI(client).delete_facility(id=facility_id)
+    try:
+        MetroAPI(client).delete_metro(id=metro_id, expect_json=False)
+        FacilityAPI(client).delete_facility(id=facility_id, expect_json=False)
+    except Exception as e:
+        print(f"Error: {e}")

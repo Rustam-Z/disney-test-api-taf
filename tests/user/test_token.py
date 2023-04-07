@@ -31,7 +31,7 @@ class TestLogin:
         response, model = TokenAPI(client).login(email=email, password=password)
 
         # Assert
-        APIResponse(response).check_status(200)
+        APIResponse(response).assert_status(200)
 
         if user_type == User.SUPERUSER:
             assert model.data.is_superuser is True, '`is_superuser` should be True for superuser.'
@@ -61,7 +61,7 @@ class TestLogin:
         response, model = TokenAPI(client).login(email=email, password=password)
 
         # Assert
-        APIResponse(response).check_status(401)
+        APIResponse(response).assert_status(401)
 
     @pytest.mark.parametrize('email, password', [
         (data.fake.email(), data.fake.password()),
@@ -70,7 +70,7 @@ class TestLogin:
     @users(User.NONE)
     def test_loginUser_withWrongEmailAndWrongPassword_returns401AndError(self, client, user, email, password):
         response, model = TokenAPI(client).login(email=email, password=password)
-        APIResponse(response).check_status(401)
+        APIResponse(response).assert_status(401)
         assert model.error.get('detail') == ErrorDetail.WRONG_CREDENTIALS.value
 
     @pytest.mark.parametrize('email, password, error', [
@@ -82,7 +82,7 @@ class TestLogin:
     @users(User.NONE)
     def test_loginUser_withEmptyFields_returns400AndError(self, client, user, email, password, error):
         response, model = TokenAPI(client).login(email=email, password=password)
-        APIResponse(response).check_status(400)
+        APIResponse(response).assert_status(400)
         assert model.error == error
 
 
@@ -102,7 +102,7 @@ class TestRefreshToken:
         new_refresh_jwt_data = decode_jwt(model.data.refresh)
 
         # Assert
-        APIResponse(response).check_status(200)
+        APIResponse(response).assert_status(200)
         assert old_refresh_jwt_data.get('user_id') == \
                new_access_jwt_data.get('user_id') == \
                new_refresh_jwt_data.get('user_id')
@@ -116,5 +116,5 @@ class TestRefreshToken:
         response, model = TokenAPI(client).refresh_token(refresh=refresh_token)
 
         # Assert
-        APIResponse(response).check_status(401)
+        APIResponse(response).assert_status(401)
         assert model.error.get('detail') == 'Token is invalid or expired'  # TODO: message should end with dot.

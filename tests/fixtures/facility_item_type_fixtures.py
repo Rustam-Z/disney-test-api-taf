@@ -50,7 +50,10 @@ def create_fake_facility_item_type(client):
     yield _fixture
 
     # Cleanup
-    a, b = FacilityItemTypeAPI(client).delete_item_type(id=facility_item_type_id)
-    InventoryItemTypeAPI(client).delete_item_type(id=inventory_item_type_id)
-    InventoryCategoryAPI(client).delete_category(id=category_id)
-    FacilityAPI(client).delete_facility(id=facility_id)
+    try:
+        FacilityItemTypeAPI(client).delete_item_type(id=facility_item_type_id, expect_json=False)
+        InventoryItemTypeAPI(client).delete_item_type(id=inventory_item_type_id, expect_json=False)
+        InventoryCategoryAPI(client).delete_category(id=category_id, expect_json=False)
+        FacilityAPI(client).delete_facility(id=facility_id, expect_json=False)
+    except Exception as e:
+        print(f"Error: {e}")

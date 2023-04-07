@@ -10,8 +10,8 @@ class TestMetroCRUD:
     def test_createNewMetro_returns201AndData(self, client, user, request):
         # Act and assert
         payload, response, model = request.getfixturevalue('create_fake_metro')()
-        APIResponse(response).check_status(201)
-        APIResponse(response).check_model_values(request_model=payload)
+        APIResponse(response).assert_status(201)
+        APIResponse(response).assert_body(payload)
 
     @users(User.SUPERUSER)
     def test_deleteMetro_returns204(self, client, user, request):
@@ -21,5 +21,5 @@ class TestMetroCRUD:
 
         # Act and assert
         response, _ = MetroAPI(client).delete_metro(id=existing_id)
-        APIResponse(response).check_status(204)
+        APIResponse(response).assert_status(204)
         # NOTE! In teardown stage deletion will return 4xx error, because we already deleted this item.

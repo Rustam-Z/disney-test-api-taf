@@ -1,3 +1,5 @@
+from json import JSONDecodeError
+
 from core.enums.assertion_message import AssertionMessage
 
 
@@ -6,12 +8,29 @@ class APIResponse:
         self._response = response
 
     def body(self):
+        return self._response.text
+
+    def json_body(self):
         return self._response.json()
 
-    def check_status(self, status_code: int):
+    def assert_body_is_json(self):
+        try:
+            self.json_body()
+        except JSONDecodeError:
+            raise ValueError(f'Response body is not a JSON object.')
+        except Exception as e:
+            raise ValueError(f"Error: {e}")
+
+    def assert_status(self, status_code: int):
         assert self._response.status_code == status_code, AssertionMessage.WRONG_STATUS_CODE.value
 
-    def check_model_values(self, request_model: dict):
-        response_model = self._response.json()
-        common_keys = set(request_model.keys()) & set(response_model.keys())  # Response may include entity `id`
-        return all(request_model[key] == response_model[key] for key in common_keys)
+    def assert_body(self, request_body: dict | str):
+        try:
+            response_model = self.json_body()
+            common_keys = set(request_body.keys()) & set(response_model.keys())  # Only asserting common keys.
+            assert all(request_body.get(key) == response_model.get(key) for key in common_keys)
+        except JSONDecodeError:
+            response_text = self.body()
+            assert response_text == request_body
+        except Exception as e:
+            raise ValueError(f"Error: {e}")
