@@ -22,4 +22,7 @@ def create_fake_customer(client):
     yield _fixture
 
     # Cleanup
-    CustomerAPI(client).delete_customer(id=customer_id)
+    try:
+        CustomerAPI(client).delete_customer(id=customer_id, should_return_json=False)
+    except Exception as e:
+        print(f"Error: {e}")

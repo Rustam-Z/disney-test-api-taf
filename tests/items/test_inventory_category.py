@@ -24,7 +24,10 @@ class TestInventoryCategoryCRUD:
         assert model.data.name == payload.get('name')
 
         # Cleanup
-        InventoryCategoryAPI(client).delete_category(id=id_)
+        try:
+            InventoryCategoryAPI(client).delete_category(id=id_, should_return_json=False)
+        except Exception as e:
+            print(f"Error: {e}")
 
     @users(User.SUPERUSER)
     def test_superUserDeletesCategory_returns204(self, client, user):

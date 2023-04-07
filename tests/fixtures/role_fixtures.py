@@ -26,4 +26,7 @@ def create_fake_role(client):
     yield _fixture
 
     # Cleanup
-    RoleAPI(client).delete_role(id=role_id)
+    try:
+        RoleAPI(client).delete_role(id=role_id, should_return_json=False)
+    except Exception as e:
+        print(f"Error: {e}")

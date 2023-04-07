@@ -21,7 +21,7 @@ class UsersAPI:
             Param.SECTION.value: Section.USERS.value
         }
 
-    def get_all_users(self, params: dict = None) -> tuple:
+    def get_all_users(self, params: dict = None, **kwargs) -> tuple:
         """
         NOTE!
         params = {
@@ -37,7 +37,7 @@ class UsersAPI:
         params.update(self.params)  # Create query string params dict.
 
         path = self.USERS
-        response = self.client.get(path, params=params)
+        response = self.client.get(path, params=params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = GetAllUsersSuccessResponse(**response.json())
@@ -46,9 +46,9 @@ class UsersAPI:
 
         return response, model
 
-    def get_user(self, id: int) -> tuple:
+    def get_user(self, id: int, **kwargs) -> tuple:
         path = f'{self.USERS}{id}'
-        response = self.client.get(path, params=self.params)
+        response = self.client.get(path, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = GetUserSuccessResponse(**response.json())
@@ -57,9 +57,9 @@ class UsersAPI:
 
         return response, model
 
-    def create_user(self, data: dict) -> tuple:
+    def create_user(self, data: dict, **kwargs) -> tuple:
         path = self.USERS
-        response = self.client.post(path, data=data, params=self.params)
+        response = self.client.post(path, data=data, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = CreateUserSuccessResponse(**response.json())
@@ -68,9 +68,9 @@ class UsersAPI:
 
         return response, model
 
-    def update_user(self, id: int, data: dict) -> tuple:
+    def update_user(self, id: int, data: dict, **kwargs) -> tuple:
         path = f'{self.USERS}{id}'
-        response = self.client.patch(path, data=data, params=self.params)
+        response = self.client.patch(path, data=data, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = UpdateUserSuccessResponse(**response.json())
@@ -79,9 +79,9 @@ class UsersAPI:
 
         return response, model
 
-    def delete_user(self, id: int) -> tuple:
+    def delete_user(self, id: int, **kwargs) -> tuple:
         path = f'{self.USERS}{id}'
-        response = self.client.delete(path, params=self.params)
+        response = self.client.delete(path, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = None
@@ -90,9 +90,9 @@ class UsersAPI:
 
         return response, model
 
-    def update_user_password(self, id: int, data: dict) -> tuple:
+    def update_user_password(self, id: int, data: dict, **kwargs) -> tuple:
         path = self.UPDATE_USER_PASSWORD.substitute(user_id=id)
-        response = self.client.post(path, data=data, params=self.params)
+        response = self.client.post(path, data=data, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = response.json()

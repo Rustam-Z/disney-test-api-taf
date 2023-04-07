@@ -30,6 +30,9 @@ def create_fake_facility(client):
     yield _fixture
 
     # Cleanup, delete facility and customer
-    FacilityAPI(client).delete_facility(id=facility_id)
-    for customer_id in customers:
-        CustomerAPI(client).delete_customer(id=customer_id)
+    try:
+        FacilityAPI(client).delete_facility(id=facility_id, should_return_json=False)
+        for customer_id in customers:
+            CustomerAPI(client).delete_customer(id=customer_id, should_return_json=False)
+    except Exception as e:
+        print(f"Error: {e}")

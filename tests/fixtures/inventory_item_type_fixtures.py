@@ -30,5 +30,8 @@ def create_fake_inventory_item_type(client):
     yield _fixture
 
     # Cleanup
-    InventoryItemTypeAPI(client).delete_item_type(id=item_type_id)
-    InventoryCategoryAPI(client).delete_category(id=category_id)
+    try:
+        InventoryItemTypeAPI(client).delete_item_type(id=item_type_id, should_return_json=False)
+        InventoryCategoryAPI(client).delete_category(id=category_id, should_return_json=False)
+    except Exception as e:
+        print(f"Error: {e}")

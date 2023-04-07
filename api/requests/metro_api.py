@@ -18,9 +18,9 @@ class MetroAPI:
             Param.SECTION.value: Section.METRO.value
         }
 
-    def get_all_metros(self) -> tuple:
+    def get_all_metros(self, **kwargs) -> tuple:
         path = self.METRO
-        response = self.client.get(path, params=self.params)
+        response = self.client.get(path, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = GetAllMetrosSuccessResponse(**response.json())
@@ -29,9 +29,9 @@ class MetroAPI:
 
         return response, model
 
-    def get_metro(self, id: int) -> tuple:
+    def get_metro(self, id: int, **kwargs) -> tuple:
         path = f'{self.METRO}{id}'
-        response = self.client.get(path, params=self.params)
+        response = self.client.get(path, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = GetMetroSuccessResponse(**response.json())
@@ -40,9 +40,9 @@ class MetroAPI:
 
         return response, model
 
-    def create_metro(self, data: dict) -> tuple:
+    def create_metro(self, data: dict, **kwargs) -> tuple:
         path = self.METRO
-        response = self.client.post(path, data=data, params=self.params)
+        response = self.client.post(path, data=data, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = CreateMetroSuccessResponse(**response.json())
@@ -51,9 +51,9 @@ class MetroAPI:
 
         return response, model
 
-    def update_metro(self, id: int, data: dict) -> tuple:
+    def update_metro(self, id: int, data: dict, **kwargs) -> tuple:
         path = f'{self.METRO}{id}'
-        response = self.client.patch(path, data=data, params=self.params)
+        response = self.client.patch(path, data=data, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = UpdateMetroSuccessResponse(**response.json())
@@ -62,9 +62,9 @@ class MetroAPI:
 
         return response, model
 
-    def delete_metro(self, id: int) -> tuple:
+    def delete_metro(self, id: int, **kwargs) -> tuple:
         path = f'{self.METRO}{id}'
-        response = self.client.delete(path, params=self.params)
+        response = self.client.delete(path, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = None

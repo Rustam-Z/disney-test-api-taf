@@ -57,13 +57,13 @@ def create_fake_user(client):
     yield _fixture
 
     # Cleanup
-    FacilityAPI(client).delete_facility(id=facility_id)
-
-    CustomerAPI(client).delete_customer(id=customer_id)
-
-    RoleAPI(client).delete_role(id=role_id)
-
-    UsersAPI(client).delete_user(id=user_id)
+    try:
+        FacilityAPI(client).delete_facility(id=facility_id)
+        CustomerAPI(client).delete_customer(id=customer_id)
+        RoleAPI(client).delete_role(id=role_id)
+        UsersAPI(client).delete_user(id=user_id)
+    except Exception as e:
+        print(f"Error: {e}")
 
 
 @pytest.fixture()
@@ -94,6 +94,8 @@ def create_fake_user_without_facility(client):
     yield _fixture
 
     # Cleanup
-    RoleAPI(client).delete_role(id=role_id)
-
-    UsersAPI(client).delete_user(id=user_id)
+    try:
+        RoleAPI(client).delete_role(id=role_id, should_return_json=False)
+        UsersAPI(client).delete_user(id=user_id, should_return_json=False)
+    except Exception as e:
+        print(f"Error: {e}")

@@ -14,9 +14,9 @@ class InventoryCategoryAPI:
             Param.SECTION.value: Section.INVENTORY_CATEGORY.value
         }
 
-    def create_category(self, data: dict) -> tuple:
+    def create_category(self, data: dict, **kwargs) -> tuple:
         path = self.INVENTORY_CATEGORY
-        response = self.client.post(path, data=data, params=self.params)
+        response = self.client.post(path, data=data, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = CreateInventoryCategorySuccessResponse(**response.json())
@@ -25,9 +25,9 @@ class InventoryCategoryAPI:
 
         return response, model
 
-    def delete_category(self, id: int) -> tuple:
+    def delete_category(self, id: int, **kwargs) -> tuple:
         path = f'{self.INVENTORY_CATEGORY}{id}'
-        response = self.client.delete(path, params=self.params)
+        response = self.client.delete(path, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = None

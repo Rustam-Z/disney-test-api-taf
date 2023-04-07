@@ -17,9 +17,9 @@ class CustomerAPI:
             Param.SECTION.value: Section.CUSTOMERS.value
         }
 
-    def get_all_customers(self) -> tuple:
+    def get_all_customers(self, **kwargs) -> tuple:
         path = self.CUSTOMER
-        response = self.client.get(path, params=self.params)
+        response = self.client.get(path, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = GetAllCustomersSuccessResponse(**response.json())
@@ -28,9 +28,9 @@ class CustomerAPI:
 
         return response, model
 
-    def get_customer(self, id: int) -> tuple:
+    def get_customer(self, id: int, **kwargs) -> tuple:
         path = f'{self.CUSTOMER}{id}'
-        response = self.client.get(path, params=self.params)
+        response = self.client.get(path, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = GetCustomerSuccessResponse(**response.json())
@@ -39,9 +39,9 @@ class CustomerAPI:
 
         return response, model
 
-    def create_customer(self, data: dict) -> tuple:
+    def create_customer(self, data: dict, **kwargs) -> tuple:
         path = self.CUSTOMER
-        response = self.client.post(path, data=data, params=self.params)
+        response = self.client.post(path, data=data, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = CreateCustomerSuccessResponse(**response.json())
@@ -50,9 +50,9 @@ class CustomerAPI:
 
         return response, model
 
-    def update_customer(self, id: int, data: dict) -> tuple:
+    def update_customer(self, id: int, data: dict, **kwargs) -> tuple:
         path = f'{self.CUSTOMER}{id}'
-        response = self.client.patch(path, data=data, params=self.params)
+        response = self.client.patch(path, data=data, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = UpdateCustomerSuccessResponse(**response.json())
@@ -61,9 +61,9 @@ class CustomerAPI:
 
         return response, model
 
-    def delete_customer(self, id: int) -> tuple:
+    def delete_customer(self, id: int, **kwargs) -> tuple:
         path = f'{self.CUSTOMER}{id}'
-        response = self.client.delete(path, params=self.params)
+        response = self.client.delete(path, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = None  # Success response doesn't have body

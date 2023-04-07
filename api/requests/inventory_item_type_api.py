@@ -14,9 +14,9 @@ class InventoryItemTypeAPI:
             Param.SECTION.value: Section.INVENTORY_ITEM_TYPE.value
         }
 
-    def create_item_type(self, data: dict) -> tuple:
+    def create_item_type(self, data: dict, **kwargs) -> tuple:
         path = self.INVENTORY_ITEM_TYPE
-        response = self.client.post(path, data=data, params=self.params)
+        response = self.client.post(path, data=data, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = CreateInventoryItemTypeSuccessResponse(**response.json())
@@ -25,9 +25,9 @@ class InventoryItemTypeAPI:
 
         return response, model
 
-    def delete_item_type(self, id: int) -> tuple:
+    def delete_item_type(self, id: int, **kwargs) -> tuple:
         path = f'{self.INVENTORY_ITEM_TYPE}{id}'
-        response = self.client.delete(path, params=self.params)
+        response = self.client.delete(path, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = None
