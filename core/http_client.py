@@ -1,6 +1,8 @@
 import requests
 from requests import Response
 
+from core.asserters import APIResponse
+
 
 class HTTPClient:
     _VALID_HTTP_METHODS = ('GET', 'POST', 'PUT', 'PATCH', 'DELETE')
@@ -17,32 +19,93 @@ class HTTPClient:
         self.remove_all_headers()
         self.update_headers(self._DEFAULT_HTTP_HEADERS)
 
-    def send_request(self, method: str, path: str, **kwargs) -> Response:
+    def send_request(
+        self,
+        method: str,
+        path: str,
+        *,
+        should_return_json: bool = True,
+        **kwargs
+    ) -> Response:
         if method not in self._VALID_HTTP_METHODS:
             raise ValueError(f'Invalid HTTP method "{method}"')
 
         url = self.build_url(self.base_url, path)
         response = self.session.request(method, url, **kwargs)
+
+        if should_return_json:
+            APIResponse(response).assert_body_is_json()
+
         return response
 
-    def get(self, path: str, params: dict = None, headers: dict = None) -> Response:
+    def get(
+        self,
+        path: str,
+        params: dict = None,
+        headers: dict = None,
+        *,
+        should_return_json: bool = True,
+        **kwargs
+    ) -> Response:
         url = self.build_url(self.base_url, path)
-        response = self.session.get(url, params=params, headers=headers)
+        response = self.session.get(url, params=params, headers=headers, **kwargs)
+
+        if should_return_json:
+            APIResponse(response).assert_body_is_json()
+
         return response
 
-    def post(self, path: str, data: dict = None, params: dict = None, headers: dict = None) -> Response:
+    def post(
+        self,
+        path: str,
+        data: dict = None,
+        params: dict = None,
+        headers: dict = None,
+        *,
+        should_return_json: bool = True,
+        **kwargs
+    ) -> Response:
         url = self.build_url(self.base_url, path)
-        response = self.session.post(url, json=data, params=params, headers=headers)
+        response = self.session.post(url, json=data, params=params, headers=headers, **kwargs)
+
+        if should_return_json:
+            APIResponse(response).assert_body_is_json()
+
         return response
 
-    def patch(self, path: str, data: dict = None, params: dict = None, headers: dict = None) -> Response:
+    def patch(
+        self,
+        path: str,
+        data: dict = None,
+        params: dict = None,
+        headers: dict = None,
+        *,
+        should_return_json: bool = True,
+        **kwargs
+    ) -> Response:
         url = self.build_url(self.base_url, path)
-        response = self.session.patch(url, json=data, params=params, headers=headers)
+        response = self.session.patch(url, json=data, params=params, headers=headers, **kwargs)
+
+        if should_return_json:
+            APIResponse(response).assert_body_is_json()
+
         return response
 
-    def delete(self, path: str, params: dict = None, headers: dict = None) -> Response:
+    def delete(
+        self,
+        path: str,
+        params: dict = None,
+        headers: dict = None,
+        *,
+        should_return_json: bool = True,
+        **kwargs
+    ) -> Response:
         url = self.build_url(self.base_url, path)
-        response = self.session.delete(url, params=params, headers=headers)
+        response = self.session.delete(url, params=params, headers=headers, **kwargs)
+
+        if should_return_json:
+            APIResponse(response).assert_body_is_json()
+
         return response
 
     def update_headers(self, headers: dict) -> None:

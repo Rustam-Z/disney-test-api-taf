@@ -22,7 +22,7 @@ class TestInventoryCategoryCRUD:
     def test_superUserCreatesItemType_returns201AndData(self, client, user, request):
         # Setup
         payload, response, model = request.getfixturevalue('create_fake_inventory_item_type')()
-        APIResponse(response).check_status(201)
+        APIResponse(response).assert_status(201)
         assert model.data.name == payload.get('name')
 
     @users(User.SUPERUSER)
@@ -38,7 +38,7 @@ class TestInventoryCategoryCRUD:
 
         # Act and assert
         response, _ = InventoryItemTypeAPI(client).delete_item_type(id=item_type_id)
-        APIResponse(response).check_status(204)
+        APIResponse(response).assert_status(204)
 
         # Cleanup
         InventoryCategoryAPI(client).delete_category(id=category_id)

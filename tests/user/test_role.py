@@ -17,12 +17,12 @@ class TestRoleCRUD:
     @users(User.SUPERUSER, User.FACILITY_ADMIN)
     def test_createNewRole_returns201AndData(self, client, user, request):
         payload, response, model = request.getfixturevalue('create_fake_role')()
-        APIResponse(response).check_status(201)
+        APIResponse(response).assert_status(201)
 
     @users(User.SUPERUSER)
     def test_getAllRoles_return200AndData(self, client, user):
         response, model = RoleAPI(client).get_all_roles()
-        APIResponse(response).check_status(200)
+        APIResponse(response).assert_status(200)
 
     @users(User.SUPERUSER)
     def test_getRoleByID_returns200AndData(self, client, user, request):
@@ -32,7 +32,7 @@ class TestRoleCRUD:
 
         # Act and assert
         response, model = RoleAPI(client).get_role(id=existing_role_id)
-        APIResponse(response).check_status(200)
+        APIResponse(response).assert_status(200)
         assert model.data.id == existing_role_id, 'IDs are not matching.'
 
     @users(User.SUPERUSER)
@@ -46,7 +46,7 @@ class TestRoleCRUD:
         payload = data.fake.model.role(sections=menu_list_model.data.results)
         response, model = RoleAPI(client).update_role(id=existing_role_id,
                                                       data=payload)
-        APIResponse(response).check_status(200)
+        APIResponse(response).assert_status(200)
         assert existing_role_id == model.data.id, 'Old ID and new ID are not matching.'
         assert payload.get('name') == model.data.name
 
@@ -58,11 +58,11 @@ class TestRoleCRUD:
 
         # Act and assert
         response, _ = RoleAPI(client).delete_role(id=existing_role_id)
-        APIResponse(response).check_status(204)
+        APIResponse(response).assert_status(204)
 
         # Fetching removed item
         response, model = RoleAPI(client).get_role(id=existing_role_id)
-        APIResponse(response).check_status(404)
+        APIResponse(response).assert_status(404)
         assert model.error.get('detail') == 'Not found.'  # TODO: error message should not be validated here.
 
 

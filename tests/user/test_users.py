@@ -14,22 +14,22 @@ class TestUsersCRUD:
     @users(User.SUPERUSER)
     def test_superuserCreatesUser_returns201AndData(self, client, user, request):
         payload, response, model = request.getfixturevalue('create_fake_user')()
-        APIResponse(response).check_status(201)
+        APIResponse(response).assert_status(201)
 
     @users(User.FACILITY_ADMIN)
     def test_adminCreatesUser_returns201AndData(self, client, user, request):
         payload, response, model = request.getfixturevalue('create_fake_user_without_facility')()
-        APIResponse(response).check_status(201)
+        APIResponse(response).assert_status(201)
 
     @users(User.SUPERUSER)
     def test_superuserGetsAllUsers_return200AndData(self, client, user):
         response, model = UsersAPI(client).get_all_users()
-        APIResponse(response).check_status(200)
+        APIResponse(response).assert_status(200)
 
     @users(User.FACILITY_ADMIN)
     def test_adminGetsAllUsers_return200AndData(self, client, user):
         response, model = UsersAPI(client).get_all_users()
-        APIResponse(response).check_status(200)
+        APIResponse(response).assert_status(200)
         # TODO: verify that the users belong to the same facility
 
     @users(User.SUPERUSER)
@@ -40,7 +40,7 @@ class TestUsersCRUD:
 
         # Act and assert
         response, model = UsersAPI(client).get_user(id=existing_id)
-        APIResponse(response).check_status(200)
+        APIResponse(response).assert_status(200)
         assert model.data.id == existing_id, 'IDs are not matching.'
 
     @users(User.FACILITY_ADMIN)
@@ -51,7 +51,7 @@ class TestUsersCRUD:
 
         # Act and assert
         response, model = UsersAPI(client).get_user(id=existing_id)
-        APIResponse(response).check_status(200)
+        APIResponse(response).assert_status(200)
         assert model.data.id == existing_id, 'IDs are not matching.'
 
     @pytest.mark.skip(reason='TODO')
@@ -71,11 +71,11 @@ class TestUsersCRUD:
 
         # Act and assert
         response, _ = UsersAPI(client).delete_user(id=existing_id)
-        APIResponse(response).check_status(204)
+        APIResponse(response).assert_status(204)
 
         # Fetching removed item
         response, model = UsersAPI(client).get_user(id=existing_id)
-        APIResponse(response).check_status(404)
+        APIResponse(response).assert_status(404)
         assert model.error.get('detail') == 'Not found.'  # TODO: error message should not be validated here.
 
 

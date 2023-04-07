@@ -20,7 +20,7 @@ class TestInventoryCategoryCRUD:
         # Act and assert
         response, model = InventoryCategoryAPI(client).create_category(data=payload)
         id_ = model.data.id
-        APIResponse(response).check_status(201)
+        APIResponse(response).assert_status(201)
         assert model.data.name == payload.get('name')
 
         # Cleanup
@@ -35,4 +35,4 @@ class TestInventoryCategoryCRUD:
 
         # Act and assert
         response, _ = InventoryCategoryAPI(client).delete_category(id=id_)
-        APIResponse(response).check_status(204)
+        APIResponse(response).assert_status(204)

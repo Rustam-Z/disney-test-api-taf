@@ -13,7 +13,7 @@ class TestMenu:
     @users(User.SUPERUSER, User.FACILITY_ADMIN)
     def test_getMenuList_returnsAllMenuListItems(self, client, user):
         response, model = MenuAPI(client).get_menu_list()
-        APIResponse(response).check_status(200)
+        APIResponse(response).assert_status(200)
         assert len(model.data.results) == 21, '21 menu items should be there, some menus were deleted or added.'
 
     @mobile()
@@ -24,17 +24,17 @@ class TestMenu:
         we need to create a role, assign it to user.
         """
         response, model = MenuAPI(client).get_user_menus(is_for_mobile=is_for_mobile)
-        APIResponse(response).check_status(200)
+        APIResponse(response).assert_status(200)
 
     @users(User.NONE)
     def test_unauthGetMenuList_returnsError(self, client, user):
         response, model = MenuAPI(client).get_menu_list()
-        APIResponse(response).check_status(401)
+        APIResponse(response).assert_status(401)
         AuthErrorResponse(**response.json())
 
     @mobile()
     @users(User.NONE)
     def test_unauthGetUserMenus_returnsError(self, client, user, is_for_mobile):
         response, model = MenuAPI(client).get_user_menus(is_for_mobile=is_for_mobile)
-        APIResponse(response).check_status(401)
+        APIResponse(response).assert_status(401)
         AuthErrorResponse(**response.json())

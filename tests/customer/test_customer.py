@@ -21,7 +21,7 @@ class TestCustomerCRUD:
     def test_createNewCustomer_returns201AndData(self, client, user, request):
         # Act and assert
         payload, response, model = request.getfixturevalue('create_fake_customer')()
-        APIResponse(response).check_status(201)
+        APIResponse(response).assert_status(201)
         assert payload.get('name') == model.data.name
         assert payload.get('barcode') == model.data.barcode
 
@@ -52,13 +52,13 @@ class TestCustomerCRUD:
         # Act and assert
         payload = data.fake.model.customer(**existing_data)
         response, model = CustomerAPI(client).create_customer(data=payload)
-        APIResponse(response).check_status(400)
+        APIResponse(response).assert_status(400)
         assert model.error == error
 
     @users(User.SUPERUSER)
     def test_getAllCustomers_return200AndData(self, client, user):
         response, model = CustomerAPI(client).get_all_customers()
-        APIResponse(response).check_status(200)
+        APIResponse(response).assert_status(200)
 
     @users(User.SUPERUSER)
     def test_getCustomerByID_returns200AndData(self, client, user, request):
@@ -68,7 +68,7 @@ class TestCustomerCRUD:
 
         # Act and assert
         response, model = CustomerAPI(client).get_customer(id=customer_id)
-        APIResponse(response).check_status(200)
+        APIResponse(response).assert_status(200)
 
     @users(User.SUPERUSER)
     def test_updateCustomerByID_returns200AndData(self, client, user, request):
@@ -79,7 +79,7 @@ class TestCustomerCRUD:
         # Act and assert
         payload = data.fake.model.customer()
         response, model = CustomerAPI(client).update_customer(id=customer_id, data=payload)
-        APIResponse(response).check_status(200)
+        APIResponse(response).assert_status(200)
         assert customer_id == model.data.id, 'Old ID and new ID are not matching.'
         assert payload.get('name') == model.data.name
         assert payload.get('barcode') == model.data.barcode
@@ -93,7 +93,7 @@ class TestCustomerCRUD:
         # Act and assert
         payload = data.fake.model.customer(name=model_1.data.name, barcode=model_1.data.barcode)
         response, model = CustomerAPI(client).update_customer(id=model_2.data.id, data=payload)
-        APIResponse(response).check_status(400)
+        APIResponse(response).assert_status(400)
         assert model.error == {
             'name': ['customer with this name already exists.'],
             'barcode': ['customer with this barcode already exists.']
@@ -107,14 +107,14 @@ class TestCustomerCRUD:
 
         # Act and assert
         response, model = CustomerAPI(client).delete_customer(id=model.data.id)
-        APIResponse(response).check_status(204)
+        APIResponse(response).assert_status(204)
 
     @users(User.SUPERUSER)
     def test_deleteNotExistingCustomerByID_returns404AndError(self, client, user):
         # Act and assert
         not_existing_customer_id = data.fake.uuid4()
         response, model = CustomerAPI(client).delete_customer(id=not_existing_customer_id)
-        APIResponse(response).check_status(404)
+        APIResponse(response).assert_status(404)
         assert model.error.get('detail') == 'Not found.'
 
 
@@ -123,7 +123,7 @@ class TestCustomerAuth:
     def test_unauthCRUDRequest_returns400AndError(self, client, user):
         payload = data.fake.model.customer()
         response, model = CustomerAPI(client).create_customer(data=payload)
-        APIResponse(response).check_status(400)
+        APIResponse(response).assert_status(400)
         AuthErrorResponse(**response.json())
 
     @pytest.mark.skip(reason="Facility user should be created automatically")
@@ -150,13 +150,13 @@ class TestCustomerWithoutSectionParam:
     @users(User.SUPERUSER, User.FACILITY_ADMIN)
     def test_GET_ALL_returns400AndError(self, client, user):
         response, model = CustomerAPI(client).send_request_without_section_param('GET')
-        APIResponse(response).check_status(400)
+        APIResponse(response).assert_status(400)
         RequestWithoutSectionParamErrorResponse(**response.json())
 
     @users(User.SUPERUSER, User.FACILITY_ADMIN)
     def test_POST_returns400AndError(self, client, user):
         response, model = CustomerAPI(client).send_request_without_section_param('POST')
-        APIResponse(response).check_status(400)
+        APIResponse(response).assert_status(400)
         RequestWithoutSectionParamErrorResponse(**response.json())
 
     @pytest.mark.parametrize('method', ['GET', 'PATCH', 'DELETE'])
@@ -164,5 +164,5 @@ class TestCustomerWithoutSectionParam:
     def test_GET_PATCH_DELETE_returns400AndError(self, client, user, method):
         not_existing_id = data.fake.uuid4()
         response, model = CustomerAPI(client).send_request_without_section_param(method, id=not_existing_id)
-        APIResponse(response).check_status(400)
+        APIResponse(response).assert_status(400)
         RequestWithoutSectionParamErrorResponse(**response.json())
