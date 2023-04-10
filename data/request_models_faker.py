@@ -190,3 +190,28 @@ class RequestModelsFaker:
 
         data.update(kwargs)
         return data
+
+    def metro_item_configuration(
+        self,
+        facility_id: int = None,
+        facility_item_type_ids: list[int] = None,
+        **kwargs
+    ) -> dict:
+        item_type_quantities = []
+
+        if facility_item_type_ids is not None:
+            for id_ in facility_item_type_ids:
+                item_type_quantities.append({
+                    "item_type": id_,
+                    "quantity": self.fake.pytint()
+                })
+
+        data = {
+            "facility": facility_id,
+            "item_type_quantities": item_type_quantities,  # Facility item type.
+            "qr_code": self.fake.ean(),
+            "description": self.fake.text(),
+        }
+
+        data.update(kwargs)
+        return data

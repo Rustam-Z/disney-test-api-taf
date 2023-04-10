@@ -1,4 +1,3 @@
-import re
 from typing import List, Optional
 
 from pydantic import BaseModel, StrictInt, constr, StrictStr, validator

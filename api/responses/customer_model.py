@@ -32,15 +32,6 @@ class GetCustomerSuccessResponse(SuccessResponse):
 
 
 """
-Update customer
-"""
-
-
-class UpdateCustomerSuccessResponse(SuccessResponse):
-    data: _Customer
-
-
-"""
 Get all customers
 """
 
@@ -62,6 +53,8 @@ Create customer
 
 
 class _CreateCustomerDataField(BaseModel):
+    # It has different fields than _Customer.
+
     id: StrictInt
     name: constr(min_length=1, strict=True)
     barcode: constr(min_length=1, strict=True)
@@ -81,3 +74,12 @@ class _CreateCustomerDataField(BaseModel):
 
 class CreateCustomerSuccessResponse(SuccessResponse):
     data: _CreateCustomerDataField
+
+
+"""
+Update customer
+"""
+
+
+class UpdateCustomerSuccessResponse(SuccessResponse):
+    data: _Customer

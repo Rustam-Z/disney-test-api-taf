@@ -19,3 +19,4 @@ class Section(Enum):
     FACILITY_ITEM_TYPE = 'facility-item-type'
     METRO = 'metro'
     METRO_COMMISSION = 'metro-commission'
+    METRO_ITEM_CONFIGURATION = 'metro-item-configuration'
