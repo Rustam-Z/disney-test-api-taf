@@ -13,12 +13,12 @@ def create_fake_facility(client):
     def _fixture(no_of_customers: int = 0, **kwargs):
         # Create customers
         for _ in range(no_of_customers):
-            payload = data.fake.model.customer()  # Request body JSON
+            payload = data.fake.model.customer()  # Request body_str JSON
             response, model = CustomerAPI(client).create_customer(data=payload)
             customers.append(model.data.id)
 
         # Create facility
-        payload = data.fake.model.facility(customers=customers, **kwargs)  # Request body JSON
+        payload = data.fake.model.facility(customers=customers, **kwargs)  # Request body_str JSON
         response, model = FacilityAPI(client).create_facility(data=payload)
 
         if response.status_code in range(200, 300):

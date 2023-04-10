@@ -42,7 +42,7 @@ class FacilityAPI:
 
     def create_facility(self, data: dict, **kwargs) -> tuple:
         path = self.FACILITY
-        response = self.client.post(path, data=data, params=self.params, **kwargs)
+        response = self.client.post(path, json=data, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = CreateFacilitySuccessResponse(**response.json())
@@ -53,7 +53,7 @@ class FacilityAPI:
 
     def update_facility(self, id: int, data: dict, **kwargs) -> tuple:
         path = f'{self.FACILITY}{id}'
-        response = self.client.patch(path, data=data, params=self.params, **kwargs)
+        response = self.client.patch(path, json=data, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = UpdateFacilitySuccessResponse(**response.json())

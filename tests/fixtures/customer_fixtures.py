@@ -6,11 +6,18 @@ from api.requests.customer_api import CustomerAPI
 
 @pytest.fixture()
 def create_fake_customer(client):
+    """
+    The decorator to create a fake entity (customer).
+
+    Example usage:
+        Use `request` argument in your tests.
+        payload, response, model = request.getfixturevalue('create_fake_customer')()
+    """
     customer_id = -1
 
     def _fixture(**kwargs):
-        # Crete customer
-        payload = data.fake.model.customer(**kwargs)  # Request body JSON
+        # Create customer
+        payload = data.fake.model.customer(**kwargs)
         response, model = CustomerAPI(client).create_customer(data=payload)
 
         if response.status_code in range(200, 300):

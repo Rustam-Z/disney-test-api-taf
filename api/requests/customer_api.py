@@ -41,7 +41,7 @@ class CustomerAPI:
 
     def create_customer(self, data: dict, **kwargs) -> tuple:
         path = self.CUSTOMER
-        response = self.client.post(path, data=data, params=self.params, **kwargs)
+        response = self.client.post(path, json=data, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = CreateCustomerSuccessResponse(**response.json())
@@ -52,7 +52,7 @@ class CustomerAPI:
 
     def update_customer(self, id: int, data: dict, **kwargs) -> tuple:
         path = f'{self.CUSTOMER}{id}'
-        response = self.client.patch(path, data=data, params=self.params, **kwargs)
+        response = self.client.patch(path, json=data, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = UpdateCustomerSuccessResponse(**response.json())
@@ -69,13 +69,5 @@ class CustomerAPI:
             model = None  # Success response doesn't have body
         else:
             model = ErrorResponse(**response.json())
-
-        return response, model
-
-    def send_request_without_section_param(self, method: str, id: int = None, **kwargs):
-        # TODO: think about logic for tests without section
-        path = f'{self.CUSTOMER}{id}' if id else self.CUSTOMER
-        response = self.client.send_request(method, path, **kwargs)
-        model = ErrorResponse(**response.json())
 
         return response, model

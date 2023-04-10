@@ -42,7 +42,7 @@ class MetroAPI:
 
     def create_metro(self, data: dict, **kwargs) -> tuple:
         path = self.METRO
-        response = self.client.post(path, data=data, params=self.params, **kwargs)
+        response = self.client.post(path, json=data, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = CreateMetroSuccessResponse(**response.json())
@@ -53,7 +53,7 @@ class MetroAPI:
 
     def update_metro(self, id: int, data: dict, **kwargs) -> tuple:
         path = f'{self.METRO}{id}'
-        response = self.client.patch(path, data=data, params=self.params, **kwargs)
+        response = self.client.patch(path, json=data, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = UpdateMetroSuccessResponse(**response.json())

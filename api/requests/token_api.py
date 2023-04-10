@@ -17,7 +17,7 @@ class TokenAPI:
             'email': email,
             'password': password
         }
-        response = self.client.post(self.USER_TOKEN, data=data, **kwargs)
+        response = self.client.post(self.USER_TOKEN, json=data, **kwargs)
 
         if response.status_code in range(200, 300):
             model = TokenSuccessResponse(**response.json())
@@ -30,7 +30,7 @@ class TokenAPI:
         data = {
             'refresh': refresh,
         }
-        response = self.client.post(self.USER_TOKEN_REFRESH, data=data, **kwargs)
+        response = self.client.post(self.USER_TOKEN_REFRESH, json=data, **kwargs)
 
         if response.status_code in range(200, 300):
             model = RefreshTokenSuccessResponse(**response.json())

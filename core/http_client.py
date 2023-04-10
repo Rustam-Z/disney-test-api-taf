@@ -23,6 +23,9 @@ class HTTPClient:
         self,
         method: str,
         path: str,
+        json: dict = None,
+        params: dict = None,
+        headers: dict = None,
         *,
         expect_json: bool = True,
         **kwargs
@@ -31,7 +34,7 @@ class HTTPClient:
             raise ValueError(f'Invalid HTTP method "{method}"')
 
         url = self.build_url(self.base_url, path)
-        response = self.session.request(method, url, **kwargs)
+        response = self.session.request(method, url, json=json, params=params, headers=headers, **kwargs)
 
         if expect_json:
             APIResponse(response).assert_body_is_json()
@@ -58,7 +61,7 @@ class HTTPClient:
     def post(
         self,
         path: str,
-        data: dict = None,
+        json: dict = None,
         params: dict = None,
         headers: dict = None,
         *,
@@ -66,7 +69,7 @@ class HTTPClient:
         **kwargs
     ) -> Response:
         url = self.build_url(self.base_url, path)
-        response = self.session.post(url, json=data, params=params, headers=headers, **kwargs)
+        response = self.session.post(url, json=json, params=params, headers=headers, **kwargs)
 
         if expect_json:
             APIResponse(response).assert_body_is_json()
@@ -76,7 +79,7 @@ class HTTPClient:
     def patch(
         self,
         path: str,
-        data: dict = None,
+        json: dict = None,
         params: dict = None,
         headers: dict = None,
         *,
@@ -84,7 +87,7 @@ class HTTPClient:
         **kwargs
     ) -> Response:
         url = self.build_url(self.base_url, path)
-        response = self.session.patch(url, json=data, params=params, headers=headers, **kwargs)
+        response = self.session.patch(url, json=json, params=params, headers=headers, **kwargs)
 
         if expect_json:
             APIResponse(response).assert_body_is_json()
@@ -97,7 +100,7 @@ class HTTPClient:
         params: dict = None,
         headers: dict = None,
         *,
-        expect_json: bool = True,
+        expect_json: bool = False,
         **kwargs
     ) -> Response:
         url = self.build_url(self.base_url, path)

@@ -22,7 +22,7 @@ class TestLogin:
         GIVEN valid email and valid password,
         WHEN POST /user/token/ request is executed,
         THEN response code should be 200,
-        AND response body contains access and refresh tokens.
+        AND response body should contain access and refresh tokens.
         """
         # Arrange
         email, password = get_random_user(user_type)

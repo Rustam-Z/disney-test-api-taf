@@ -16,7 +16,7 @@ class InventoryItemTypeAPI:
 
     def create_item_type(self, data: dict, **kwargs) -> tuple:
         path = self.INVENTORY_ITEM_TYPE
-        response = self.client.post(path, data=data, params=self.params, **kwargs)
+        response = self.client.post(path, json=data, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = CreateInventoryItemTypeSuccessResponse(**response.json())

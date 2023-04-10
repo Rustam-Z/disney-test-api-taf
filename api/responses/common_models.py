@@ -15,6 +15,7 @@ Example usage:
 """
 from pydantic import validator
 
+from api.enums.errors import ErrorDetail
 from api.responses.response_models import ErrorResponse
 
 
@@ -25,7 +26,7 @@ class AuthErrorResponse(ErrorResponse):
         Validate that the value in the "detail" key == expected_message.
         """
         detail = value.get('detail')
-        expected_message = 'Authentication credentials were not provided.'
+        expected_message = ErrorDetail.AUTH_CREDS_NOT_PROVIDED.value
 
         if detail == expected_message:
             return value
@@ -40,7 +41,7 @@ class NoPermissionErrorResponse(ErrorResponse):
         Validate that the value in the "detail" key == expected_message.
         """
         detail = value.get('detail')
-        expected_message = "'AnonymousUser' object has no attribute 'role'"
+        expected_message = ErrorDetail.NO_PERMISSION.value
 
         if detail == expected_message:
             return value
@@ -55,7 +56,7 @@ class OnlySuperuserCanPerformErrorResponse(ErrorResponse):
         Validate that the value in the "detail" key == expected_message.
         """
         detail = value.get('detail')
-        expected_message = 'Only Superuser can perform this action!'
+        expected_message = ErrorDetail.ONLY_SUPERUSER.value
 
         if detail == expected_message:
             return value
@@ -70,7 +71,7 @@ class RequestWithoutSectionParamErrorResponse(ErrorResponse):
         Validate that the value in the "detail" key == expected_message.
         """
         detail = value.get('detail')
-        expected_message = 'There is no such menu route available.'
+        expected_message = ErrorDetail.NO_SUCH_MENU.value
 
         if detail == expected_message:
             return value

@@ -16,7 +16,7 @@ class InventoryCategoryAPI:
 
     def create_category(self, data: dict, **kwargs) -> tuple:
         path = self.INVENTORY_CATEGORY
-        response = self.client.post(path, data=data, params=self.params, **kwargs)
+        response = self.client.post(path, json=data, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = CreateInventoryCategorySuccessResponse(**response.json())
