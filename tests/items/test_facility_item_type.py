@@ -18,18 +18,21 @@ from tests.fixtures.facility_item_type_fixtures import create_fake_facility_item
 class TestInventoryCategoryCRUD:
     @users(User.SUPERUSER)
     def test_superUserCreatesItemType_returns201AndData(self, client, user, request):
-        # Setup
+        # Arrange
         payload, response, model = request.getfixturevalue('create_fake_facility_item_type')()
+
+        # Assert
         APIResponse(response).assert_status(201)
-        assert model.data.name == payload.get('name')
+        APIResponse(response).assert_models(payload)
 
     @users(User.SUPERUSER)
     def test_superUserDeletesItemType_returns204(self, client, user, request):
-        # Setup
+        # Arrange
         payload, response, model = request.getfixturevalue('create_fake_facility_item_type')()
         existing_id = model.data.id
 
-        # Act and assert
-        response, _ = FacilityItemTypeAPI(client).delete_item_type(id=existing_id)
+        # Act
+        response, model = FacilityItemTypeAPI(client).delete_item_type(id=existing_id)
+
+        # Assert
         APIResponse(response).assert_status(204)
-        # NOTE! In teardown stage deletion will return 4xx error, because we already deleted this item.

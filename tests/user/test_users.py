@@ -22,19 +22,19 @@ class TestUsersCRUD:
         APIResponse(response).assert_status(201)
 
     @users(User.SUPERUSER)
-    def test_superuserGetsAllUsers_return200AndData(self, client, user):
+    def test_superuserGetsAllUsers_returns200AndData(self, client, user):
         response, model = UsersAPI(client).get_all_users()
         APIResponse(response).assert_status(200)
 
     @users(User.FACILITY_ADMIN)
-    def test_adminGetsAllUsers_return200AndData(self, client, user):
+    def test_adminGetsAllUsers_returns200AndData(self, client, user):
         response, model = UsersAPI(client).get_all_users()
         APIResponse(response).assert_status(200)
         # TODO: verify that the users belong to the same facility
 
     @users(User.SUPERUSER)
     def test_superuserGetsUserByID_returns200AndData(self, client, user, request):
-        # Setup
+        # Arrange
         payload, response, model = request.getfixturevalue('create_fake_user')()
         existing_id = model.data.id
 
@@ -45,7 +45,7 @@ class TestUsersCRUD:
 
     @users(User.FACILITY_ADMIN)
     def test_adminGetsUserByID_returns200AndData(self, client, user, request):
-        # Setup
+        # Arrange
         payload, response, model = request.getfixturevalue('create_fake_user_without_facility')()
         existing_id = model.data.id
 
@@ -65,7 +65,7 @@ class TestUsersCRUD:
 
     @users(User.SUPERUSER)
     def test_deleteRoleByID_returns204(self, client, user, request):
-        # Setup
+        # Arrange
         payload, response, model = request.getfixturevalue('create_fake_user')()
         existing_id = model.data.id
 

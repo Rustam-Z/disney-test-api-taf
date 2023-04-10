@@ -20,25 +20,21 @@ from tests.fixtures.inventory_item_type_fixtures import create_fake_inventory_it
 class TestInventoryCategoryCRUD:
     @users(User.SUPERUSER)
     def test_superUserCreatesItemType_returns201AndData(self, client, user, request):
-        # Setup
+        # Act
         payload, response, model = request.getfixturevalue('create_fake_inventory_item_type')()
+
+        # Assert
         APIResponse(response).assert_status(201)
-        assert model.data.name == payload.get('name')
+        APIResponse(response).assert_models(payload)
 
     @users(User.SUPERUSER)
-    def test_superUserDeletesItemType_returns204(self, client, user):
-        # Setup
-        category_payload = data.fake.model.inventory_category()
-        category_response, category_model = InventoryCategoryAPI(client).create_category(data=category_payload)
-        category_id = category_model.data.id
+    def test_superUserDeletesItemType_returns204(self, client, user, request):
+        # Arrange
+        payload, response, model = request.getfixturevalue('create_fake_inventory_item_type')()
+        existing_id = model.data.id
 
-        payload = data.fake.model.inventory_item_type(category_id=category_id)
-        response, model = InventoryItemTypeAPI(client).create_item_type(data=payload)
-        item_type_id = model.data.id
+        # Act
+        response, model = InventoryItemTypeAPI(client).delete_item_type(id=existing_id)
 
-        # Act and assert
-        response, _ = InventoryItemTypeAPI(client).delete_item_type(id=item_type_id)
+        # Assert
         APIResponse(response).assert_status(204)
-
-        # Cleanup
-        InventoryCategoryAPI(client).delete_category(id=category_id)

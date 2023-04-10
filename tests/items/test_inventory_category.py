@@ -14,28 +14,32 @@ from core.enums.users import User
 class TestInventoryCategoryCRUD:
     @users(User.SUPERUSER)
     def test_superUserCreatesCategory_returns201AndData(self, client, user):
-        # Setup
+        # Arrange
         payload = data.fake.model.inventory_category()
 
-        # Act and assert
+        # Act
         response, model = InventoryCategoryAPI(client).create_category(data=payload)
         id_ = model.data.id
+
+        # Assert
         APIResponse(response).assert_status(201)
-        assert model.data.name == payload.get('name')
+        APIResponse(response).assert_models(payload)
 
         # Cleanup
         try:
             InventoryCategoryAPI(client).delete_category(id=id_, expect_json=False)
-        except Exception as e:
-            print(f"Error: {e}")
+        except Exception:
+            return None
 
     @users(User.SUPERUSER)
     def test_superUserDeletesCategory_returns204(self, client, user):
-        # Setup
+        # Arrange
         payload = data.fake.model.inventory_category()
         response, model = InventoryCategoryAPI(client).create_category(data=payload)
         id_ = model.data.id
 
-        # Act and assert
-        response, _ = InventoryCategoryAPI(client).delete_category(id=id_)
+        # Act
+        response, model = InventoryCategoryAPI(client).delete_category(id=id_)
+
+        # Assert
         APIResponse(response).assert_status(204)
