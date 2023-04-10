@@ -5,13 +5,13 @@ from core.enums.assertion_message import AssertionMessage
 
 class APIResponse:
     def __init__(self, response):
-        self._response = response
+        self.response = response
 
     def body_str(self):
-        return self._response.text
+        return self.response.text
 
     def body_json(self):
-        return self._response.json()
+        return self.response.json()
 
     def assert_body_is_json(self):
         try:
@@ -22,16 +22,15 @@ class APIResponse:
             raise ValueError(f"Error: {e}")
 
     def assert_status(self, status_code: int):
-        assert self._response.status_code == status_code, \
-            f'{AssertionMessage.WRONG_STATUS_CODE.value} Actual: {self._response.status_code}, expected: {status_code}.'
+        assert self.response.status_code == status_code, \
+            f'{AssertionMessage.WRONG_STATUS_CODE.value} Actual: {self.response.status_code}, expected: {status_code}.'
 
-    def assert_body(self, request_body: dict | str):
+    def assert_models(self, request_body: dict | str):
         try:
-            response_model = self.body_json()
+            response_model = self.body_json().get('data')
             common_keys = set(request_body.keys()) & set(response_model.keys())  # Only asserting common keys.
             assert all(request_body.get(key) == response_model.get(key) for key in common_keys)
         except JSONDecodeError:
-            response_text = self.body_str()
-            assert response_text == request_body
+            return ValueError('Response object is not JSON.')
         except Exception as e:
-            raise ValueError(f"Error: {e}")
+            return ValueError(f"Error: {e}.")

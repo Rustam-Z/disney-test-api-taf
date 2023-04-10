@@ -11,7 +11,7 @@ class TestMetroCRUD:
         # Act and assert
         payload, response, model = request.getfixturevalue('create_fake_metro')()
         APIResponse(response).assert_status(201)
-        APIResponse(response).assert_body(payload)
+        APIResponse(response).assert_models(payload)
 
     @users(User.SUPERUSER)
     def test_deleteMetro_returns204(self, client, user, request):

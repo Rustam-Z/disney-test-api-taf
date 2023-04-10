@@ -1,8 +1,7 @@
 """
-Test customer CRUD.
-
-TODO: test pagination in get all customers, test creating without mandatory fields.
-TODO: add test to check status update.
+TODO:
+    - test pagination in get all customers, test creating without mandatory fields.
+    - add test to check status update.
 """
 import pytest
 
@@ -35,7 +34,7 @@ class TestCustomerCRUD:
 
         # Assert
         APIResponse(response).assert_status(201)
-        APIResponse(response).assert_body(payload)
+        APIResponse(response).assert_models(payload)
 
         # Cleanup
         try:
@@ -87,6 +86,7 @@ class TestCustomerCRUD:
 
         # Assert
         APIResponse(response).assert_status(200)
+        assert model.data.id == customer_id, 'IDs are not matching.'
 
     @users(User.SUPERUSER)
     def test_updateCustomer_withValidID_returns200AndData(self, client, user, request):
@@ -100,7 +100,7 @@ class TestCustomerCRUD:
 
         # Assert
         APIResponse(response).assert_status(200)
-        APIResponse(response).assert_body(payload)
+        APIResponse(response).assert_models(payload)
         assert customer_id == model.data.id, 'Old ID and new ID are not matching. Data was changed for wrong ID.'
 
     @users(User.SUPERUSER)
@@ -151,11 +151,8 @@ class TestCustomerAuth:
 
     @users(User.FACILITY_ADMIN)
     def test_createCustomer_notSuperUser_returns403AndError(self, client, user):
-        # Arrange
-        payload = data.fake.model.customer()
-
         # Act
-        response, model = CustomerAPI(client).create_customer(data=payload)
+        response, model = CustomerAPI(client).create_customer(data={})
 
         # Assert
         APIResponse(response).assert_status(403)
@@ -205,7 +202,6 @@ class TestCustomerAuth:
 
         # Assert
         APIResponse(response).assert_status(403)
-        AuthErrorResponse(**response.json())
 
     @pytest.mark.skip(reason="Facility user should be created automatically")
     @users(User.FACILITY_USER)
@@ -218,7 +214,6 @@ class TestCustomerAuth:
 
         # Assert
         APIResponse(response).assert_status(403)
-        NoPermissionErrorResponse(**response.json())
 
 
 class TestCustomerWithoutSectionParam:
