@@ -10,7 +10,7 @@ def create_fake_role(client):
     role_id = -1
 
     def _fixture(**kwargs):
-        # Create role request body_str
+        # Create role request body
         menu_list_response, menu_list_model = MenuAPI(client).get_menu_list()
         payload = data.fake.model.role(sections=menu_list_model.data.results, **kwargs)
 

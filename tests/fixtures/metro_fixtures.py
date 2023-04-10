@@ -11,13 +11,12 @@ def create_fake_metro(client):
     metro_id = -1
 
     def _fixture(**kwargs):
-        # Setup
         payload = data.fake.model.facility()
         response, model = FacilityAPI(client).create_facility(data=payload)
         nonlocal facility_id
         facility_id = model.data.id
 
-        # Create inventory item type
+        # Create metro
         payload = data.fake.model.metro(facility_id=facility_id, **kwargs)
         response, model = MetroAPI(client).create_metro(data=payload)
 

@@ -75,7 +75,7 @@ def create_fake_user_without_facility(client):
         # Fetch menu list, to give permission to user
         menu_list_response, menu_list_model = MenuAPI(client).get_menu_list()
 
-        # Create a role
+        # Create role
         role_payload = data.fake.model.role(sections=menu_list_model.data.results)
         role_response, role_model = RoleAPI(client).create_role(data=role_payload)
         nonlocal role_id
