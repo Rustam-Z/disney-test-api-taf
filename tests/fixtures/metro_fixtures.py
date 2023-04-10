@@ -3,6 +3,24 @@ import pytest
 import data
 from api.requests.facility_api import FacilityAPI
 from api.requests.metro_api import MetroAPI
+from api.requests.metro_commission_api import MetroCommissionAPI
+
+
+@pytest.fixture()
+def create_fake_metro_for_commission_superuser(client):
+
+    def _fixture(**kwargs):
+        payload = data.fake.model.facility()
+        response, model = FacilityAPI(client).create_facility(data=payload)
+        facility_id = model.data.id
+
+        # Create metro
+        payload = data.fake.model.metro_for_commission(facility_id=facility_id, **kwargs)
+        response, model = MetroCommissionAPI(client).create_metro(data=payload)
+
+        return payload, response, model
+
+    yield _fixture
 
 
 @pytest.fixture()

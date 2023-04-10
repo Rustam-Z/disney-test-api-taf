@@ -55,18 +55,20 @@ class RequestModelsFaker:
         data.update(kwargs)
         return data
 
-    def role(self,
-             sections: List,
-             permissions: dict = None,
-             facility_id: int = None,
-             is_driver: bool = False,
-             **kwargs
-             ) -> dict:
+    def role(
+        self,
+        sections: List,
+        permissions: dict = None,
+        facility_id: int = None,
+        is_driver: bool = False,
+        **kwargs
+    ) -> dict:
         """
         menu_list: the ids of menu lists to give permission. It is a menu list results model.
         permissions: section_id: [is_editable, is_viewable]
-        facility_id: if None then it is not assigned to facility.
-
+        facility_id:
+            if None and superuser makes request then it is not assigned to facility.
+            if facility user makes request, then it is automatically assigned to facility.
         """
         if permissions is None:
             permissions = {}
@@ -102,7 +104,7 @@ class RequestModelsFaker:
             "role": role_id,
             "email": self.fake.email(),
             "phone_number": self.fake.custom_phone_number(),
-            "password": self.fake.password()
+            "password": self.fake.password(),
         }
 
         data.update(kwargs)
@@ -110,7 +112,7 @@ class RequestModelsFaker:
 
     def inventory_category(self, **kwargs) -> dict:
         data = {
-            "name": self.fake.name()
+            "name": self.fake.name(),
         }
 
         data.update(kwargs)
@@ -120,7 +122,7 @@ class RequestModelsFaker:
         data = {
             "name": self.fake.name(),
             "description": self.fake.text(),
-            "category": category_id
+            "category": category_id,
         }
 
         data.update(kwargs)
@@ -131,18 +133,18 @@ class RequestModelsFaker:
             "facility": facility_id,
             "item_type": item_type_id,  # Inventory item type id
             "name": self.fake.name(),
-            "weight": self.fake.pyint()
+            "weight": self.fake.pyint(),
         }
 
         data.update(kwargs)
         return data
 
     def metro(
-            self,
-            facility_id: int,
-            laundry_status: str = MetroLaundryStatuses.NONE.value,
-            process_status: str = MetroProcessStatuses.STAGED_IN_INVENTORY.value,
-            **kwargs
+        self,
+        facility_id: int = None,
+        laundry_status: str = MetroLaundryStatuses.NONE.value,
+        process_status: str = MetroProcessStatuses.STAGED_IN_INVENTORY.value,
+        **kwargs
     ) -> dict:
         """
         MetroLaundryStatuses
@@ -168,7 +170,22 @@ class RequestModelsFaker:
             "qr_code": self.fake.ean(),
             "rfid_tag_id": self.fake.ean(),
             "laundry_status": laundry_status,
-            "process_status": process_status
+            "process_status": process_status,
+        }
+
+        data.update(kwargs)
+        return data
+
+    def metro_for_commission(self, facility_id: int = None, **kwargs) -> dict:
+        """
+        This model is used in metro commission.
+        """
+
+        data = {
+            "facility": facility_id,
+            "qr_code": self.fake.ean(),
+            "rfid_tag_id": self.fake.ean(),
+            "human_readable": self.fake.name(),
         }
 
         data.update(kwargs)

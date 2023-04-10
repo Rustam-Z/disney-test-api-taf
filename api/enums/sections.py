@@ -18,3 +18,4 @@ class Section(Enum):
     INVENTORY_ITEM_TYPE = 'inventory-item-type'
     FACILITY_ITEM_TYPE = 'facility-item-type'
     METRO = 'metro'
+    METRO_COMMISSION = 'metro-commission'
