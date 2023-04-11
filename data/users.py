@@ -4,7 +4,7 @@ from core.config import CONFIG
 from core.enums.users import User
 
 
-def get_random_user(user_type: User) -> tuple:
+def get_config_user(user_type: User) -> tuple:
     users = CONFIG.users.get(user_type.value)
 
     user = random.choice(users)

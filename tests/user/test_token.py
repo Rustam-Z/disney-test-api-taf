@@ -5,10 +5,10 @@ Tests for user authentication, access token and refresh token.
 import pytest
 
 from api.enums.errors import ErrorDetail
+from api.responses.common_models import InvalidTokenErrorResponse
 from core.asserters import APIResponse
 from core.decorators import users
 from api.requests.token_api import TokenAPI
-from core.config.users import get_random_user
 from core.enums.users import User
 from core.helpers.jwt_helper import decode_jwt
 import data
@@ -25,7 +25,7 @@ class TestLogin:
         AND response body should contain access and refresh tokens.
         """
         # Arrange
-        email, password = get_random_user(user_type)
+        email, password = data.get_config_user(user_type)
 
         # Act
         response, model = TokenAPI(client).login(email=email, password=password)
@@ -54,7 +54,7 @@ class TestLogin:
         AND response body contains access and refresh tokens.
         """
         # Arrange
-        email, password = get_random_user(user_type)
+        email, password = data.get_config_user(user_type)
         password = data.fake.password()
 
         # Act
@@ -91,7 +91,7 @@ class TestRefreshToken:
     @users(User.NONE)
     def test_getNewAccessToken_withValidRefreshToken_returns200AndTokens(self, client, user, user_type):
         # Arrange
-        email, password = get_random_user(user_type)
+        email, password = data.get_config_user(user_type)
         response, model = TokenAPI(client).login(email=email, password=password)
         refresh_token = model.data.refresh
 
@@ -117,4 +117,4 @@ class TestRefreshToken:
 
         # Assert
         APIResponse(response).assert_status(401)
-        assert model.error.get('detail') == 'Token is invalid or expired'  # TODO: message should end with dot.
+        InvalidTokenErrorResponse(**response.json())

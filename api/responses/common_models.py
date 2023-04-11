@@ -19,6 +19,21 @@ from api.enums.errors import ErrorDetail
 from api.responses.response_models import ErrorResponse
 
 
+class InvalidTokenErrorResponse(ErrorResponse):
+    @validator('error')
+    def check_message(cls, value):
+        """
+        Validate that the value in the "detail" key == expected_message.
+        """
+        detail = value.get('detail')
+        expected_message = ErrorDetail.TOKEN_IS_INVALID.value
+
+        if detail == expected_message:
+            return value
+
+        raise ValueError('error should include detail key')
+
+
 class AuthErrorResponse(ErrorResponse):
     @validator('error')
     def check_message(cls, value):

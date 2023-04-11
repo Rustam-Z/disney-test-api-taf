@@ -76,7 +76,7 @@ class TestUsersCRUD:
         # Fetching removed item
         response, model = UsersAPI(client).get_user(id=existing_id)
         APIResponse(response).assert_status(404)
-        assert model.error.get('detail') == 'Not found.'  # TODO: error message should not be validated here.
+        assert model.error.get('detail') == 'Not found.'
 
 
 class TestUsersAuth:

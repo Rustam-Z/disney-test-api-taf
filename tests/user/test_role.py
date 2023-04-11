@@ -63,7 +63,7 @@ class TestRoleCRUD:
         # Fetching removed item
         response, model = RoleAPI(client).get_role(id=existing_role_id)
         APIResponse(response).assert_status(404)
-        assert model.error.get('detail') == 'Not found.'  # TODO: error message should not be validated here.
+        assert model.error.get('detail') == 'Not found.'
 
 
 class TestRoleAuth:

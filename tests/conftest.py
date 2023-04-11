@@ -2,7 +2,7 @@ import pytest
 
 from api.requests.token_api import TokenAPI
 from core.config import CONFIG
-from core.config.users import get_random_user
+from data.users import get_config_user
 from core.enums.environments import Environment
 from core.enums.users import User
 from core.helpers.jwt_helper import is_jwt_expired
@@ -20,7 +20,7 @@ def pytest_addoption(parser):
 
 @pytest.hookimpl
 def pytest_configure(config):
-    """PyTest configuration hook.
+    """PyTest's configuration hook.
 
     The default "env" is specified in ".config.yaml". If "--env" is not specified "env" in ".config.yaml" will be used.
     If "--env" is specified, then the "CONFIG.env" will be overridden, and tests ONLY will run on specified environment.
@@ -47,7 +47,7 @@ def users(request):
 
     Steps:
         - Select user depending on `user` param value from core.enums.users.User.
-        - Get user credentials (email, password) using config.users.get_random_user()
+        - Get user credentials (email, password) using get_config_user()
         - Request user token. And cache user token. Use cached value next time.
     """
     client = request.session.client
@@ -59,7 +59,7 @@ def users(request):
         client.remove_headers('Authorization')
     else:
         # Update headers with Authorization header
-        email, password = get_random_user(user_type)
+        email, password = get_config_user(user_type)
         access_token = get_access_token(client, email, password)
         headers = {
             'Authorization': 'Bearer ' + access_token,
