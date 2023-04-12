@@ -143,10 +143,17 @@ class TestFacilityCRUD:
         # Assert
         APIResponse(response).assert_status(204)
 
-    @pytest.mark.skip(reason="TODO")
     @users(User.SUPERUSER)
     def test_deleteFacility_byInvalidID_returns404AndError(self, client, user):
-        ...
+        # Arrange
+        not_existing_id = data.fake.uuid4()
+
+        # Act
+        response, model = FacilityAPI(client).delete_facility(id=not_existing_id)
+
+        # Assert
+        APIResponse(response).assert_status(404)
+        assert model.error.get('detail') == 'Not found.'
 
 
 class TestFacilityAuth:

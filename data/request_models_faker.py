@@ -203,7 +203,7 @@ class RequestModelsFaker:
             for id_ in facility_item_type_ids:
                 item_type_quantities.append({
                     "item_type": id_,
-                    "quantity": self.fake.pytint()
+                    "quantity": self.fake.pyint()
                 })
 
         data = {

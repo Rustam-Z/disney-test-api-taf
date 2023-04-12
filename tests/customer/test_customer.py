@@ -134,10 +134,10 @@ class TestCustomerCRUD:
     @users(User.SUPERUSER)
     def test_deleteCustomer_withInvalidID_returns404AndError(self, client, user):
         # Arrange
-        not_existing_customer_id = data.fake.uuid4()
+        not_existing_id = data.fake.uuid4()
 
         # Act
-        response, model = CustomerAPI(client).delete_customer(id=not_existing_customer_id)
+        response, model = CustomerAPI(client).delete_customer(id=not_existing_id)
 
         # Assert
         APIResponse(response).assert_status(404)

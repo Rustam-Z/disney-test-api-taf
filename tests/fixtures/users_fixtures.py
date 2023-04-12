@@ -9,7 +9,7 @@ from api.requests.users_api import UsersAPI
 
 
 @pytest.fixture()
-def create_fake_user(client):
+def create_fake_user_superuser(client):
     """
     For superuser.
 
@@ -67,7 +67,7 @@ def create_fake_user(client):
 
 
 @pytest.fixture()
-def create_fake_user_without_facility(client):
+def create_fake_user(client):
     user_id = -1
     role_id = -1
 

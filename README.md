@@ -97,3 +97,18 @@ Other response models are created for successful responses per API.
      Web and mobile always use section param.
      So, tests without section param will be considered as NEGATIVE. And we can have separate tests and overwrite API functions. That's okay.
 ```
+
+## TODO
+- What if the script can be crated to populate the database with data, session setup and session teardown.
+  - It can be used by fixtures to make the setup and teardown faster.
+  - The fixtures will use get_all_* instead of creation. We don't need local teardown. OR we can create some config file?
+  - Because, the models starting from metro item configuration need to create at least 4-5 other models.
+- Superuser creates smth class, pass facility id if needed, if not passed then facility will be created too.
+- Tests:
+  - get_all_* but populate with data before fetching and validate if data is there
+  - test pagination in get_all_*
+  - Create models without superuser too
+    - Negative tests with creation and update
+    - Update with/without superuser
+  - Delete not existing as separate test
+  - Authz

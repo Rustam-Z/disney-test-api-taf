@@ -7,18 +7,21 @@ from api.requests.users_api import UsersAPI
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
-from tests.fixtures.users_fixtures import create_fake_user, create_fake_user_without_facility
+from tests.fixtures.users_fixtures import (
+    create_fake_user_superuser,
+    create_fake_user,
+)
 
 
 class TestUsersCRUD:
     @users(User.SUPERUSER)
     def test_superuserCreatesUser_returns201AndData(self, client, user, request):
-        payload, response, model = request.getfixturevalue('create_fake_user')()
+        payload, response, model = request.getfixturevalue('create_fake_user_superuser')()
         APIResponse(response).assert_status(201)
 
     @users(User.FACILITY_ADMIN)
     def test_adminCreatesUser_returns201AndData(self, client, user, request):
-        payload, response, model = request.getfixturevalue('create_fake_user_without_facility')()
+        payload, response, model = request.getfixturevalue('create_fake_user')()
         APIResponse(response).assert_status(201)
 
     @users(User.SUPERUSER)
@@ -35,7 +38,7 @@ class TestUsersCRUD:
     @users(User.SUPERUSER)
     def test_superuserGetsUserByID_returns200AndData(self, client, user, request):
         # Arrange
-        payload, response, model = request.getfixturevalue('create_fake_user')()
+        payload, response, model = request.getfixturevalue('create_fake_user_superuser')()
         existing_id = model.data.id
 
         # Act and assert
@@ -46,7 +49,7 @@ class TestUsersCRUD:
     @users(User.FACILITY_ADMIN)
     def test_adminGetsUserByID_returns200AndData(self, client, user, request):
         # Arrange
-        payload, response, model = request.getfixturevalue('create_fake_user_without_facility')()
+        payload, response, model = request.getfixturevalue('create_fake_user')()
         existing_id = model.data.id
 
         # Act and assert
@@ -66,7 +69,7 @@ class TestUsersCRUD:
     @users(User.SUPERUSER)
     def test_deleteRoleByID_returns204(self, client, user, request):
         # Arrange
-        payload, response, model = request.getfixturevalue('create_fake_user')()
+        payload, response, model = request.getfixturevalue('create_fake_user_superuser')()
         existing_id = model.data.id
 
         # Act and assert

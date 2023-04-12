@@ -57,11 +57,18 @@ class TestRoleCRUD:
         existing_role_id = model.data.id
 
         # Act and assert
-        response, _ = RoleAPI(client).delete_role(id=existing_role_id)
+        response, model = RoleAPI(client).delete_role(id=existing_role_id)
         APIResponse(response).assert_status(204)
 
-        # Fetching removed item
-        response, model = RoleAPI(client).get_role(id=existing_role_id)
+    @users(User.SUPERUSER)
+    def test_deleteFacility_byInvalidID_returns404AndError(self, client, user):
+        # Arrange
+        not_existing_id = data.fake.uuid4()
+
+        # Act
+        response, model = RoleAPI(client).delete_role(id=not_existing_id)
+
+        # Assert
         APIResponse(response).assert_status(404)
         assert model.error.get('detail') == 'Not found.'
 
