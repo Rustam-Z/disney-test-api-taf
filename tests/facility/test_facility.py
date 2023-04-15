@@ -65,19 +65,6 @@ class TestFacilityCRUD:
         APIResponse(response).assert_status(400)
         assert model.error.get('name') == ['facility with this name already exists.']
 
-    @pytest.mark.parametrize('wrong_data', [-1, 0, 1, 13, -48])
-    @users(User.SUPERUSER)
-    def test_createFacility_withWrongTurnaroundTime_returns400AndError(self, client, user, wrong_data):
-        # Arrange
-        payload = data.fake.model.facility(turnaround_time=wrong_data)
-
-        # Act
-        response, model = FacilityAPI(client).create_facility(data=payload)
-
-        # Assert
-        APIResponse(response).assert_status(400)
-        assert model.error.get('turnaround_time') == [f'"{wrong_data}" is not a valid choice.']
-
     @users(User.SUPERUSER)
     def test_getAllFacilities_returns200AndData(self, client, user):
         response, model = FacilityAPI(client).get_all_facilities()

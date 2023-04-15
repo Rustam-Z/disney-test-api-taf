@@ -23,13 +23,16 @@ class APIResponse:
 
     def assert_status(self, status_code: int):
         assert self.response.status_code == status_code, \
-            f'{AssertionMessage.WRONG_STATUS_CODE.value} Actual: {self.response.status_code}, expected: {status_code}.'
+            f'{AssertionMessage.WRONG_STATUS_CODE.value} ' \
+            f'Actual: {self.response.status_code}, ' \
+            f'expected: {status_code}. ' \
+            f'Response payload: {self.body_str()}'
 
-    def assert_models(self, request_body: dict | str):
+    def assert_models(self, request_body: dict | str, message: str = None):
         try:
             response_model = self.body_json().get('data')
             common_keys = set(request_body.keys()) & set(response_model.keys())  # Only asserting common keys.
-            assert all(request_body.get(key) == response_model.get(key) for key in common_keys)
+            assert all(request_body.get(key) == response_model.get(key) for key in common_keys), message
         except JSONDecodeError:
             return ValueError('Response object is not JSON.')
         except Exception as e:

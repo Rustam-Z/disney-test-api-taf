@@ -39,7 +39,6 @@ class RequestModelsFaker:
         data = {
             "name": self.fake.name(),
             "phone_number": self.fake.custom_phone_number(),
-            "turnaround_time": random.choice([48, 72]),
             "country": self.fake.country(),
             "state": self.fake.state(),
             "city": self.fake.city(),

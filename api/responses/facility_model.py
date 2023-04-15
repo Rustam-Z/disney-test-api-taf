@@ -11,7 +11,6 @@ class _Facility(BaseModel):
     phone_number: constr(min_length=1, strict=True)
     timezone: constr(min_length=1, strict=True)
     status: constr(min_length=1, strict=True)
-    turnaround_time: constr(min_length=1, strict=True)
     country: constr(min_length=1, strict=True)
     state: constr(min_length=1, strict=True)
     city: constr(min_length=1, strict=True)
