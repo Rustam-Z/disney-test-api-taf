@@ -11,7 +11,7 @@ from api.response_models.common_models import (
     RequestWithoutSectionParamErrorResponse,
     NoPermissionErrorResponse,
 )
-from api.response_models.customer_model import GetAllCustomersSuccessResponse
+from api.response_models.customer_models import GetAllCustomersSuccessResponse
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User

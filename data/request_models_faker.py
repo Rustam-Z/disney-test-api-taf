@@ -214,3 +214,12 @@ class RequestModelsFaker:
 
         data.update(kwargs)
         return data
+
+    def cart(self, metro_qr_code: str, metro_config_qr_code: str, **kwargs) -> dict:
+        data = {
+            "metro_qr_code": metro_qr_code,
+            "metro_config_qr_code": metro_config_qr_code,
+        }
+
+        data.update(kwargs)
+        return data

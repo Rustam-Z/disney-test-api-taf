@@ -7,7 +7,7 @@ from api.response_models.common_models import (
     RequestWithoutSectionParamErrorResponse,
     OnlySuperuserCanPerformErrorResponse,
 )
-from api.response_models.facility_model import GetAllFacilitiesSuccessResponse
+from api.response_models.facility_models import GetAllFacilitiesSuccessResponse
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User

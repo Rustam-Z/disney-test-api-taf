@@ -2,7 +2,7 @@ from api.enums.params import Param
 from api.enums.sections import Section
 from api.response_models.response_models import ErrorResponse
 from core.http_client import HTTPClient
-from api.response_models.items.inventory_item_type_model import CreateInventoryItemTypeSuccessResponse
+from api.response_models.items.inventory_item_type_models import CreateInventoryItemTypeSuccessResponse
 
 
 class InventoryItemTypeAPI:

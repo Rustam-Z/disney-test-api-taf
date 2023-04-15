@@ -2,7 +2,7 @@ from api.enums.params import Param
 from api.enums.sections import Section
 from core.http_client import HTTPClient
 from api.response_models.response_models import ErrorResponse
-from api.response_models.metro.metro_commission_model import (
+from api.response_models.metro.metro_commission_models import (
     GetAllMetrosSuccessResponse,
     CreateMetroResponse,
 )
