@@ -1,17 +1,17 @@
 import pytest
 
 import data
-from api.requests.facility_api import FacilityAPI
-from api.responses.common_models import (
+from api.endpoints.facility_api import FacilityAPI
+from api.response_models.common_models import (
     AuthErrorResponse,
     RequestWithoutSectionParamErrorResponse,
     OnlySuperuserCanPerformErrorResponse,
 )
-from api.responses.facility_model import GetAllFacilitiesSuccessResponse
+from api.response_models.facility_model import GetAllFacilitiesSuccessResponse
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
-from tests.fixtures.facility_fixtures import create_fake_facility
+from fixtures.facility import create_fake_facility
 
 
 class TestFacilityCRUD:

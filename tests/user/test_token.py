@@ -5,10 +5,10 @@ Tests for user authentication, access token and refresh token.
 import pytest
 
 from api.enums.errors import ErrorDetail
-from api.responses.common_models import InvalidTokenErrorResponse
+from api.response_models.common_models import InvalidTokenErrorResponse
 from core.asserters import APIResponse
 from core.decorators import users
-from api.requests.user.token_api import TokenAPI
+from api.endpoints.user.token_api import TokenAPI
 from core.enums.users import User
 from core.helpers.jwt_helper import decode_jwt
 import data

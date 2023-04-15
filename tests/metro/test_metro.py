@@ -1,8 +1,8 @@
-from api.requests.metro.metro_api import MetroAPI
+from api.endpoints.metro.metro_api import MetroAPI
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
-from tests.fixtures.metro_fixtures import create_fake_metro
+from fixtures.metro import create_fake_metro
 
 
 class TestMetroCRUD:

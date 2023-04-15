@@ -2,8 +2,8 @@
 Tests for fetching all menu items, and user menu items based on user permissions.
 """
 
-from api.requests.user.menu_api import MenuAPI
-from api.responses.common_models import AuthErrorResponse
+from api.endpoints.user.menu_api import MenuAPI
+from api.response_models.common_models import AuthErrorResponse
 from core.asserters import APIResponse
 from core.enums.users import User
 from core.decorators import users, mobile

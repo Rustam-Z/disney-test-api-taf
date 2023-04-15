@@ -1,6 +1,6 @@
 import pytest
 
-from api.requests.user.token_api import TokenAPI
+from api.endpoints.user.token_api import TokenAPI
 from core.config import CONFIG
 from data.users import get_config_user
 from core.enums.environments import Environment

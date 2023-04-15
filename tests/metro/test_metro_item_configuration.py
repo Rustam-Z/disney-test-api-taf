@@ -2,8 +2,8 @@ from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
 import data
-from api.requests.metro.metro_item_configuration_api import MetroItemConfigurationAPI
-from tests.fixtures.metro_item_configuration_fixtures import create_fake_metro_item_configuration_superuser
+from api.endpoints.metro.metro_item_configuration_api import MetroItemConfigurationAPI
+from fixtures.metro_item_configuration import create_fake_metro_item_configuration_superuser
 
 
 class TestMetroItemConfigurationCRUD:

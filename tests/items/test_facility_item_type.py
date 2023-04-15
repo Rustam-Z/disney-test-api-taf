@@ -11,8 +11,8 @@ TODO:
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
-from api.requests.items.facility_item_type_api import FacilityItemTypeAPI
-from tests.fixtures.facility_item_type_fixtures import create_fake_facility_item_type
+from api.endpoints.items.facility_item_type_api import FacilityItemTypeAPI
+from fixtures.facility_item_type import create_fake_facility_item_type
 
 
 class TestInventoryCategoryCRUD:

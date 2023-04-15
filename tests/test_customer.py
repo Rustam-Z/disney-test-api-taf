@@ -5,18 +5,18 @@ TODO:
 """
 import pytest
 
-from api.requests.customer_api import CustomerAPI
-from api.responses.common_models import (
+from api.endpoints.customer_api import CustomerAPI
+from api.response_models.common_models import (
     AuthErrorResponse,
     RequestWithoutSectionParamErrorResponse,
     NoPermissionErrorResponse,
 )
-from api.responses.customer_model import GetAllCustomersSuccessResponse
+from api.response_models.customer_model import GetAllCustomersSuccessResponse
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
 import data
-from tests.fixtures.customer_fixtures import create_fake_customer
+from fixtures.customer import create_fake_customer
 
 
 class TestCustomerCRUD:
@@ -218,7 +218,7 @@ class TestCustomerAuth:
 
 class TestCustomerWithoutSectionParam:
     """
-    For testing requests without section query param we don't need:
+    For testing endpoints without section query param we don't need:
         - Request body_str for POST and PATCH.
         - ID for GET, DELETE, PATCH.
 

@@ -6,12 +6,12 @@ TODO:
 """
 import pytest
 
-from api.requests.metro.metro_commission_api import MetroCommissionAPI
+from api.endpoints.metro.metro_commission_api import MetroCommissionAPI
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
 import data
-from tests.fixtures.metro_fixtures import create_fake_metro_for_commission_superuser
+from fixtures.metro import create_fake_metro_for_commission_superuser
 
 
 class TestMetroCommissionCRUD:

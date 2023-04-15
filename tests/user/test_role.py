@@ -5,12 +5,12 @@ TODO: create a role, and a user, assign role to that user, remove the role, what
 """
 
 import data
-from api.requests.user.menu_api import MenuAPI
-from api.requests.user.role_api import RoleAPI
+from api.endpoints.user.menu_api import MenuAPI
+from api.endpoints.user.role_api import RoleAPI
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
-from tests.fixtures.role_fixtures import create_fake_role
+from fixtures.role import create_fake_role
 
 
 class TestRoleCRUD:
