@@ -1,27 +1,24 @@
-from string import Template
-
 from api.enums.params import Param
 from api.enums.sections import Section
 from api.responses.response_models import ErrorResponse
 from core.http_client import HTTPClient
-from api.responses.users_model import (GetAllUsersSuccessResponse,
-                                       GetUserSuccessResponse,
-                                       CreateUserSuccessResponse,
-                                       UpdateUserSuccessResponse
-                                       )
+from api.responses.user.role_model import (GetRoleSuccessResponse,
+                                           GetAllRolesSuccessResponse,
+                                           CreateRoleSuccessResponse,
+                                           UpdateRoleSuccessResponse,
+                                           )
 
 
-class UsersAPI:
-    USERS = '/user/users/'
-    UPDATE_USER_PASSWORD = Template(f'{USERS}$user_id/password/')
+class RoleAPI:
+    ROLE = '/user/role/'
 
     def __init__(self, client: HTTPClient):
         self.client = client
         self.params = {
-            Param.SECTION.value: Section.USERS.value
+            Param.SECTION.value: Section.ROLES.value
         }
 
-    def get_all_users(self, params: dict = None, **kwargs) -> tuple:
+    def get_all_roles(self, params: dict = None, **kwargs) -> tuple:
         """
         NOTE!
         params = {
@@ -29,6 +26,7 @@ class UsersAPI:
             Param.SEARCH.value,
             Param.PAGE.value,
             Param.PAGE_SIZE.value,
+            Param.IS_DRIVER.value,
         }
         """
         if params is None:
@@ -36,66 +34,55 @@ class UsersAPI:
 
         params.update(self.params)  # Create query string params dict.
 
-        path = self.USERS
+        path = self.ROLE
         response = self.client.get(path, params=params, **kwargs)
 
         if response.status_code in range(200, 300):
-            model = GetAllUsersSuccessResponse(**response.json())
+            model = GetAllRolesSuccessResponse(**response.json())
         else:
             model = ErrorResponse(**response.json())
 
         return response, model
 
-    def get_user(self, id: int, **kwargs) -> tuple:
-        path = f'{self.USERS}{id}'
+    def get_role(self, id: int, **kwargs) -> tuple:
+        path = f'{self.ROLE}{id}'
         response = self.client.get(path, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
-            model = GetUserSuccessResponse(**response.json())
+            model = GetRoleSuccessResponse(**response.json())
         else:
             model = ErrorResponse(**response.json())
 
         return response, model
 
-    def create_user(self, data: dict, **kwargs) -> tuple:
-        path = self.USERS
+    def create_role(self, data: dict, **kwargs) -> tuple:
+        path = self.ROLE
         response = self.client.post(path, json=data, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
-            model = CreateUserSuccessResponse(**response.json())
+            model = CreateRoleSuccessResponse(**response.json())
         else:
             model = ErrorResponse(**response.json())
 
         return response, model
 
-    def update_user(self, id: int, data: dict, **kwargs) -> tuple:
-        path = f'{self.USERS}{id}'
+    def update_role(self, id: int, data: dict, **kwargs) -> tuple:
+        path = f'{self.ROLE}{id}'
         response = self.client.patch(path, json=data, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
-            model = UpdateUserSuccessResponse(**response.json())
+            model = UpdateRoleSuccessResponse(**response.json())
         else:
             model = ErrorResponse(**response.json())
 
         return response, model
 
-    def delete_user(self, id: int, **kwargs) -> tuple:
-        path = f'{self.USERS}{id}'
+    def delete_role(self, id: int, **kwargs) -> tuple:
+        path = f'{self.ROLE}{id}'
         response = self.client.delete(path, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
             model = None
-        else:
-            model = ErrorResponse(**response.json())
-
-        return response, model
-
-    def update_user_password(self, id: int, data: dict, **kwargs) -> tuple:
-        path = self.UPDATE_USER_PASSWORD.substitute(user_id=id)
-        response = self.client.post(path, data=data, params=self.params, **kwargs)
-
-        if response.status_code in range(200, 300):
-            model = response.json()
         else:
             model = ErrorResponse(**response.json())
 

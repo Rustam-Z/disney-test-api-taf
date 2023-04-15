@@ -1,4 +1,4 @@
-from api.requests.metro_api import MetroAPI
+from api.requests.metro.metro_api import MetroAPI
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User

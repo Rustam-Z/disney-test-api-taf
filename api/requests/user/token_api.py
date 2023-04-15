@@ -1,8 +1,8 @@
 from core.http_client import HTTPClient
 from api.responses.response_models import ErrorResponse
-from api.responses.token_model import (TokenSuccessResponse,
-                                       RefreshTokenSuccessResponse,
-                                       )
+from api.responses.user.token_model import (TokenSuccessResponse,
+                                            RefreshTokenSuccessResponse,
+                                            )
 
 
 class TokenAPI:

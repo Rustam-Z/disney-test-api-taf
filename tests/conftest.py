@@ -1,13 +1,12 @@
 import pytest
 
-from api.requests.token_api import TokenAPI
+from api.requests.user.token_api import TokenAPI
 from core.config import CONFIG
 from data.users import get_config_user
 from core.enums.environments import Environment
 from core.enums.users import User
 from core.helpers.jwt_helper import is_jwt_expired
 from core.http_client import HTTPClient
-
 
 CACHED_ACCESS_TOKENS = {}  # email: access_token
 

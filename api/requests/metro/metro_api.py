@@ -1,10 +1,10 @@
 from api.enums.params import Param
 from api.enums.sections import Section
-from api.responses.metro_model import (CreateMetroSuccessResponse,
-                                       UpdateMetroSuccessResponse,
-                                       GetMetroSuccessResponse,
-                                       GetAllMetrosSuccessResponse,
-                                       )
+from api.responses.metro.metro_model import (CreateMetroSuccessResponse,
+                                             UpdateMetroSuccessResponse,
+                                             GetMetroSuccessResponse,
+                                             GetAllMetrosSuccessResponse,
+                                             )
 from api.responses.response_models import ErrorResponse
 from core.http_client import HTTPClient
 

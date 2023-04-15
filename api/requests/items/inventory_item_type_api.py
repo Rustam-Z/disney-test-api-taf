@@ -2,11 +2,11 @@ from api.enums.params import Param
 from api.enums.sections import Section
 from api.responses.response_models import ErrorResponse
 from core.http_client import HTTPClient
-from api.responses.facility_item_type_model import CreateFacilityItemTypeSuccessResponse
+from api.responses.items.inventory_item_type_model import CreateInventoryItemTypeSuccessResponse
 
 
-class FacilityItemTypeAPI:
-    FACILITY_ITEM_TYPE = '/inventory/facility-item-type/'
+class InventoryItemTypeAPI:
+    INVENTORY_ITEM_TYPE = '/inventory/item-type/'
 
     def __init__(self, client: HTTPClient):
         self.client = client
@@ -15,18 +15,18 @@ class FacilityItemTypeAPI:
         }
 
     def create_item_type(self, data: dict, **kwargs) -> tuple:
-        path = self.FACILITY_ITEM_TYPE
+        path = self.INVENTORY_ITEM_TYPE
         response = self.client.post(path, json=data, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):
-            model = CreateFacilityItemTypeSuccessResponse(**response.json())
+            model = CreateInventoryItemTypeSuccessResponse(**response.json())
         else:
             model = ErrorResponse(**response.json())
 
         return response, model
 
     def delete_item_type(self, id: int, **kwargs) -> tuple:
-        path = f'{self.FACILITY_ITEM_TYPE}{id}'
+        path = f'{self.INVENTORY_ITEM_TYPE}{id}'
         response = self.client.delete(path, params=self.params, **kwargs)
 
         if response.status_code in range(200, 300):

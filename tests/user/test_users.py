@@ -3,14 +3,11 @@ TODO: test pagination in get all users
 """
 import pytest
 
-from api.requests.users_api import UsersAPI
+from api.requests.user.users_api import UsersAPI
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
-from tests.fixtures.users_fixtures import (
-    create_fake_user_superuser,
-    create_fake_user,
-)
+from tests.fixtures.users_fixtures import create_fake_user_superuser, create_fake_user
 
 
 class TestUsersCRUD:

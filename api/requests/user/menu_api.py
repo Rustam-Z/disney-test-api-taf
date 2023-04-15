@@ -1,9 +1,9 @@
 from api.enums.params import Param
 from core.http_client import HTTPClient
 from api.responses.response_models import ErrorResponse
-from api.responses.menu_model import (MenuListSuccessResponse,
-                                      UserMenusSuccessResponse,
-                                      )
+from api.responses.user.menu_model import (MenuListSuccessResponse,
+                                           UserMenusSuccessResponse,
+                                           )
 
 
 class MenuAPI:

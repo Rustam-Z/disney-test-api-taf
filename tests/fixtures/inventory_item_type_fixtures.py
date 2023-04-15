@@ -1,8 +1,8 @@
 import pytest
 
 import data
-from api.requests.inventory_item_type_api import InventoryItemTypeAPI
-from api.requests.inventory_category_api import InventoryCategoryAPI
+from api.requests.items.inventory_item_type_api import InventoryItemTypeAPI
+from api.requests.items.inventory_category_api import InventoryCategoryAPI
 
 
 @pytest.fixture()

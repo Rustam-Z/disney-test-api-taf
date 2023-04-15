@@ -2,8 +2,8 @@ import pytest
 
 import data
 from api.requests.facility_api import FacilityAPI
-from api.requests.metro_api import MetroAPI
-from api.requests.metro_commission_api import MetroCommissionAPI
+from api.requests.metro.metro_api import MetroAPI
+from api.requests.metro.metro_commission_api import MetroCommissionAPI
 
 
 @pytest.fixture()

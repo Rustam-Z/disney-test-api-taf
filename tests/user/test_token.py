@@ -8,7 +8,7 @@ from api.enums.errors import ErrorDetail
 from api.responses.common_models import InvalidTokenErrorResponse
 from core.asserters import APIResponse
 from core.decorators import users
-from api.requests.token_api import TokenAPI
+from api.requests.user.token_api import TokenAPI
 from core.enums.users import User
 from core.helpers.jwt_helper import decode_jwt
 import data

@@ -3,9 +3,9 @@ import pytest
 import data
 from api.requests.customer_api import CustomerAPI
 from api.requests.facility_api import FacilityAPI
-from api.requests.menu_api import MenuAPI
-from api.requests.role_api import RoleAPI
-from api.requests.users_api import UsersAPI
+from api.requests.user.menu_api import MenuAPI
+from api.requests.user.role_api import RoleAPI
+from api.requests.user.users_api import UsersAPI
 
 
 @pytest.fixture()

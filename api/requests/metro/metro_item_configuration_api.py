@@ -2,7 +2,7 @@ from api.enums.params import Param
 from api.enums.sections import Section
 from api.responses.response_models import ErrorResponse
 from core.http_client import HTTPClient
-from api.responses.metro_item_configuration_model import (
+from api.responses.metro.metro_item_configuration_model import (
     GetAllConfigsSuccessResponse,
     GetConfigSuccessResponse,
     CreateConfigSuccessResponse,

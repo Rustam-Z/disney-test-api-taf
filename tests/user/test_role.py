@@ -5,8 +5,8 @@ TODO: create a role, and a user, assign role to that user, remove the role, what
 """
 
 import data
-from api.requests.menu_api import MenuAPI
-from api.requests.role_api import RoleAPI
+from api.requests.user.menu_api import MenuAPI
+from api.requests.user.role_api import RoleAPI
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
