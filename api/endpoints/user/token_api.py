@@ -18,23 +18,25 @@ class TokenAPI:
             'password': password
         }
         response = self.client.post(self.USER_TOKEN, json=data, **kwargs)
+        response_payload = response.content
 
-        if response.status_code in range(200, 300):
-            model = TokenSuccessResponse(**response.json())
-        else:
-            model = ErrorResponse(**response.json())
+        if response.status_code == 200:
+            response_payload = TokenSuccessResponse(**response.json())
+        elif response.status_code in range(400, 500):
+            response_payload = ErrorResponse(**response.json())
 
-        return response, model
+        return response, response_payload
 
     def refresh_token(self, refresh: str, **kwargs) -> tuple:
         data = {
             'refresh': refresh,
         }
         response = self.client.post(self.USER_TOKEN_REFRESH, json=data, **kwargs)
+        response_payload = response.content
 
-        if response.status_code in range(200, 300):
-            model = RefreshTokenSuccessResponse(**response.json())
-        else:
-            model = ErrorResponse(**response.json())
+        if response.status_code == 200:
+            response_payload = RefreshTokenSuccessResponse(**response.json())
+        elif response.status_code in range(400, 500):
+            response_payload = ErrorResponse(**response.json())
 
-        return response, model
+        return response, response_payload

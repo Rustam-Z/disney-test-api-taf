@@ -17,21 +17,21 @@ class InventoryCategoryAPI:
     def create_category(self, data: dict, **kwargs) -> tuple:
         path = self.INVENTORY_CATEGORY
         response = self.client.post(path, json=data, params=self.params, **kwargs)
+        response_payload = response.content
 
-        if response.status_code in range(200, 300):
-            model = CreateInventoryCategorySuccessResponse(**response.json())
-        else:
-            model = ErrorResponse(**response.json())
+        if response.status_code == 201:
+            response_payload = CreateInventoryCategorySuccessResponse(**response.json())
+        elif response.status_code in range(400, 500):
+            response_payload = ErrorResponse(**response.json())
 
-        return response, model
+        return response, response_payload
 
     def delete_category(self, id: int, **kwargs) -> tuple:
         path = f'{self.INVENTORY_CATEGORY}{id}'
         response = self.client.delete(path, params=self.params, **kwargs)
+        response_payload = response.content
 
-        if response.status_code in range(200, 300):
-            model = None
-        else:
-            model = ErrorResponse(**response.json())
+        if response.status_code in range(400, 500):
+            response_payload = ErrorResponse(**response.json())
 
-        return response, model
+        return response, response_payload

@@ -36,54 +36,57 @@ class RoleAPI:
 
         path = self.ROLE
         response = self.client.get(path, params=params, **kwargs)
+        response_payload = response.content
 
-        if response.status_code in range(200, 300):
-            model = GetAllRolesSuccessResponse(**response.json())
-        else:
-            model = ErrorResponse(**response.json())
+        if response.status_code == 200:
+            response_payload = GetAllRolesSuccessResponse(**response.json())
+        elif response.status_code in range(400, 500):
+            response_payload = ErrorResponse(**response.json())
 
-        return response, model
+        return response, response_payload
 
     def get_role(self, id: int, **kwargs) -> tuple:
         path = f'{self.ROLE}{id}'
         response = self.client.get(path, params=self.params, **kwargs)
+        response_payload = response.content
 
-        if response.status_code in range(200, 300):
-            model = GetRoleSuccessResponse(**response.json())
-        else:
-            model = ErrorResponse(**response.json())
+        if response.status_code == 200:
+            response_payload = GetRoleSuccessResponse(**response.json())
+        elif response.status_code in range(400, 500):
+            response_payload = ErrorResponse(**response.json())
 
-        return response, model
+        return response, response_payload
 
     def create_role(self, data: dict, **kwargs) -> tuple:
         path = self.ROLE
         response = self.client.post(path, json=data, params=self.params, **kwargs)
+        response_payload = response.content
 
-        if response.status_code in range(200, 300):
-            model = CreateRoleSuccessResponse(**response.json())
-        else:
-            model = ErrorResponse(**response.json())
+        if response.status_code == 201:
+            response_payload = CreateRoleSuccessResponse(**response.json())
+        elif response.status_code in range(400, 500):
+            response_payload = ErrorResponse(**response.json())
 
-        return response, model
+        return response, response_payload
 
     def update_role(self, id: int, data: dict, **kwargs) -> tuple:
         path = f'{self.ROLE}{id}'
         response = self.client.patch(path, json=data, params=self.params, **kwargs)
+        response_payload = response.content
 
-        if response.status_code in range(200, 300):
-            model = UpdateRoleSuccessResponse(**response.json())
-        else:
-            model = ErrorResponse(**response.json())
+        if response.status_code == 200:
+            response_payload = UpdateRoleSuccessResponse(**response.json())
+        elif response.status_code in range(400, 500):
+            response_payload = ErrorResponse(**response.json())
 
-        return response, model
+        return response, response_payload
 
     def delete_role(self, id: int, **kwargs) -> tuple:
         path = f'{self.ROLE}{id}'
         response = self.client.delete(path, params=self.params, **kwargs)
+        response_payload = response.content
 
-        if response.status_code in range(200, 300):
-            model = None
-        else:
-            model = ErrorResponse(**response.json())
+        if response.status_code in range(400, 500):
+            response_payload = ErrorResponse(**response.json())
 
-        return response, model
+        return response, response_payload

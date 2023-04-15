@@ -20,54 +20,57 @@ class CustomerAPI:
     def get_all_customers(self, **kwargs) -> tuple:
         path = self.CUSTOMER
         response = self.client.get(path, params=self.params, **kwargs)
+        response_payload = response.content
 
-        if response.status_code in range(200, 300):
-            model = GetAllCustomersSuccessResponse(**response.json())
-        else:
-            model = ErrorResponse(**response.json())
+        if response.status_code == 200:
+            response_payload = GetAllCustomersSuccessResponse(**response.json())
+        elif response.status_code in range(400, 500):
+            response_payload = ErrorResponse(**response.json())
 
-        return response, model
+        return response, response_payload
 
     def get_customer(self, id: int, **kwargs) -> tuple:
         path = f'{self.CUSTOMER}{id}'
         response = self.client.get(path, params=self.params, **kwargs)
+        response_payload = response.content
 
-        if response.status_code in range(200, 300):
-            model = GetCustomerSuccessResponse(**response.json())
-        else:
-            model = ErrorResponse(**response.json())
+        if response.status_code == 200:
+            response_payload = GetCustomerSuccessResponse(**response.json())
+        elif response.status_code in range(400, 500):
+            response_payload = ErrorResponse(**response.json())
 
-        return response, model
+        return response, response_payload
 
     def create_customer(self, data: dict, **kwargs) -> tuple:
         path = self.CUSTOMER
         response = self.client.post(path, json=data, params=self.params, **kwargs)
+        response_payload = response.content
 
-        if response.status_code in range(200, 300):
-            model = CreateCustomerSuccessResponse(**response.json())
-        else:
-            model = ErrorResponse(**response.json())
+        if response.status_code == 201:
+            response_payload = CreateCustomerSuccessResponse(**response.json())
+        elif response.status_code in range(400, 500):
+            response_payload = ErrorResponse(**response.json())
 
-        return response, model
+        return response, response_payload
 
     def update_customer(self, id: int, data: dict, **kwargs) -> tuple:
         path = f'{self.CUSTOMER}{id}'
         response = self.client.patch(path, json=data, params=self.params, **kwargs)
+        response_payload = response.content
 
-        if response.status_code in range(200, 300):
-            model = UpdateCustomerSuccessResponse(**response.json())
-        else:
-            model = ErrorResponse(**response.json())
+        if response.status_code == 200:
+            response_payload = UpdateCustomerSuccessResponse(**response.json())
+        elif response.status_code in range(400, 500):
+            response_payload = ErrorResponse(**response.json())
 
-        return response, model
+        return response, response_payload
 
     def delete_customer(self, id: int, **kwargs) -> tuple:
         path = f'{self.CUSTOMER}{id}'
         response = self.client.delete(path, params=self.params, **kwargs)
+        response_payload = response.content
 
-        if response.status_code in range(200, 300):
-            model = None  # Success response doesn't have body
-        else:
-            model = ErrorResponse(**response.json())
+        if response.status_code in range(400, 500):
+            response_payload = ErrorResponse(**response.json())
 
-        return response, model
+        return response, response_payload

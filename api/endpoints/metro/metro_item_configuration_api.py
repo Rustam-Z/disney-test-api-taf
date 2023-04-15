@@ -22,54 +22,57 @@ class MetroItemConfigurationAPI:
     def get_all_configs(self, **kwargs) -> tuple:
         path = self.METRO_ITEM_CONFIGURATION
         response = self.client.get(path, params=self.params, **kwargs)
+        response_payload = response.content
 
-        if response.status_code in range(200, 300):
-            model = GetAllConfigsSuccessResponse(**response.json())
-        else:
-            model = ErrorResponse(**response.json())
+        if response.status_code == 200:
+            response_payload = GetAllConfigsSuccessResponse(**response.json())
+        elif response.status_code in range(400, 500):
+            response_payload = ErrorResponse(**response.json())
 
-        return response, model
+        return response, response_payload
 
     def get_config(self, id: int, **kwargs) -> tuple:
         path = f'{self.METRO_ITEM_CONFIGURATION}{id}'
         response = self.client.get(path, params=self.params, **kwargs)
+        response_payload = response.content
 
-        if response.status_code in range(200, 300):
-            model = GetConfigSuccessResponse(**response.json())
-        else:
-            model = ErrorResponse(**response.json())
+        if response.status_code == 200:
+            response_payload = GetConfigSuccessResponse(**response.json())
+        elif response.status_code in range(400, 500):
+            response_payload = ErrorResponse(**response.json())
 
-        return response, model
+        return response, response_payload
 
     def create_config(self, data: dict, **kwargs) -> tuple:
         path = self.METRO_ITEM_CONFIGURATION
         response = self.client.post(path, json=data, params=self.params, **kwargs)
+        response_payload = response.content
 
-        if response.status_code in range(200, 300):
-            model = CreateConfigSuccessResponse(**response.json())
-        else:
-            model = ErrorResponse(**response.json())
+        if response.status_code == 201:
+            response_payload = CreateConfigSuccessResponse(**response.json())
+        elif response.status_code in range(400, 500):
+            response_payload = ErrorResponse(**response.json())
 
-        return response, model
+        return response, response_payload
 
     def update_config(self, id: int, data: dict, **kwargs) -> tuple:
         path = f'{self.METRO_ITEM_CONFIGURATION}{id}'
         response = self.client.patch(path, json=data, params=self.params, **kwargs)
+        response_payload = response.content
 
-        if response.status_code in range(200, 300):
-            model = UpdateConfigSuccessResponse(**response.json())
-        else:
-            model = ErrorResponse(**response.json())
+        if response.status_code == 200:
+            response_payload = UpdateConfigSuccessResponse(**response.json())
+        elif response.status_code in range(400, 500):
+            response_payload = ErrorResponse(**response.json())
 
-        return response, model
+        return response, response_payload
 
     def delete_config(self, id: int, **kwargs) -> tuple:
         path = f'{self.METRO_ITEM_CONFIGURATION}{id}'
         response = self.client.delete(path, params=self.params, **kwargs)
+        response_payload = response.content
 
-        if response.status_code in range(200, 300):
-            model = None  # Success response doesn't have body
-        else:
-            model = ErrorResponse(**response.json())
+        if response.status_code in range(400, 500):
+            response_payload = ErrorResponse(**response.json())
 
-        return response, model
+        return response, response_payload

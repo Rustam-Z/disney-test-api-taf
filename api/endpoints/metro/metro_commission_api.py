@@ -4,7 +4,7 @@ from core.http_client import HTTPClient
 from api.response_models.response_models import ErrorResponse
 from api.response_models.metro.metro_commission_models import (
     GetAllMetrosSuccessResponse,
-    CreateMetroResponse,
+    CreateMetroSuccessResponse,
 )
 
 
@@ -20,24 +20,26 @@ class MetroCommissionAPI:
     def get_all_metros(self, **kwargs) -> tuple:
         path = self.METRO_COMMISSION
         response = self.client.get(path, params=self.params, **kwargs)
+        response_payload = response.content
 
-        if response.status_code in range(200, 300):
-            model = GetAllMetrosSuccessResponse(**response.json())
-        else:
-            model = ErrorResponse(**response.json())
+        if response.status_code == 200:
+            response_payload = GetAllMetrosSuccessResponse(**response.json())
+        elif response.status_code in range(400, 500):
+            response_payload = ErrorResponse(**response.json())
 
-        return response, model
+        return response, response_payload
 
     def create_metro(self, data: dict, **kwargs) -> tuple:
         path = self.METRO_COMMISSION
         response = self.client.post(path, json=data, params=self.params, **kwargs)
+        response_payload = response.content
 
-        if response.status_code in range(200, 300):
-            model = CreateMetroResponse(**response.json())
-        else:
-            model = ErrorResponse(**response.json())
+        if response.status_code == 201:
+            response_payload = CreateMetroSuccessResponse(**response.json())
+        elif response.status_code in range(400, 500):
+            response_payload = ErrorResponse(**response.json())
 
-        return response, model
+        return response, response_payload
 
     def upload_csv(self):  # TODO
         ...

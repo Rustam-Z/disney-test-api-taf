@@ -31,9 +31,7 @@ class FacilityItemTypeAPI:
         response = self.client.delete(path, params=self.params, **kwargs)
         response_payload = response.content
 
-        if response.status_code == 204:
-            response_payload = None
-        elif response.status_code in range(400, 500):
+        if response.status_code in range(400, 500):
             response_payload = ErrorResponse(**response.json())
 
         return response, response_payload

@@ -48,5 +48,5 @@ class _CreateMetroDataField(BaseModel):
     facility: StrictInt
 
 
-class CreateMetroResponse(SuccessResponse):
+class CreateMetroSuccessResponse(SuccessResponse):
     data: _CreateMetroDataField
