@@ -5,6 +5,7 @@ from core.http_client import HTTPClient
 from api.response_models.customer.delivery_schedule_models import (
     GetDeliveryScheduleSuccessResponse,
     CreateDeliveryScheduleSuccessResponse,
+    GetAllDeliveryScheduleSuccessResponse,
 )
 
 
@@ -23,7 +24,7 @@ class DeliveryScheduleAPI:
         response_payload = response.content
 
         if response.status_code == 200:
-            response_payload = response.json()
+            response_payload = GetAllDeliveryScheduleSuccessResponse(**response.json())
         elif response.status_code in range(400, 500):
             response_payload = ErrorResponse(**response.json())
 

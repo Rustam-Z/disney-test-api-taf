@@ -1,6 +1,6 @@
-from typing import List
+from typing import List, Optional
 
-from pydantic import BaseModel, StrictInt, constr
+from pydantic import BaseModel, StrictInt, constr, StrictStr
 
 from api.response_models.response_models import SuccessResponse
 
@@ -14,11 +14,6 @@ class _DeliverySchedule(BaseModel):
     end_time: constr(min_length=1, strict=True)
 
 
-"""
-Get delivery schedule
-"""
-
-
 class _FacilityField(BaseModel):
     id: StrictInt
     name: constr(min_length=1, strict=True)
@@ -29,13 +24,34 @@ class _CustomerField(BaseModel):
     name: constr(min_length=1, strict=True)
 
 
-class _GetDeliveryScheduleDataField(_DeliverySchedule):
+class _DeliveryScheduleComplex(_DeliverySchedule):
     facility: _FacilityField
     customer: _CustomerField
 
 
+"""
+Get delivery schedule
+"""
+
+
 class GetDeliveryScheduleSuccessResponse(SuccessResponse):
-    data: _GetDeliveryScheduleDataField
+    data: _DeliveryScheduleComplex
+
+
+"""
+Get all delivery schedules
+"""
+
+
+class _GetAllDeliveryScheduleDataField(BaseModel):
+    count: StrictInt
+    next: Optional[StrictStr]
+    previous: Optional[StrictStr]
+    results: List[_DeliveryScheduleComplex]
+
+
+class GetAllDeliveryScheduleSuccessResponse(SuccessResponse):
+    data: _GetAllDeliveryScheduleDataField
 
 
 """
