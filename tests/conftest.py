@@ -7,6 +7,8 @@ from core.enums.environments import Environment
 from core.enums.users import User
 from core.helpers.jwt_helper import is_jwt_expired
 from core.http_client import HTTPClient
+from fixtures import *
+
 
 CACHED_ACCESS_TOKENS = {}  # email: access_token
 

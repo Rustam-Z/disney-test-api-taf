@@ -9,7 +9,6 @@ from api.endpoints.items.inventory_category_api import InventoryCategoryAPI
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
-from fixtures.inventory_item_type import create_fake_inventory_item_type
 
 
 class TestInventoryCategoryCRUD:
