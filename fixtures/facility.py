@@ -1,8 +1,8 @@
 import pytest
 
 import data
-from api.endpoints.customer_api import CustomerAPI
-from api.endpoints.facility_api import FacilityAPI
+from api.endpoints.customer.customer_api import CustomerAPI
+from api.endpoints.facility.facility_api import FacilityAPI
 
 
 @pytest.fixture()

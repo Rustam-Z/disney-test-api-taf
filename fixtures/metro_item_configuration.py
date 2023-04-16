@@ -1,7 +1,7 @@
 import pytest
 
 import data
-from api.endpoints.facility_api import FacilityAPI
+from api.endpoints.facility.facility_api import FacilityAPI
 from api.endpoints.items.inventory_item_type_api import InventoryItemTypeAPI
 from api.endpoints.items.inventory_category_api import InventoryCategoryAPI
 from api.endpoints.items.facility_item_type_api import FacilityItemTypeAPI

@@ -6,11 +6,11 @@ TODO:
 import pytest
 
 import data
-from api.endpoints.customer_api import CustomerAPI
+from api.endpoints.customer.customer_api import CustomerAPI
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
-from api.response_models.customer_models import GetAllCustomersSuccessResponse
+from api.response_models.customer.customer_models import GetAllCustomersSuccessResponse
 from api.response_models.common_models import (
     AuthErrorResponse,
     RequestWithoutSectionParamErrorResponse,

@@ -1,7 +1,7 @@
 import pytest
 
 import data
-from api.endpoints.facility_api import FacilityAPI
+from api.endpoints.facility.facility_api import FacilityAPI
 from api.endpoints.metro.metro_api import MetroAPI
 from api.endpoints.metro.metro_commission_api import MetroCommissionAPI
 

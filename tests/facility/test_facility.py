@@ -1,11 +1,11 @@
 import pytest
 
 import data
-from api.endpoints.facility_api import FacilityAPI
+from api.endpoints.facility.facility_api import FacilityAPI
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
-from api.response_models.facility_models import GetAllFacilitiesSuccessResponse
+from api.response_models.facility.facility_models import GetAllFacilitiesSuccessResponse
 from api.response_models.common_models import (
     AuthErrorResponse,
     RequestWithoutSectionParamErrorResponse,
