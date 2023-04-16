@@ -18,7 +18,7 @@ class TestCreateDeliverySchedule:
         APIResponse(response).assert_models(payload)
 
 
-class TestAllDeliverySchedule:
+class TestGetAllDeliverySchedule:
     @users(User.SUPERUSER)
     def test_getAllDeliverySchedules_returns200AndData(self, client, user):
         # Act
@@ -26,3 +26,20 @@ class TestAllDeliverySchedule:
 
         # Assert
         APIResponse(response).assert_status(200)
+
+
+class TestGetDeliverySchedule:
+    @users(User.SUPERUSER)
+    def test_getDeliverySchedule_withValidID_returns200AndData(self, client, user, request):
+        # Arrange
+        payload, response, model = request.getfixturevalue('create_fake_schedule_superuser')()
+        delivery_schedule_id = model.data.id
+
+        # Act
+        response, model = DeliveryScheduleAPI(client).get_schedule(id=delivery_schedule_id)
+
+        # Assert
+        APIResponse(response).assert_status(200)
+        assert model.data.id == delivery_schedule_id
+        APIResponse(response).assert_models(payload)
+
