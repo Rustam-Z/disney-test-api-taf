@@ -12,55 +12,77 @@ from core.decorators import users
 from core.enums.users import User
 
 
-class TestRoleCRUD:
+class TestCreateRole:
     @users(User.SUPERUSER, User.FACILITY_ADMIN)
-    def test_createNewRole_returns201AndData(self, client, user, request):
+    def test_createRoleBySuperuser_withValidData_returns201AndData(self, client, user, request):
+        # Act
         payload, response, model = request.getfixturevalue('create_fake_role')()
+        
+        # Assert
         APIResponse(response).assert_status(201)
 
-    @users(User.SUPERUSER)
-    def test_getAllRoles_return200AndData(self, client, user):
+
+class TestGetAllRoles:
+    @users(User.SUPERUSER, User.FACILITY_ADMIN)
+    def test_getAllRoles_return200AndData(self, client, user, request):
+        # Arrange
+        payload, response, model = request.getfixturevalue('create_fake_role')()
+
+        # Act
         response, model = RoleAPI(client).get_all_roles()
+        
+        # Assert
         APIResponse(response).assert_status(200)
 
+
+class TestGetRole:
     @users(User.SUPERUSER)
-    def test_getRoleByID_returns200AndData(self, client, user, request):
-        # Setup
+    def test_getRoleBySuperuser_returns200AndData(self, client, user, request):
+        # Arrange
         payload, response, model = request.getfixturevalue('create_fake_role')(is_driver=True)
         existing_role_id = model.data.id
 
-        # Act and assert
+        # Act
         response, model = RoleAPI(client).get_role(id=existing_role_id)
+
+        # Assert
         APIResponse(response).assert_status(200)
         assert model.data.id == existing_role_id, 'IDs are not matching.'
 
+
+class TestUpdateRole:
     @users(User.SUPERUSER)
     def test_updateRoleByID_returns200AndData(self, client, user, request):
-        # Setup
+        # Arrange
         payload, response, model = request.getfixturevalue('create_fake_role')()
+        menu_list_response, menu_list_model = MenuAPI(client).get_menu_list()
         existing_role_id = model.data.id
 
-        # Act and assert
-        menu_list_response, menu_list_model = MenuAPI(client).get_menu_list()
+        # Act
         payload = data.fake.model.role(sections=menu_list_model.data.results)
-        response, model = RoleAPI(client).update_role(id=existing_role_id,
-                                                      data=payload)
+        response, model = RoleAPI(client).update_role(id=existing_role_id, data=payload)
+
+        # Assert4
         APIResponse(response).assert_status(200)
         assert existing_role_id == model.data.id, 'Old ID and new ID are not matching.'
         assert payload.get('name') == model.data.name
 
+
+class TestDeleteRole:
     @users(User.SUPERUSER)
-    def test_deleteRoleByID_returns204(self, client, user, request):
-        # Setup
+    def test_deleteRoleBySuperuser_withValidID_returns204(self, client, user, request):
+        # Arrange
         payload, response, model = request.getfixturevalue('create_fake_role')()
         existing_role_id = model.data.id
 
-        # Act and assert
+        # Act
         response, model = RoleAPI(client).delete_role(id=existing_role_id)
+
+        # Assert
         APIResponse(response).assert_status(204)
 
     @users(User.SUPERUSER)
-    def test_deleteFacility_byInvalidID_returns404AndError(self, client, user):
+    def test_deleteRoleBySuperuser_withInvalidID_returns404AndError(self, client, user):
         # Arrange
         not_existing_id = data.fake.uuid4()
 
