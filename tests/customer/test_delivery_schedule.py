@@ -2,6 +2,7 @@ import pytest
 
 import data
 from api.endpoints.customer.delivery_schedule_api import DeliveryScheduleAPI
+from api.enums.errors import ErrorDetail
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
@@ -61,3 +62,25 @@ class TestUpdateDeliverySchedule:
         APIResponse(response).assert_status(200)
         APIResponse(response).assert_models(payload)
         assert delivery_schedule_id == model.data.id
+
+
+class TestDeleteDeliverySchedule:
+    @users(User.SUPERUSER)
+    def test_deleteDeliverySchedule_withValidID_returns204(self, client, user, request):
+        # Arrange
+        payload, response, model = request.getfixturevalue('create_fake_schedule_superuser')()
+        delivery_schedule_id = model.data.id
+
+        # Act
+        response, response_payload = DeliveryScheduleAPI(client).delete_schedule(id=delivery_schedule_id)
+
+        # Assert
+        APIResponse(response).assert_status(204)
+
+        # Act: Remove already removed object.
+        # Act
+        response, model = DeliveryScheduleAPI(client).delete_schedule(id=delivery_schedule_id)
+
+        # Assert
+        APIResponse(response).assert_status(404)
+        assert model.error.get('detail') == ErrorDetail.NOT_FOUND.value

@@ -9,3 +9,4 @@ class ErrorDetail(Enum):
     ONLY_SUPERUSER = 'Only Superuser can perform this action!'
     NO_PERMISSION = 'You do not have permission to perform this action.'
     NO_SUCH_MENU = 'There is no such menu route available.'
+    NOT_FOUND = 'Not found.'

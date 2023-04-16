@@ -7,6 +7,7 @@ TODO: create a role, and a user, assign role to that user, remove the role, what
 import data
 from api.endpoints.user.menu_api import MenuAPI
 from api.endpoints.user.role_api import RoleAPI
+from api.enums.errors import ErrorDetail
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
@@ -91,7 +92,7 @@ class TestDeleteRole:
 
         # Assert
         APIResponse(response).assert_status(404)
-        assert model.error.get('detail') == 'Not found.'
+        assert model.error.get('detail') == ErrorDetail.NOT_FOUND.value
 
 
 class TestRoleAuth:

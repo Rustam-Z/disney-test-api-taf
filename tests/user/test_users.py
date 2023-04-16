@@ -4,6 +4,7 @@ TODO: test pagination in get all users
 import pytest
 
 from api.endpoints.user.users_api import UsersAPI
+from api.enums.errors import ErrorDetail
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
@@ -92,14 +93,18 @@ class TestDeleteUser:
         payload, response, model = request.getfixturevalue('create_fake_user_superuser')()
         existing_id = model.data.id
 
-        # Act and assert
+        # Act
         response, _ = UsersAPI(client).delete_user(id=existing_id)
+
+        # Assert
         APIResponse(response).assert_status(204)
 
-        # Fetching removed item
+        # Act: Fetching removed item.
         response, model = UsersAPI(client).get_user(id=existing_id)
+
+        # Assert
         APIResponse(response).assert_status(404)
-        assert model.error.get('detail') == 'Not found.'
+        assert model.error.get('detail') == ErrorDetail.NOT_FOUND.value
 
 
 class TestUsersAuth:
