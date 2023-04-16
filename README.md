@@ -1,5 +1,8 @@
 # Disney's API Test Automation Framework
 
+## Links
+1. [Disney Postman collection](https://cloudy-spaceship-458806.postman.co/workspace/Disney~a12dcd17-4260-4ca9-98d0-ada0bf3f809f)
+
 ## Setup
 1. Install [Python](https://www.python.org/downloads/) >= 3.11 and [Poetry](https://python-poetry.org/docs/).
 2. Install PyCharm / IntelliJ, clone the project.
