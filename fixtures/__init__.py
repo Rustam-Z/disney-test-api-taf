@@ -14,3 +14,4 @@ from .metro import (
 )
 from .metro_item_configuration import create_fake_metro_item_configuration_superuser
 from .cart_build import create_fake_cart_superuser
+from .delivery_schedule import create_fake_schedule_superuser

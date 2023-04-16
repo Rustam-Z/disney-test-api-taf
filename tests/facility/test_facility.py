@@ -2,6 +2,7 @@ import pytest
 
 import data
 from api.endpoints.facility.facility_api import FacilityAPI
+from api.enums.errors import ErrorDetail
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
@@ -150,7 +151,7 @@ class TestDeleteFacility:
 
         # Assert
         APIResponse(response).assert_status(404)
-        assert model.error.get('detail') == 'Not found.'
+        assert model.error.get('detail') == ErrorDetail.NOT_FOUND.value
 
 
 class TestFacilityAuth:

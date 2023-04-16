@@ -223,3 +223,15 @@ class RequestModelsFaker:
 
         data.update(kwargs)
         return data
+
+    def delivery_schedule(self, facility_id: int, customer_id: int, **kwargs) -> dict:
+        data = {
+            "facility": facility_id,
+            "customer": customer_id,
+            "days": ["0", "1"],
+            "start_time": "08:00:00",
+            "end_time": "10:00:00",
+        }
+
+        data.update(kwargs)
+        return data
