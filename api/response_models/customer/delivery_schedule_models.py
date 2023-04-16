@@ -61,3 +61,12 @@ Create delivery schedule
 
 class CreateDeliveryScheduleSuccessResponse(SuccessResponse):
     data: _DeliverySchedule
+
+
+"""
+Update delivery schedule
+"""
+
+
+class UpdateDeliveryScheduleSuccessResponse(SuccessResponse):
+    data: _DeliverySchedule

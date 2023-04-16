@@ -224,7 +224,7 @@ class RequestModelsFaker:
         data.update(kwargs)
         return data
 
-    def delivery_schedule(self, facility_id: int = None, customer_id: int = None, **kwargs) -> dict:
+    def delivery_schedule(self, facility_id: int, customer_id: int, **kwargs) -> dict:
         data = {
             "facility": facility_id,
             "customer": customer_id,

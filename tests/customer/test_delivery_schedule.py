@@ -43,3 +43,21 @@ class TestGetDeliverySchedule:
         assert model.data.id == delivery_schedule_id
         APIResponse(response).assert_models(payload)
 
+
+class TestUpdateDeliverySchedule:
+    @users(User.SUPERUSER)
+    def test_updateDeliverySchedule_withValidID_returns200AndData(self, client, user, request):
+        # Arrange
+        payload, response, model = request.getfixturevalue('create_fake_schedule_superuser')()
+        delivery_schedule_id = model.data.id
+        facility_id = model.data.facility
+        customer_id = model.data.customer
+
+        # Act
+        payload = data.fake.model.delivery_schedule(facility_id=facility_id, customer_id=customer_id)
+        response, model = DeliveryScheduleAPI(client).update_schedule(id=delivery_schedule_id, data=payload)
+
+        # Assert
+        APIResponse(response).assert_status(200)
+        APIResponse(response).assert_models(payload)
+        assert delivery_schedule_id == model.data.id

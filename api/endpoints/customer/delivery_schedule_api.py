@@ -6,6 +6,7 @@ from api.response_models.customer.delivery_schedule_models import (
     GetDeliveryScheduleSuccessResponse,
     CreateDeliveryScheduleSuccessResponse,
     GetAllDeliveryScheduleSuccessResponse,
+    UpdateDeliveryScheduleSuccessResponse,
 )
 
 
@@ -60,7 +61,7 @@ class DeliveryScheduleAPI:
         response_payload = response.content
 
         if response.status_code == 200:
-            response_payload = response.json()
+            response_payload = UpdateDeliveryScheduleSuccessResponse(**response.json())
         elif response.status_code in range(400, 500):
             response_payload = ErrorResponse(**response.json())
 
