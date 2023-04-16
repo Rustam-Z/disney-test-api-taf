@@ -7,7 +7,6 @@ from api.endpoints.user.users_api import UsersAPI
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
-from fixtures.users import create_fake_user_superuser, create_fake_user
 
 
 class TestUsersCRUD:

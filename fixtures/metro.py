@@ -24,7 +24,7 @@ def create_fake_metro_for_commission_superuser(client):
 
 
 @pytest.fixture()
-def create_fake_metro(client):
+def create_fake_metro_superuser(client):
     facility_id = -1
     metro_id = -1
 

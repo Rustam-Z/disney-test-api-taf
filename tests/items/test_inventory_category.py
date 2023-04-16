@@ -1,9 +1,3 @@
-"""
-TODO:
-- Test CRUD
-- Auth
-- Section
-"""
 import data
 from api.endpoints.items.inventory_category_api import InventoryCategoryAPI
 from core.asserters import APIResponse
@@ -11,31 +5,22 @@ from core.decorators import users
 from core.enums.users import User
 
 
-class TestInventoryCategoryCRUD:
+class TestCreateInventoryCategory:
     @users(User.SUPERUSER)
-    def test_superUserCreatesCategory_returns201AndData(self, client, user):
-        # Arrange
-        payload = data.fake.model.inventory_category()
-
+    def test_createInventoryCategoryBySuperuser_withValidData_returns201AndData(self, client, user, request):
         # Act
-        response, model = InventoryCategoryAPI(client).create_category(data=payload)
-        id_ = model.data.id
+        payload, response, model = request.getfixturevalue('create_fake_inventory_category')()
 
         # Assert
         APIResponse(response).assert_status(201)
         APIResponse(response).assert_models(payload)
 
-        # Cleanup
-        try:
-            InventoryCategoryAPI(client).delete_category(id=id_, expect_json=False)
-        except Exception:
-            return None
 
+class TestDeleteInventoryCategory:
     @users(User.SUPERUSER)
-    def test_superUserDeletesCategory_returns204(self, client, user):
+    def test_deleteInventoryCategoryBySuperuser_withValidID_returns204(self, client, user, request):
         # Arrange
-        payload = data.fake.model.inventory_category()
-        response, model = InventoryCategoryAPI(client).create_category(data=payload)
+        payload, response, model = request.getfixturevalue('create_fake_inventory_category')()
         id_ = model.data.id
 
         # Act

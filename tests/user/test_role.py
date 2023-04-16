@@ -10,7 +10,6 @@ from api.endpoints.user.role_api import RoleAPI
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
-from fixtures.role import create_fake_role
 
 
 class TestRoleCRUD:

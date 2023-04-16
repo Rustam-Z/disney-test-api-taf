@@ -11,12 +11,11 @@ from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
 import data
-from fixtures.metro import create_fake_metro_for_commission_superuser
 
 
-class TestMetroCommissionCRUD:
+class TestCreateMetroCommission:
     @users(User.SUPERUSER)
-    def test_createMetro_withSuperUser_withValidData_returns201AndData(self, client, user, request):
+    def test_createMetroBySuperuser_withValidData_returns201AndData(self, client, user, request):
         # Act
         payload, response, model = request.getfixturevalue('create_fake_metro_for_commission_superuser')()
 
@@ -26,7 +25,7 @@ class TestMetroCommissionCRUD:
 
     @pytest.mark.skip(reason="Need to investigate why the test fails.")
     @users(User.FACILITY_ADMIN)
-    def test_createMetro_withFacilityAdmin_withValidData_returns201AndData(self, client, user):
+    def test_createMetroByFacilityAdmin_withValidData_returns201AndData(self, client, user):
         # Arrange
         payload = data.fake.model.metro_for_commission()
 
@@ -37,8 +36,10 @@ class TestMetroCommissionCRUD:
         APIResponse(response).assert_status(201)
         APIResponse(response).assert_models(payload)
 
+
+class TestDeleteMetroCommission:
     @users(User.SUPERUSER)
-    def test_getAllMetros_returns200AndData(self, client, user):
+    def test_getAllMetrosBySuperuser_returns200AndData(self, client, user):
         # Act
         response, model = MetroCommissionAPI(client).get_all_metros()
 

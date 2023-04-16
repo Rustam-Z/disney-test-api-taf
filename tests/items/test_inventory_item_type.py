@@ -14,9 +14,9 @@ from core.decorators import users
 from core.enums.users import User
 
 
-class TestInventoryCategoryCRUD:
+class TestCreateInventoryItemType:
     @users(User.SUPERUSER)
-    def test_superUserCreatesItemType_returns201AndData(self, client, user, request):
+    def test_createInventoryItemTypeBySuperuser_withValidData_returns201AndData(self, client, user, request):
         # Act
         payload, response, model = request.getfixturevalue('create_fake_inventory_item_type')()
 
@@ -24,8 +24,10 @@ class TestInventoryCategoryCRUD:
         APIResponse(response).assert_status(201)
         APIResponse(response).assert_models(payload)
 
+
+class TestDeleteInventoryItemType:
     @users(User.SUPERUSER)
-    def test_superUserDeletesItemType_returns204(self, client, user, request):
+    def test_deleteInventoryItemTypeBySuperuser_withValidID_returns204(self, client, user, request):
         # Arrange
         payload, response, model = request.getfixturevalue('create_fake_inventory_item_type')()
         existing_id = model.data.id

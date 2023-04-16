@@ -11,7 +11,6 @@ from api.response_models.facility_models import GetAllFacilitiesSuccessResponse
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
-from fixtures.facility import create_fake_facility
 
 
 class TestFacilityCRUD:

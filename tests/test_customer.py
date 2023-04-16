@@ -16,7 +16,6 @@ from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
 import data
-from fixtures.customer import create_fake_customer
 
 
 class TestCustomerCRUD:
