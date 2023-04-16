@@ -5,24 +5,20 @@ TODO:
 """
 import pytest
 
+import data
 from api.endpoints.customer_api import CustomerAPI
+from core.asserters import APIResponse
+from core.decorators import users
+from core.enums.users import User
+from api.response_models.customer_models import GetAllCustomersSuccessResponse
 from api.response_models.common_models import (
     AuthErrorResponse,
     RequestWithoutSectionParamErrorResponse,
     NoPermissionErrorResponse,
 )
-from api.response_models.customer_models import GetAllCustomersSuccessResponse
-from core.asserters import APIResponse
-from core.decorators import users
-from core.enums.users import User
-import data
 
 
-class TestCustomerCRUD:
-    """
-    Test customer CRUD (creation, reading, update, delete).
-    """
-
+class TestCreateCustomer:
     @users(User.SUPERUSER)
     def test_createCustomer_withValidData_returns201AndData(self, client, user, request):
         # Arrange
@@ -69,11 +65,18 @@ class TestCustomerCRUD:
         APIResponse(response).assert_status(400)
         assert model.error == error
 
+
+class TestGetAllCustomers:
     @users(User.SUPERUSER)
     def test_getAllCustomers_returns200AndData(self, client, user):
+        # Act
         response, model = CustomerAPI(client).get_all_customers()
+
+        # Assert
         APIResponse(response).assert_status(200)
 
+
+class TestGetCustomer:
     @users(User.SUPERUSER)
     def test_getCustomer_withValidID_returns200AndData(self, client, user, request):
         # Arrange
@@ -87,6 +90,8 @@ class TestCustomerCRUD:
         APIResponse(response).assert_status(200)
         assert model.data.id == customer_id, 'IDs are not matching.'
 
+
+class TestUpdateCustomer:
     @users(User.SUPERUSER)
     def test_updateCustomer_withValidID_returns200AndData(self, client, user, request):
         # Arrange
@@ -119,6 +124,8 @@ class TestCustomerCRUD:
             'barcode': ['customer with this barcode already exists.']
         }
 
+
+class TestDeleteCustomer:
     @users(User.SUPERUSER)
     def test_deleteCustomer_withValidID_returns204(self, client, user, request):
         # Arrange

@@ -2,18 +2,18 @@ import pytest
 
 import data
 from api.endpoints.facility_api import FacilityAPI
+from core.asserters import APIResponse
+from core.decorators import users
+from core.enums.users import User
+from api.response_models.facility_models import GetAllFacilitiesSuccessResponse
 from api.response_models.common_models import (
     AuthErrorResponse,
     RequestWithoutSectionParamErrorResponse,
     OnlySuperuserCanPerformErrorResponse,
 )
-from api.response_models.facility_models import GetAllFacilitiesSuccessResponse
-from core.asserters import APIResponse
-from core.decorators import users
-from core.enums.users import User
 
 
-class TestFacilityCRUD:
+class TestCreateFacility:
     @users(User.SUPERUSER)
     def test_createFacility_withValidData_returns201AndData(self, client, user):
         # Arrange
@@ -64,11 +64,18 @@ class TestFacilityCRUD:
         APIResponse(response).assert_status(400)
         assert model.error.get('name') == ['facility with this name already exists.']
 
+
+class TestGetAllFacilities:
     @users(User.SUPERUSER)
     def test_getAllFacilities_returns200AndData(self, client, user):
+        # Act
         response, model = FacilityAPI(client).get_all_facilities()
+
+        # Assert
         APIResponse(response).assert_status(200)
 
+
+class TestGetFacility:
     @users(User.SUPERUSER)
     def test_getFacility_byValidID_returns200AndData(self, client, user, request):
         # Arrange
@@ -82,6 +89,8 @@ class TestFacilityCRUD:
         APIResponse(response).assert_status(200)
         assert model.data.id == existing_facility_id, 'IDs are not matching.'
 
+
+class TestUpdateFacility:
     @users(User.SUPERUSER)
     def test_updateFacility_byValidID_returns200AndData(self, client, user, request):
         # Arrange
@@ -117,6 +126,8 @@ class TestFacilityCRUD:
     def test_updateFacility_byValidIDWithExistingName_returns400AndError(self, client, user):
         ...
 
+
+class TestDeleteFacility:
     @users(User.SUPERUSER)
     def test_deleteFacility_byValidID_returns204(self, client, user, request):
         # Arrange
