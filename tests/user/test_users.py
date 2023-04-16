@@ -9,61 +9,85 @@ from core.decorators import users
 from core.enums.users import User
 
 
-class TestUsersCRUD:
+class TestCreateUser:
     @users(User.SUPERUSER)
-    def test_superuserCreatesUser_returns201AndData(self, client, user, request):
+    def test_createUserBySuperuser_withValidData_returns201AndData(self, client, user, request):
+        # Act
         payload, response, model = request.getfixturevalue('create_fake_user_superuser')()
+
+        # Assert
         APIResponse(response).assert_status(201)
 
     @users(User.FACILITY_ADMIN)
-    def test_adminCreatesUser_returns201AndData(self, client, user, request):
+    def test_createUserByFacilityAdmin_withValidData_returns201AndData(self, client, user, request):
+        # Act
         payload, response, model = request.getfixturevalue('create_fake_user')()
+
+        # Assert
         APIResponse(response).assert_status(201)
 
+
+class TestGetAllUsers:
     @users(User.SUPERUSER)
-    def test_superuserGetsAllUsers_returns200AndData(self, client, user):
+    def test_getAllUsersByFacilityAdmin_returns200AndData(self, client, user):
+        # Act
         response, model = UsersAPI(client).get_all_users()
+
+        # Assert
         APIResponse(response).assert_status(200)
 
     @users(User.FACILITY_ADMIN)
-    def test_adminGetsAllUsers_returns200AndData(self, client, user):
+    def test_getAllUsersByFacilityAdmin_returns200AndData(self, client, user):
+        # Act
         response, model = UsersAPI(client).get_all_users()
+
+        # Assert
         APIResponse(response).assert_status(200)
         # TODO: verify that the users belong to the same facility
 
+
+class TestGetUser:
     @users(User.SUPERUSER)
-    def test_superuserGetsUserByID_returns200AndData(self, client, user, request):
+    def test_getsUserBySuperuser_withValidID_returns200AndData(self, client, user, request):
         # Arrange
         payload, response, model = request.getfixturevalue('create_fake_user_superuser')()
         existing_id = model.data.id
 
-        # Act and assert
+        # Act
         response, model = UsersAPI(client).get_user(id=existing_id)
+
+        # Assert
         APIResponse(response).assert_status(200)
         assert model.data.id == existing_id, 'IDs are not matching.'
 
     @users(User.FACILITY_ADMIN)
-    def test_adminGetsUserByID_returns200AndData(self, client, user, request):
+    def test_getsUserByFacilityAdmin_withValidID_returns200AndData(self, client, user, request):
         # Arrange
         payload, response, model = request.getfixturevalue('create_fake_user')()
         existing_id = model.data.id
 
-        # Act and assert
+        # Act
         response, model = UsersAPI(client).get_user(id=existing_id)
+
+        # Assert
         APIResponse(response).assert_status(200)
         assert model.data.id == existing_id, 'IDs are not matching.'
 
+
+class TestUpdateUser:
     @pytest.mark.skip(reason='TODO')
     @users(User.SUPERUSER)
-    def test_updateUserByID_returns200AndData(self, client, user, request):
+    def test_updateUserBySuperUser_withValidData_returns200AndData(self, client, user, request):
         # Create a user
         # Get a user
         # Change the response body
         # Verify that status is 200 and the data was altered
         ...
 
+
+class TestDeleteUser:
     @users(User.SUPERUSER)
-    def test_deleteRoleByID_returns204(self, client, user, request):
+    def test_deleteRoleBySuperuser_withValidID_returns204(self, client, user, request):
         # Arrange
         payload, response, model = request.getfixturevalue('create_fake_user_superuser')()
         existing_id = model.data.id
@@ -84,4 +108,3 @@ class TestUsersAuth:
 
 class TestUsersWithoutSectionParam:
     ...
-
