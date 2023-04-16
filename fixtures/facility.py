@@ -20,10 +20,8 @@ def create_fake_facility(client):
         # Create facility
         payload = data.fake.model.facility(customers=customers, **kwargs)  # Request body_str JSON
         response, model = FacilityAPI(client).create_facility(data=payload)
-
-        if response.status_code in range(200, 300):
-            nonlocal facility_id
-            facility_id = model.data.id
+        nonlocal facility_id
+        facility_id = model.data.id
 
         return payload, response, model
 

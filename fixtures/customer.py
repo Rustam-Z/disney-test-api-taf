@@ -19,10 +19,8 @@ def create_fake_customer(client):
         # Create customer
         payload = data.fake.model.customer(**kwargs)
         response, model = CustomerAPI(client).create_customer(data=payload)
-
-        if response.status_code in range(200, 300):
-            nonlocal customer_id
-            customer_id = model.data.id
+        nonlocal customer_id
+        customer_id = model.data.id
 
         return payload, response, model
 

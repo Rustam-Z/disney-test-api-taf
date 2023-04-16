@@ -37,10 +37,8 @@ def create_fake_metro_superuser(client):
         # Create metro
         payload = data.fake.model.metro(facility_id=facility_id, **kwargs)
         response, model = MetroAPI(client).create_metro(data=payload)
-
-        if response.status_code in range(200, 300):
-            nonlocal metro_id
-            metro_id = model.data.id
+        nonlocal metro_id
+        metro_id = model.data.id
 
         return payload, response, model
 

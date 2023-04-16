@@ -16,10 +16,8 @@ def create_fake_role(client):
 
         # Create role
         response, model = RoleAPI(client).create_role(data=payload)
-
-        if response.status_code in range(200, 300):
-            nonlocal role_id
-            role_id = model.data.id
+        nonlocal role_id
+        role_id = model.data.id
 
         return payload, response, model
 

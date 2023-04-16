@@ -22,5 +22,11 @@ class TestCreateCart:
         APIResponse(response).assert_status(201)
 
 
-class TestDeleteCart:
-    ...
+class TestGetCart:
+    @users(User.SUPERUSER)
+    def test_getCartBySuperuser_returns200AndData(self, client, user, request):
+        # Act
+        response, model = CartBuildAPI(client).get_cart()
+
+        # Assert
+        APIResponse(response).assert_status(200)

@@ -47,10 +47,8 @@ def create_fake_user_superuser(client):
         # Create user
         payload = data.fake.model.user(role_id=role_id, facility_id=facility_id, **kwargs)
         response, model = UsersAPI(client).create_user(data=payload)
-
-        if response.status_code in range(200, 300):
-            nonlocal user_id
-            user_id = model.data.id
+        nonlocal user_id
+        user_id = model.data.id
 
         return payload, response, model
 
