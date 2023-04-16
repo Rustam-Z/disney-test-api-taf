@@ -1,4 +1,5 @@
 env: dev # default env in which tests will run, available options [qa, prod, dev].
+prefix: "/api/v1" # API version
 
 dev:
   hosts:
