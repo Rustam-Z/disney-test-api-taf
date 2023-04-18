@@ -78,7 +78,6 @@ class TestDeleteDeliverySchedule:
         APIResponse(response).assert_status(204)
 
         # Act: Remove already removed object.
-        # Act
         response, model = DeliveryScheduleAPI(client).delete_schedule(id=delivery_schedule_id)
 
         # Assert
