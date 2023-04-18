@@ -8,7 +8,7 @@ from api.endpoints.order.order_api import OrderAPI
 
 @pytest.fixture()
 def create_fake_order(client, create_fake_facility):
-    delivery_schedule_id = -1
+    order_id = -1
 
     def _fixture(**kwargs):
         # Arrange
@@ -19,6 +19,7 @@ def create_fake_order(client, create_fake_facility):
         # Create cart
         payload = data.fake.model.order(facility_id=facility_id, customer_id=customer_id, **kwargs)
         response, model = OrderAPI(client).create_order(data=payload)
+        nonlocal order_id
         order_id = model.data.id
 
         return payload, response, model
@@ -27,6 +28,6 @@ def create_fake_order(client, create_fake_facility):
 
     # Cleanup
     try:
-        OrderAPI(client).delete_order(id=delivery_schedule_id, expect_json=False)
+        OrderAPI(client).delete_order(id=order_id, expect_json=False)
     except Exception as e:
         print(f"Error: {e}")
