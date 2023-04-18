@@ -19,7 +19,7 @@ class TestCreateDeliverySchedule:
         APIResponse(response).assert_models(payload)
 
 
-class TestGetAllDeliverySchedule:
+class TestGetAllDeliverySchedules:
     @users(User.SUPERUSER)
     def test_getAllDeliverySchedules_returns200AndData(self, client, user):
         # Act
@@ -78,7 +78,6 @@ class TestDeleteDeliverySchedule:
         APIResponse(response).assert_status(204)
 
         # Act: Remove already removed object.
-        # Act
         response, model = DeliveryScheduleAPI(client).delete_schedule(id=delivery_schedule_id)
 
         # Assert

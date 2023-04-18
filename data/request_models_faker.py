@@ -1,4 +1,5 @@
 import random
+from datetime import datetime, timedelta
 from typing import List
 
 from api.enums.metro import MetroLaundryStatuses, MetroProcessStatuses
@@ -231,6 +232,21 @@ class RequestModelsFaker:
             "days": ["0", "1"],
             "start_time": "08:00:00",
             "end_time": "10:00:00",
+        }
+
+        data.update(kwargs)
+        return data
+
+    def order(self, facility_id: int, customer_id: int, **kwargs) -> dict:
+        now_utc = datetime.utcnow()
+        future_utc = now_utc + timedelta(hours=random.randint(1,10))
+        now_date_str = now_utc.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+        future_date_str = future_utc.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+        data = {
+            "facility": facility_id,
+            "customer": customer_id,
+            "dropoff_date_start": now_date_str,
+            "dropoff_date_end": future_date_str,
         }
 
         data.update(kwargs)
