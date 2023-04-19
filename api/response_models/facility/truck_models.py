@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from pydantic import BaseModel, StrictInt, constr, StrictStr
+from pydantic import BaseModel, StrictInt, constr, StrictStr, StrictFloat
 
 from api.response_models.response_models import SuccessResponse
 
@@ -10,7 +10,7 @@ class _Truck(BaseModel):
     facility: StrictInt
     number: constr(min_length=1, strict=True)
     bin_capacity: StrictInt
-    weight_capacity: StrictInt
+    weight_capacity: StrictFloat
     status: constr(min_length=1, strict=True)
 
 
@@ -30,6 +30,20 @@ Get truck
 
 class GetTruckSuccessResponse(SuccessResponse):
     data: _TruckComplex
+
+
+"""
+Get all trucks
+"""
+class _GetAllTrucksDataField(BaseModel):
+    count: StrictInt
+    next: Optional[StrictStr]
+    previous: Optional[StrictStr]
+    results: List[_TruckComplex]
+
+
+class GetAllTrucksSuccessResponse(SuccessResponse):
+    data: _GetAllTrucksDataField
 
 
 """

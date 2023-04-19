@@ -45,7 +45,7 @@ class TestGetOrder:
         APIResponse(response).assert_models(payload)
 
 
-class TestUpdateDeliverySchedule:
+class TestUpdateOrder:
     @users(User.SUPERUSER)
     def test_updateOrder_withValidID_returns200AndData(self, client, user, request):
         # Arrange
