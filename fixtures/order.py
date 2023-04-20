@@ -19,7 +19,7 @@ def create_fake_order(client, create_fake_facility):
         # Create order
         payload = data.fake.model.order(facility_id=facility_id, customer_id=customer_id, **kwargs)
         response, model = OrderAPI(client).create_order(data=payload)
-        nonlocal  order_id
+        nonlocal order_id
         order_id = model.data.id
 
         return payload, response, model
