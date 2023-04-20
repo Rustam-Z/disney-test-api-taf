@@ -16,7 +16,7 @@ def create_fake_order(client, create_fake_facility):
         facility_id = facility_model.data.id
         customer_id = random.choice(facility_model.data.customers)
 
-        # Create cart
+        # Create order
         payload = data.fake.model.order(facility_id=facility_id, customer_id=customer_id, **kwargs)
         response, model = OrderAPI(client).create_order(data=payload)
         nonlocal order_id

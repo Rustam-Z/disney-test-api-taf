@@ -22,3 +22,4 @@ class Section(Enum):
     METRO_ITEM_CONFIGURATION = 'metro-item-configuration'
     DELIVERY_SCHEDULE = 'delivery-schedule'
     ORDER = 'orders'
+    TRUCK = 'trucks'

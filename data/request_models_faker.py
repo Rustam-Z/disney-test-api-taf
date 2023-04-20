@@ -251,3 +251,14 @@ class RequestModelsFaker:
 
         data.update(kwargs)
         return data
+
+    def truck(self, facility_id: int, **kwargs):
+        data = {
+            "facility": facility_id,
+            "number": random.randint(1000, 10000),
+            "bin_capacity": random.randint(50, 300),
+            "weight_capacity": random.randint(50, 500),
+        }
+
+        data.update(kwargs)
+        return data
