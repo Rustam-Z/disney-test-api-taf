@@ -73,7 +73,7 @@ class CreateOrderSuccessResponse(SuccessResponse):
 
 
 """
-Update delivery schedule
+Update orders
 """
 
 

@@ -17,3 +17,4 @@ from .cart_build import create_fake_cart_superuser
 from .delivery_schedule import create_fake_schedule_superuser
 from .order import create_fake_order
 from .truck import create_fake_truck
+from .inventory_location import create_fake_inventory_location

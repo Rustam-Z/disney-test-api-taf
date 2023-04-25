@@ -15,6 +15,7 @@ class _InventoryLocation(BaseModel):
     antenna_port: constr(min_length=1, strict=True)
     type: constr(min_length=1, strict=True)
 
+
 class _FacilityField(BaseModel):
     id: StrictInt
     name: constr(min_length=1, strict=True)
@@ -27,43 +28,43 @@ class _InventoryLocationComplex(_InventoryLocation):
 
 
 """
-Get order
+Get inventory location
 """
 
 
-class GetOrderSuccessResponse(SuccessResponse):
-    data: _OrderComplex
+class GetInventoryLocationSuccessResponse(SuccessResponse):
+    data: _InventoryLocationComplex
 
 
 """
-Get all orders
+Get all inventory locations
 """
 
 
-class _GetAllOrdersDataField(BaseModel):
+class _GetAllInventoryLocationDataField(BaseModel):
     count: StrictInt
     next: Optional[StrictStr]
     previous: Optional[StrictStr]
-    results: List[_OrderComplex]
+    results: List[_InventoryLocationComplex]
 
 
-class GetAllOrdersSuccessResponse(SuccessResponse):
-    data: _GetAllOrdersDataField
-
-
-"""
-Create order
-"""
-
-
-class CreateOrderSuccessResponse(SuccessResponse):
-    data: _Order
+class GetAllInventoryLocationSuccessResponse(SuccessResponse):
+    data: _GetAllInventoryLocationDataField
 
 
 """
-Update delivery schedule
+Create inventory location
 """
 
 
-class UpdateOrderSuccessResponse(SuccessResponse):
-    data: _Order
+class CreateInventoryLocationSuccessResponse(SuccessResponse):
+    data: _InventoryLocation
+
+
+"""
+Update inventory location
+"""
+
+
+class UpdateInventoryLocationSuccessResponse(SuccessResponse):
+    data: _InventoryLocation

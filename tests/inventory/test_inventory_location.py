@@ -1,84 +1,83 @@
 import pytest
 
 import data
-from api.endpoints.order.order_api import OrderAPI
+from api.endpoints.inventory.inventory_location_api import InventoryLocationAPI
 from api.enums.errors import ErrorDetail
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
 
 
-class TestCreateOrder:
+class TestCreateInventoryLocation:
     @users(User.SUPERUSER)
-    def test_createOrder_withValidData_returns201AndData(self, client, user, request):
+    def test_createInventoryLocation_withValidData_returns201AndData(self, client, user, request):
         # Act
-        payload, response, model = request.getfixturevalue('create_fake_order')()
+        payload, response, model = request.getfixturevalue('create_fake_inventory_location')()
 
         # Assert
         APIResponse(response).assert_status(201)
         APIResponse(response).assert_models(payload)
 
 
-class TestGetAllOrders:
+class TestGetAllInventoryLocations:
     @users(User.SUPERUSER)
-    def test_getAllOrders_returns200AndData(self, client, user):
+    def test_getAllInventoryLocations_returns200AndData(self, client, user):
         # Act
-        response, model = OrderAPI(client).get_all_orders()
+        response, model = InventoryLocationAPI(client).get_all_inventoryLocations()
 
         # Assert
         APIResponse(response).assert_status(200)
 
 
-class TestGetOrder:
+class TestGetInventoryLocation:
     @users(User.SUPERUSER)
-    def test_getOrder_withValidID_returns200AndData(self, client, user, request):
+    def test_getInventoryLocation_withValidID_returns200AndData(self, client, user, request):
         # Arrange
-        payload, response, model = request.getfixturevalue('create_fake_order')()
-        order_id = model.data.id
+        payload, response, model = request.getfixturevalue('create_fake_inventory_location')()
+        inventory_location_id = model.data.id
 
         # Act
-        response, model = OrderAPI(client).get_order(id=order_id)
+        response, model = InventoryLocationAPI(client).get_inventoryLocation(id=inventory_location_id)
 
         # Assert
         APIResponse(response).assert_status(200)
-        assert model.data.id == order_id
+        assert model.data.id == inventory_location_id
         APIResponse(response).assert_models(payload)
 
 
-class TestUpdateOrder:
+class TestUpdateInventoryLocation:
     @users(User.SUPERUSER)
-    def test_updateOrder_withValidID_returns200AndData(self, client, user, request):
+    def test_updateInventoryLocation_withValidID_returns200AndData(self, client, user, request):
         # Arrange
-        payload, response, model = request.getfixturevalue('create_fake_order')()
-        order_id = model.data.id
+        payload, response, model = request.getfixturevalue('create_fake_inventory_location')()
+        inventory_location_id = model.data.id
         facility_id = model.data.facility
-        customer_id = model.data.customer
 
         # Act
-        payload = data.fake.model.order(facility_id=facility_id, customer_id=customer_id)
-        response, model = OrderAPI(client).update_order(id=order_id, data=payload)
+        payload = data.fake.model.inventory_location(facility_id=facility_id)
+        response, model = InventoryLocationAPI(client).update_inventoryLocation(id=inventory_location_id, data=payload)
 
         # Assert
         APIResponse(response).assert_status(200)
         APIResponse(response).assert_models(payload)
-        assert order_id == model.data.id
+        assert inventory_location_id == model.data.id
 
 
 class TestDeleteOrder:
     @users(User.SUPERUSER)
-    def test_deleteOrder_withValidID_returns204(self, client, user, request):
+    def test_deleteInventoryLocation_withValidID_returns204(self, client, user, request):
         # Arrange
-        payload, response, model = request.getfixturevalue('create_fake_order')()
-        order_id = model.data.id
+        payload, response, model = request.getfixturevalue('create_fake_inventory_location')()
+        inventory_location_id = model.data.id
 
         # Act
-        response, response_payload = OrderAPI(client).delete_order(id=order_id)
+        response, response_payload = InventoryLocationAPI(client).delete_inventoryLocation(id=inventory_location_id)
 
         # Assert
         APIResponse(response).assert_status(204)
 
         # Act: Remove already removed object.
-        response, model = OrderAPI(client).delete_order(id=order_id)
+        response, model = InventoryLocationAPI(client).delete_inventoryLocation(id=inventory_location_id)
 
         # Assert
         APIResponse(response).assert_status(404)
