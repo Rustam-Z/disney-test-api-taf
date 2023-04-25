@@ -279,3 +279,19 @@ class RequestModelsFaker:
 
         data.update(kwargs)
         return data
+
+
+    def customer_contact(self, facility_id, customer_id, **kwargs):
+        data = {
+            "facility": facility_id,
+            "customer": customer_id,
+            "name": self.fake.name(),
+            "email": self.fake.email(),
+            "phone_number": f"{random.randint(100,999)}-{random.randint(100,999)}-{random.randint(1000,9999)}",
+            "title": self.fake.name(),
+            "has_dropoff_access": bool(random.randint(0, 1)),
+            "has_invoice_access": bool(random.randint(0, 1)),
+        }
+
+        data.update(kwargs)
+        return data
