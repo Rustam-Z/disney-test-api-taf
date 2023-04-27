@@ -16,7 +16,7 @@ def create_fake_schedule_superuser(client, create_fake_facility):
         facility_id = facility_model.data.id
         customer_id = random.choice(facility_model.data.customers)
 
-        # Create cart
+        # Create schedule
         payload = data.fake.model.delivery_schedule(facility_id=facility_id, customer_id=customer_id, **kwargs)
         response, model = DeliveryScheduleAPI(client).create_schedule(data=payload)
         nonlocal delivery_schedule_id

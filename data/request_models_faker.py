@@ -262,3 +262,36 @@ class RequestModelsFaker:
 
         data.update(kwargs)
         return data
+
+    def inventory_location(self, facility_id, **kwargs):
+        name = self.fake.name()
+        address = f"{random.randint(0,255)}.{random.randint(0,255)}.{random.randint(0,255)}.{random.randint(0,255)}"
+        antenna = random.randint(0, 7)
+        data = {
+            "name": name,
+            "facility": facility_id,
+            "description": name,
+            "reader_name": name,
+            "mac_address": address,
+            "antenna_port": f"{antenna},{antenna+1},{antenna+2}",
+            "type": "exit",
+        }
+
+        data.update(kwargs)
+        return data
+
+
+    def customer_contact(self, facility_id, customer_id, **kwargs):
+        data = {
+            "facility": facility_id,
+            "customer": customer_id,
+            "name": self.fake.name(),
+            "email": self.fake.email(),
+            "phone_number": f"{random.randint(100,999)}-{random.randint(100,999)}-{random.randint(1000,9999)}",
+            "title": self.fake.name(),
+            "has_dropoff_access": bool(random.randint(0, 1)),
+            "has_invoice_access": bool(random.randint(0, 1)),
+        }
+
+        data.update(kwargs)
+        return data
