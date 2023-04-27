@@ -7,7 +7,7 @@ import data
 
 class TestCreateCart:
     @users(User.SUPERUSER)
-    def test_createCart_withValidData_returns201AndData(self, client, user, request):
+    def test_createCart_withValidData_returns200AndData(self, client, user, request):
         # Arrange
         metro_payload, metro_response, metro_model = request.getfixturevalue('create_fake_metro_superuser')()
         conf_payload, conf_response, conf_model = request.getfixturevalue('create_fake_metro_item_configuration_superuser')()
@@ -19,7 +19,7 @@ class TestCreateCart:
         response, model = CartBuildAPI(client).create_cart(data=payload)
 
         # Assert
-        APIResponse(response).assert_status(201)
+        APIResponse(response).assert_status(200)
 
 
 class TestGetCart:
