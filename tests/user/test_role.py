@@ -15,19 +15,36 @@ from core.enums.users import User
 
 class TestCreateRole:
     @users(User.SUPERUSER, User.FACILITY_ADMIN)
-    def test_createRoleBySuperuser_withValidData_returns201AndData(self, client, user, request):
+    def test_createRole_withValidData_returns201AndData(self, client, user, request):
         # Act
         payload, response, model = request.getfixturevalue('create_fake_role')()
         
         # Assert
         APIResponse(response).assert_status(201)
 
+    @users(User.SUPERUSER, User.FACILITY_ADMIN)
+    def test_createDriverRole_returns201AndData(self, client, user, request):
+        # Act
+        payload, response, model = request.getfixturevalue('create_fake_role')(is_driver=True)
+        existing_role_id = model.data.id
+
+        # Assert
+        APIResponse(response).assert_status(201)
+        assert model.data.is_driver is True
+
+        # Act
+        response, model = RoleAPI(client).get_role(id=existing_role_id)
+
+        # Assert
+        APIResponse(response).assert_status(200)
+        assert model.data.is_driver is True
+
 
 class TestGetAllRoles:
     @users(User.SUPERUSER, User.FACILITY_ADMIN)
     def test_getAllRoles_return200AndData(self, client, user, request):
         # Arrange
-        payload, response, model = request.getfixturevalue('create_fake_role')()
+        request.getfixturevalue('create_fake_role')()
 
         # Act
         response, model = RoleAPI(client).get_all_roles()
