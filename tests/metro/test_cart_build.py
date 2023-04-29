@@ -8,6 +8,14 @@ import data
 class TestCreateCart:
     @users(User.SUPERUSER)
     def test_createCart_withValidData_returns200AndData(self, client, user, request):
+        # Act
+        payload, response, model = request.getfixturevalue('create_fake_cart_superuser')()
+
+        # Assert
+        APIResponse(response).assert_status(200)
+
+    @users(User.SUPERUSER)
+    def test_createCart_withMetroAndMetroConfigBelongingToDifferentFacility_returns200AndData(self, client, user, request):
         # Arrange
         metro_payload, metro_response, metro_model = request.getfixturevalue('create_fake_metro_superuser')()
         conf_payload, conf_response, conf_model = request.getfixturevalue('create_fake_metro_item_configuration_superuser')()
@@ -19,7 +27,8 @@ class TestCreateCart:
         response, model = CartBuildAPI(client).create_cart(data=payload)
 
         # Assert
-        APIResponse(response).assert_status(200)
+        APIResponse(response).assert_status(400)
+        assert model.error.get('detail') == 'The Metro and The Metro Configuration belong to different facilities.'
 
 
 class TestGetCart:
