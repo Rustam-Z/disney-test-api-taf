@@ -12,7 +12,7 @@ class TestCreateCustomerContact:
     @users(User.SUPERUSER)
     def test_createCustomerContact_withValidData_returns201AndData(self, client, user, request):
         # Act
-        payload, response, model = request.getfixturevalue('create_fake_customer_contact')()
+        payload, response, model = request.getfixturevalue('create_fake_customer_contact_superuser')()
 
         # Assert
         APIResponse(response).assert_status(201)
@@ -33,7 +33,7 @@ class TestGetCustomerContact:
     @users(User.SUPERUSER)
     def test_getCustomerContact_withValidID_returns200AndData(self, client, user, request):
         # Arrange
-        payload, response, model = request.getfixturevalue('create_fake_customer_contact')()
+        payload, response, model = request.getfixturevalue('create_fake_customer_contact_superuser')()
         customer_contact_id = model.data.id
 
         # Act
@@ -49,7 +49,7 @@ class TestUpdateCustomerContact:
     @users(User.SUPERUSER)
     def test_updateCustomerContact_withValidID_returns200AndData(self, client, user, request):
         # Arrange
-        payload, response, model = request.getfixturevalue('create_fake_customer_contact')()
+        payload, response, model = request.getfixturevalue('create_fake_customer_contact_superuser')()
         customer_contact_id = model.data.id
         facility_id = model.data.facility
         customer_id = model.data.customer
@@ -68,7 +68,7 @@ class TestCustomerContact:
     @users(User.SUPERUSER)
     def test_deleteCustomerContact_withValidID_returns204(self, client, user, request):
         # Arrange
-        payload, response, model = request.getfixturevalue('create_fake_customer_contact')()
+        payload, response, model = request.getfixturevalue('create_fake_customer_contact_superuser')()
         customer_contact_id = model.data.id
 
         # Act
