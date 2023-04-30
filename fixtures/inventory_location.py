@@ -1,5 +1,3 @@
-import random
-
 import pytest
 
 import data
@@ -7,17 +5,17 @@ from api.endpoints.inventory.inventory_location_api import InventoryLocationAPI
 
 
 @pytest.fixture()
-def create_fake_inventory_location(client, create_fake_facility):
+def create_fake_inventory_location_superuser(client, create_fake_facility):
     inventory_location_id = -1
 
     def _fixture(**kwargs):
         # Arrange
-        facility_payload, facility_response, facility_model = create_fake_facility(no_of_customers=1)
-        facility_id = facility_model.data.id
+        if 'facility_id' not in kwargs:
+            facility_payload, facility_response, facility_model = create_fake_facility(no_of_customers=1)
+            kwargs['facility_id'] = facility_model.data.id
 
-
-        # Create order
-        payload = data.fake.model.inventory_location(facility_id=facility_id, **kwargs)
+        # Create inventory location
+        payload = data.fake.model.inventory_location(**kwargs)
         response, model = InventoryLocationAPI(client).create_inventory_location(data=payload)
         nonlocal inventory_location_id
         inventory_location_id = model.data.id

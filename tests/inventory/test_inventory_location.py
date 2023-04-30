@@ -1,5 +1,3 @@
-import pytest
-
 import data
 from api.endpoints.inventory.inventory_location_api import InventoryLocationAPI
 from api.enums.errors import ErrorDetail
@@ -12,7 +10,7 @@ class TestCreateInventoryLocation:
     @users(User.SUPERUSER)
     def test_createInventoryLocation_withValidData_returns201AndData(self, client, user, request):
         # Act
-        payload, response, model = request.getfixturevalue('create_fake_inventory_location')()
+        payload, response, model = request.getfixturevalue('create_fake_inventory_location_superuser')()
 
         # Assert
         APIResponse(response).assert_status(201)
@@ -33,7 +31,7 @@ class TestGetInventoryLocation:
     @users(User.SUPERUSER)
     def test_getInventoryLocation_withValidID_returns200AndData(self, client, user, request):
         # Arrange
-        payload, response, model = request.getfixturevalue('create_fake_inventory_location')()
+        payload, response, model = request.getfixturevalue('create_fake_inventory_location_superuser')()
         inventory_location_id = model.data.id
 
         # Act
@@ -49,7 +47,7 @@ class TestUpdateInventoryLocation:
     @users(User.SUPERUSER)
     def test_updateInventoryLocation_withValidID_returns200AndData(self, client, user, request):
         # Arrange
-        payload, response, model = request.getfixturevalue('create_fake_inventory_location')()
+        payload, response, model = request.getfixturevalue('create_fake_inventory_location_superuser')()
         inventory_location_id = model.data.id
         facility_id = model.data.facility
 
@@ -67,7 +65,7 @@ class TestDeleteOrder:
     @users(User.SUPERUSER)
     def test_deleteInventoryLocation_withValidID_returns204(self, client, user, request):
         # Arrange
-        payload, response, model = request.getfixturevalue('create_fake_inventory_location')()
+        payload, response, model = request.getfixturevalue('create_fake_inventory_location_superuser')()
         inventory_location_id = model.data.id
 
         # Act
