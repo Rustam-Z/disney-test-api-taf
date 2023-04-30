@@ -18,7 +18,7 @@ def create_fake_inventory_location(client, create_fake_facility):
 
         # Create order
         payload = data.fake.model.inventory_location(facility_id=facility_id, **kwargs)
-        response, model = InventoryLocationAPI(client).create_inventoryLocation(data=payload)
+        response, model = InventoryLocationAPI(client).create_inventory_location(data=payload)
         nonlocal inventory_location_id
         inventory_location_id = model.data.id
 
@@ -28,6 +28,6 @@ def create_fake_inventory_location(client, create_fake_facility):
 
     # Cleanup
     try:
-        InventoryLocationAPI(client).delete_inventoryLocation(id=inventory_location_id, expect_json=False)
+        InventoryLocationAPI(client).delete_inventory_location(id=inventory_location_id, expect_json=False)
     except Exception as e:
         print(f"Error: {e}")

@@ -25,3 +25,4 @@ class Section(Enum):
     TRUCK = 'trucks'
     INVENTORY_LOCATION = 'inventory-location'
     CUSTOMER_CONTACT = 'customer-contact'
+    DRIVER_ASSIGNMENT = 'driver-assignment'

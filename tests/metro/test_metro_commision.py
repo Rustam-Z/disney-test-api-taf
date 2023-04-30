@@ -37,7 +37,7 @@ class TestCreateMetroCommission:
         APIResponse(response).assert_models(payload)
 
 
-class TestDeleteMetroCommission:
+class TestGetAllMetros:
     @users(User.SUPERUSER)
     def test_getAllMetrosBySuperuser_returns200AndData(self, client, user):
         # Act

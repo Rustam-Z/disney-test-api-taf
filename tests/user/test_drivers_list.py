@@ -1,4 +1,4 @@
-from api.endpoints.user.drivers_list import DriversListAPI
+from api.endpoints.user.drivers_list_api import DriversListAPI
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User

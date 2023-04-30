@@ -1,6 +1,6 @@
 from api.enums.params import Param
 from api.enums.sections import Section
-from api.response_models.user.drivers_list import GetAllDriversSuccessResponse
+from api.response_models.user.drivers_list_models import GetAllDriversSuccessResponse
 from core.http_client import HTTPClient
 from api.response_models.response_models import ErrorResponse
 

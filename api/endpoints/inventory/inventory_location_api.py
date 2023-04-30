@@ -19,7 +19,7 @@ class InventoryLocationAPI:
             Param.SECTION.value: Section.INVENTORY_LOCATION.value
         }
 
-    def get_all_inventoryLocations(self, **kwargs) -> tuple:
+    def get_all_inventory_locations(self, **kwargs) -> tuple:
         path = self.INVENTORY_LOCATION
         response = self.client.get(path, params=self.params, **kwargs)
         response_payload = response.content
@@ -31,7 +31,7 @@ class InventoryLocationAPI:
 
         return response, response_payload
 
-    def get_inventoryLocation(self, id: int, **kwargs) -> tuple:
+    def get_inventory_location(self, id: int, **kwargs) -> tuple:
         path = f'{self.INVENTORY_LOCATION}{id}'
         response = self.client.get(path, params=self.params, **kwargs)
         response_payload = response.content
@@ -43,7 +43,7 @@ class InventoryLocationAPI:
 
         return response, response_payload
 
-    def create_inventoryLocation(self, data: dict, **kwargs) -> tuple:
+    def create_inventory_location(self, data: dict, **kwargs) -> tuple:
         path = self.INVENTORY_LOCATION
         response = self.client.post(path, json=data, params=self.params, **kwargs)
         response_payload = response.content
@@ -55,7 +55,7 @@ class InventoryLocationAPI:
 
         return response, response_payload
 
-    def update_inventoryLocation(self, id: int, data: dict, **kwargs) -> tuple:
+    def update_inventory_location(self, id: int, data: dict, **kwargs) -> tuple:
         path = f'{self.INVENTORY_LOCATION}{id}'
         response = self.client.patch(path, json=data, params=self.params, **kwargs)
         response_payload = response.content
@@ -67,7 +67,7 @@ class InventoryLocationAPI:
 
         return response, response_payload
 
-    def delete_inventoryLocation(self, id: int, **kwargs) -> tuple:
+    def delete_inventory_location(self, id: int, **kwargs) -> tuple:
         path = f'{self.INVENTORY_LOCATION}{id}'
         response = self.client.delete(path, params=self.params, **kwargs)
         response_payload = response.content

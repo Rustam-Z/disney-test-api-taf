@@ -95,7 +95,7 @@ class RequestModelsFaker:
         data.update(kwargs)
         return data
 
-    def user(self, role_id: int, facility_id: int = None, **kwargs) -> dict:
+    def user(self, role_id: int = None, facility_id: int = None, **kwargs) -> dict:
         data = {
             "facility": facility_id,
             "first_name": self.fake.first_name(),
@@ -118,7 +118,7 @@ class RequestModelsFaker:
         data.update(kwargs)
         return data
 
-    def inventory_item_type(self, category_id: int, **kwargs) -> dict:
+    def inventory_item_type(self, category_id: int = None, **kwargs) -> dict:
         data = {
             "name": self.fake.name(),
             "description": self.fake.text(),
@@ -128,7 +128,7 @@ class RequestModelsFaker:
         data.update(kwargs)
         return data
 
-    def facility_item_type(self, item_type_id: int, facility_id: int = None, **kwargs) -> dict:
+    def facility_item_type(self, item_type_id: int = None, facility_id: int = None, **kwargs) -> dict:
         data = {
             "facility": facility_id,
             "item_type": item_type_id,  # Inventory item type id
@@ -216,7 +216,7 @@ class RequestModelsFaker:
         data.update(kwargs)
         return data
 
-    def cart(self, metro_qr_code: str, metro_config_qr_code: str, **kwargs) -> dict:
+    def cart(self, metro_qr_code: str = None, metro_config_qr_code: str = None, **kwargs) -> dict:
         data = {
             "metro_qr_code": metro_qr_code,
             "metro_config_qr_code": metro_config_qr_code,
@@ -225,7 +225,7 @@ class RequestModelsFaker:
         data.update(kwargs)
         return data
 
-    def delivery_schedule(self, facility_id: int, customer_id: int, **kwargs) -> dict:
+    def delivery_schedule(self, facility_id: int = None, customer_id: int = None, **kwargs) -> dict:
         data = {
             "facility": facility_id,
             "customer": customer_id,
@@ -237,22 +237,28 @@ class RequestModelsFaker:
         data.update(kwargs)
         return data
 
-    def order(self, facility_id: int, customer_id: int, **kwargs) -> dict:
-        now_utc = datetime.utcnow()
-        future_utc = now_utc + timedelta(hours=random.randint(1,10))
-        now_date_str = now_utc.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+    def order(self, facility_id: int = None, customer_id: int = None, **kwargs) -> dict:
+        """
+        Creates fake order, with the start date == tomorrow.
+        """
+        now_utc = datetime.now()
+        tomorrow_utc = now_utc + timedelta(days=1)
+        future_utc = now_utc + timedelta(days=random.randint(2, 10))
+
+        tomorrow_date_str = tomorrow_utc.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
         future_date_str = future_utc.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+
         data = {
             "facility": facility_id,
             "customer": customer_id,
-            "dropoff_date_start": now_date_str,
+            "dropoff_date_start": tomorrow_date_str,
             "dropoff_date_end": future_date_str,
         }
 
         data.update(kwargs)
         return data
 
-    def truck(self, facility_id: int, **kwargs):
+    def truck(self, facility_id: int = None, **kwargs):
         data = {
             "facility": facility_id,
             "number": random.randint(1000, 10000),
@@ -263,7 +269,7 @@ class RequestModelsFaker:
         data.update(kwargs)
         return data
 
-    def inventory_location(self, facility_id, **kwargs):
+    def inventory_location(self, facility_id: int = None, **kwargs):
         name = self.fake.name()
         address = f"{random.randint(0,255)}.{random.randint(0,255)}.{random.randint(0,255)}.{random.randint(0,255)}"
         antenna = random.randint(0, 7)
@@ -280,8 +286,7 @@ class RequestModelsFaker:
         data.update(kwargs)
         return data
 
-
-    def customer_contact(self, facility_id, customer_id, **kwargs):
+    def customer_contact(self, facility_id: int = None, customer_id: int = None, **kwargs):
         data = {
             "facility": facility_id,
             "customer": customer_id,

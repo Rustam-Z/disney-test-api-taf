@@ -1,5 +1,3 @@
-import random
-
 import pytest
 
 import data
@@ -12,11 +10,12 @@ def create_fake_truck(client, create_fake_facility):
 
     def _fixture(**kwargs):
         # Arrange
-        facility_payload, facility_response, facility_model = create_fake_facility(no_of_customers=1)
-        facility_id = facility_model.data.id
+        if 'facility_id' not in kwargs:
+            facility_payload, facility_response, facility_model = create_fake_facility(no_of_customers=1)
+            kwargs['facility_id'] = facility_model.data.id
 
         # Create truck
-        payload = data.fake.model.truck(facility_id=facility_id, **kwargs)
+        payload = data.fake.model.truck(**kwargs)
         response, model = TruckAPI(client).create_truck(data=payload)
         nonlocal truck_id
         truck_id = model.data.id

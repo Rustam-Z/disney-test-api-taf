@@ -23,7 +23,7 @@ class TestGetAllInventoryLocations:
     @users(User.SUPERUSER)
     def test_getAllInventoryLocations_returns200AndData(self, client, user):
         # Act
-        response, model = InventoryLocationAPI(client).get_all_inventoryLocations()
+        response, model = InventoryLocationAPI(client).get_all_inventory_locations()
 
         # Assert
         APIResponse(response).assert_status(200)
@@ -37,7 +37,7 @@ class TestGetInventoryLocation:
         inventory_location_id = model.data.id
 
         # Act
-        response, model = InventoryLocationAPI(client).get_inventoryLocation(id=inventory_location_id)
+        response, model = InventoryLocationAPI(client).get_inventory_location(id=inventory_location_id)
 
         # Assert
         APIResponse(response).assert_status(200)
@@ -55,7 +55,7 @@ class TestUpdateInventoryLocation:
 
         # Act
         payload = data.fake.model.inventory_location(facility_id=facility_id)
-        response, model = InventoryLocationAPI(client).update_inventoryLocation(id=inventory_location_id, data=payload)
+        response, model = InventoryLocationAPI(client).update_inventory_location(id=inventory_location_id, data=payload)
 
         # Assert
         APIResponse(response).assert_status(200)
@@ -71,13 +71,13 @@ class TestDeleteOrder:
         inventory_location_id = model.data.id
 
         # Act
-        response, response_payload = InventoryLocationAPI(client).delete_inventoryLocation(id=inventory_location_id)
+        response, response_payload = InventoryLocationAPI(client).delete_inventory_location(id=inventory_location_id)
 
         # Assert
         APIResponse(response).assert_status(204)
 
         # Act: Remove already removed object.
-        response, model = InventoryLocationAPI(client).delete_inventoryLocation(id=inventory_location_id)
+        response, model = InventoryLocationAPI(client).delete_inventory_location(id=inventory_location_id)
 
         # Assert
         APIResponse(response).assert_status(404)

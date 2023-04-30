@@ -21,9 +21,8 @@ class _FacilityField(BaseModel):
     name: constr(min_length=1, strict=True)
 
 
-
 class _InventoryLocationComplex(_InventoryLocation):
-    facility: _FacilityField
+    facility: Optional[_FacilityField]
     status: constr(min_length=1, strict=True)
 
 

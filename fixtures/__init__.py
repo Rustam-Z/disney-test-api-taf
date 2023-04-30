@@ -2,8 +2,8 @@ from .customer import create_fake_customer
 from .facility import create_fake_facility
 from .role import create_fake_role
 from .users import (
-    create_fake_user,
     create_fake_user_superuser,
+    create_fake_user,
 )
 from .category import create_fake_inventory_category
 from .inventory_item_type import create_fake_inventory_item_type

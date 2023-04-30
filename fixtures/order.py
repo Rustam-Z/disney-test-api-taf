@@ -12,12 +12,13 @@ def create_fake_order(client, create_fake_facility):
 
     def _fixture(**kwargs):
         # Arrange
-        facility_payload, facility_response, facility_model = create_fake_facility(no_of_customers=1)
-        facility_id = facility_model.data.id
-        customer_id = random.choice(facility_model.data.customers)
+        if 'facility_id' not in kwargs:
+            facility_payload, facility_response, facility_model = create_fake_facility(no_of_customers=1)
+            kwargs['facility_id'] = facility_model.data.id
+            kwargs['customer_id'] = random.choice(facility_model.data.customers)
 
         # Create order
-        payload = data.fake.model.order(facility_id=facility_id, customer_id=customer_id, **kwargs)
+        payload = data.fake.model.order(**kwargs)
         response, model = OrderAPI(client).create_order(data=payload)
         nonlocal order_id
         order_id = model.data.id

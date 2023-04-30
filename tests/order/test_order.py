@@ -1,5 +1,3 @@
-import pytest
-
 import data
 from api.endpoints.order.order_api import OrderAPI
 from api.enums.errors import ErrorDetail
