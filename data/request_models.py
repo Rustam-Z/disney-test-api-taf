@@ -287,17 +287,17 @@ class RequestModelsFaker:
         data.update(kwargs)
         return data
 
-    def assign_orders_to_truck_and_drivers(
+    def driver_assignment_to_one_order(
         self,
         truck: int = None,
         drivers: list[int] = None,
-        assigned_orders: list[dict] = None,
-        unassigned_orders: list[dict] = None,
-    ) -> dict:
-        data = {
+        assigned_orders: list[int] = None,
+        unassigned_orders: list[int] = None,
+    ) -> list:
+        data = [{
             "truck": truck,
             "drivers": drivers,
-            "assigned_orders": assigned_orders,
-            "unassigned_orders": unassigned_orders,
-        }
+            "assigned_orders": [{'order_id': order_id} for order_id in assigned_orders],
+            "unassigned_orders": [{'order_id': order_id} for order_id in unassigned_orders],
+        }]
         return data

@@ -19,3 +19,4 @@ from .order import create_fake_order_superuser
 from .truck import create_fake_truck_superuser
 from .inventory_location import create_fake_inventory_location_superuser
 from .customer_contact import create_fake_customer_contact_superuser
+from .driver_assignment import driver_assignment
