@@ -12,7 +12,7 @@ class TestCreateTruck:
     @users(User.SUPERUSER)
     def test_createTruck_withValidData_returns201AndData(self, client, user, request):
         # Act
-        payload, response, model = request.getfixturevalue('create_fake_truck')()
+        payload, response, model = request.getfixturevalue('create_fake_truck_superuser')()
 
         # Assert
         APIResponse(response).assert_status(201)
@@ -33,7 +33,7 @@ class TestGetTruck:
     @users(User.SUPERUSER)
     def test_getTruck_withValidID_returns200AndData(self, client, user, request):
         # Arrange
-        payload, response, model = request.getfixturevalue('create_fake_truck')()
+        payload, response, model = request.getfixturevalue('create_fake_truck_superuser')()
         truck_id = model.data.id
 
         # Act
@@ -49,7 +49,7 @@ class TestUpdateTruck:
     @users(User.SUPERUSER)
     def test_updateTruck_withValidID_returns200AndData(self, client, user, request):
         # Arrange
-        payload, response, model = request.getfixturevalue('create_fake_truck')()
+        payload, response, model = request.getfixturevalue('create_fake_truck_superuser')()
         truck_id = model.data.id
         facility_id = model.data.facility
 
@@ -67,7 +67,7 @@ class TestDeleteTruck:
     @users(User.SUPERUSER)
     def test_deleteTruck_withValidID_returns204(self, client, user, request):
         # Arrange
-        payload, response, model = request.getfixturevalue('create_fake_truck')()
+        payload, response, model = request.getfixturevalue('create_fake_truck_superuser')()
         truck_id = model.data.id
 
         # Act

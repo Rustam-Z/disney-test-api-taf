@@ -5,7 +5,7 @@ from api.endpoints.facility.truck_api import TruckAPI
 
 
 @pytest.fixture()
-def create_fake_truck(client, create_fake_facility):
+def create_fake_truck_superuser(client, create_fake_facility):
     truck_id = -1
 
     def _fixture(**kwargs):

@@ -29,7 +29,7 @@ class TestGetUnassignedOrders:
     @users(User.SUPERUSER)
     def test_getUnassignedOrders_withExistingOrders_returns200AndData(self, client, user, request):
         # Arrange: create order
-        payload, response, model = request.getfixturevalue('create_fake_order')()
+        payload, response, model = request.getfixturevalue('create_fake_order_superuser')()
         order_id = model.data.id
         facility_id = model.data.facility
         time = model.data.dropoff_date_start
@@ -85,14 +85,14 @@ class TestGetTruckOrdersAndDrivers:
         assert driver_model.data.facility == facility_id
 
         # Create truck
-        truck_payload, truck_response, truck_model = request.getfixturevalue('create_fake_truck')(
+        truck_payload, truck_response, truck_model = request.getfixturevalue('create_fake_truck_superuser')(
             facility_id=facility_id
         )
         truck_id = truck_model.data.id
         assert truck_model.data.facility == facility_id
 
         # Create orders
-        order_payload, order_response, order_model = request.getfixturevalue('create_fake_order')(
+        order_payload, order_response, order_model = request.getfixturevalue('create_fake_order_superuser')(
             facility_id=facility_id,
             customer_id=customer_id
         )

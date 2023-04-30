@@ -7,7 +7,7 @@ from api.endpoints.order.order_api import OrderAPI
 
 
 @pytest.fixture()
-def create_fake_order(client, create_fake_facility):
+def create_fake_order_superuser(client, create_fake_facility):
     order_id = -1
 
     def _fixture(**kwargs):

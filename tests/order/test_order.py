@@ -10,7 +10,7 @@ class TestCreateOrder:
     @users(User.SUPERUSER)
     def test_createOrder_withValidData_returns201AndData(self, client, user, request):
         # Act
-        payload, response, model = request.getfixturevalue('create_fake_order')()
+        payload, response, model = request.getfixturevalue('create_fake_order_superuser')()
 
         # Assert
         APIResponse(response).assert_status(201)
@@ -31,7 +31,7 @@ class TestGetOrder:
     @users(User.SUPERUSER)
     def test_getOrder_withValidID_returns200AndData(self, client, user, request):
         # Arrange
-        payload, response, model = request.getfixturevalue('create_fake_order')()
+        payload, response, model = request.getfixturevalue('create_fake_order_superuser')()
         order_id = model.data.id
 
         # Act
@@ -47,7 +47,7 @@ class TestUpdateOrder:
     @users(User.SUPERUSER)
     def test_updateOrder_withValidID_returns200AndData(self, client, user, request):
         # Arrange
-        payload, response, model = request.getfixturevalue('create_fake_order')()
+        payload, response, model = request.getfixturevalue('create_fake_order_superuser')()
         order_id = model.data.id
         facility_id = model.data.facility
         customer_id = model.data.customer
@@ -66,7 +66,7 @@ class TestDeleteOrder:
     @users(User.SUPERUSER)
     def test_deleteOrder_withValidID_returns204(self, client, user, request):
         # Arrange
-        payload, response, model = request.getfixturevalue('create_fake_order')()
+        payload, response, model = request.getfixturevalue('create_fake_order_superuser')()
         order_id = model.data.id
 
         # Act
