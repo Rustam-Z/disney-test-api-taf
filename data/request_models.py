@@ -16,7 +16,6 @@ class RequestModelsFaker:
             **kwargs: The values that need to be overridden in the data dictionary.
 
         Returns: Dict, fake request model.
-
         """
         data = {
             'name': self.fake.name(),
@@ -29,7 +28,6 @@ class RequestModelsFaker:
             'zip_code': self.fake.zipcode(),
             'main_phone_number': self.fake.custom_phone_number(),
         }
-
         data.update(kwargs)  # Update data with kwargs values
         return data
 
@@ -106,7 +104,6 @@ class RequestModelsFaker:
             "phone_number": self.fake.custom_phone_number(),
             "password": self.fake.password(),
         }
-
         data.update(kwargs)
         return data
 
@@ -114,7 +111,6 @@ class RequestModelsFaker:
         data = {
             "name": self.fake.name(),
         }
-
         data.update(kwargs)
         return data
 
@@ -124,7 +120,6 @@ class RequestModelsFaker:
             "description": self.fake.text(),
             "category": category_id,
         }
-
         data.update(kwargs)
         return data
 
@@ -135,7 +130,6 @@ class RequestModelsFaker:
             "name": self.fake.name(),
             "weight": self.fake.pyint(),
         }
-
         data.update(kwargs)
         return data
 
@@ -172,7 +166,6 @@ class RequestModelsFaker:
             "laundry_status": laundry_status,
             "process_status": process_status,
         }
-
         data.update(kwargs)
         return data
 
@@ -180,14 +173,12 @@ class RequestModelsFaker:
         """
         This model is used in metro commission.
         """
-
         data = {
             "facility": facility_id,
             "qr_code": self.fake.ean(),
             "rfid_tag_id": self.fake.ean(),
             "human_readable": self.fake.name(),
         }
-
         data.update(kwargs)
         return data
 
@@ -221,7 +212,6 @@ class RequestModelsFaker:
             "metro_qr_code": metro_qr_code,
             "metro_config_qr_code": metro_config_qr_code,
         }
-
         data.update(kwargs)
         return data
 
@@ -233,7 +223,6 @@ class RequestModelsFaker:
             "start_time": "08:00:00",
             "end_time": "10:00:00",
         }
-
         data.update(kwargs)
         return data
 
@@ -258,18 +247,17 @@ class RequestModelsFaker:
         data.update(kwargs)
         return data
 
-    def truck(self, facility_id: int = None, **kwargs):
+    def truck(self, facility_id: int = None, **kwargs) -> dict:
         data = {
             "facility": facility_id,
             "number": random.randint(1000, 10000),
             "bin_capacity": random.randint(50, 300),
             "weight_capacity": random.randint(50, 500),
         }
-
         data.update(kwargs)
         return data
 
-    def inventory_location(self, facility_id: int = None, **kwargs):
+    def inventory_location(self, facility_id: int = None, **kwargs) -> dict:
         name = self.fake.name()
         address = f"{random.randint(0,255)}.{random.randint(0,255)}.{random.randint(0,255)}.{random.randint(0,255)}"
         antenna = random.randint(0, 7)
@@ -282,11 +270,10 @@ class RequestModelsFaker:
             "antenna_port": f"{antenna},{antenna+1},{antenna+2}",
             "type": "exit",
         }
-
         data.update(kwargs)
         return data
 
-    def customer_contact(self, facility_id: int = None, customer_id: int = None, **kwargs):
+    def customer_contact(self, facility_id: int = None, customer_id: int = None, **kwargs) -> dict:
         data = {
             "facility": facility_id,
             "customer": customer_id,
@@ -297,6 +284,20 @@ class RequestModelsFaker:
             "has_dropoff_access": bool(random.randint(0, 1)),
             "has_invoice_access": bool(random.randint(0, 1)),
         }
-
         data.update(kwargs)
+        return data
+
+    def assign_orders_to_truck_and_drivers(
+        self,
+        truck: int = None,
+        drivers: list[int] = None,
+        assigned_orders: list[dict] = None,
+        unassigned_orders: list[dict] = None,
+    ) -> dict:
+        data = {
+            "truck": truck,
+            "drivers": drivers,
+            "assigned_orders": assigned_orders,
+            "unassigned_orders": unassigned_orders,
+        }
         return data

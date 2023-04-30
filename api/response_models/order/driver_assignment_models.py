@@ -1,9 +1,26 @@
 from datetime import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel, StrictInt, constr, StrictFloat
+from pydantic import BaseModel, StrictInt, constr, StrictFloat, validator
 
 from api.response_models.response_models import SuccessResponse
+
+
+class _Order(BaseModel):
+    id: StrictInt
+    customer_name: constr(min_length=1, strict=True)
+    scheduled_for_date_end: datetime
+    scheduled_for_date_start: datetime
+    unique_id: constr(min_length=1, strict=True)
+
+
+class _Driver(BaseModel):
+    id: StrictInt
+    facility: Optional[StrictInt]
+    first_name: constr(min_length=1, strict=True)
+    last_name: constr(min_length=1, strict=True)
+    email: constr(min_length=1, strict=True)
+    phone_number: constr(min_length=1, strict=True)
 
 
 """
@@ -16,8 +33,8 @@ class _TruckOrdersAndDrivers(BaseModel):
     number: constr(min_length=1, strict=True)
     bin_capacity: StrictInt
     weight_capacity: StrictFloat
-    drivers: Optional[List[StrictInt]]
-    orders: List[StrictInt] = []
+    drivers: Optional[List[_Driver]]
+    orders: List[_Order] = []
 
 
 class GetTruckOrdersAndDrivers(SuccessResponse):
@@ -27,14 +44,6 @@ class GetTruckOrdersAndDrivers(SuccessResponse):
 """
 Get unassigned orders
 """
-
-
-class _Order(BaseModel):
-    customer_name: constr(min_length=1, strict=True)
-    id: StrictInt
-    scheduled_for_date_end: datetime
-    scheduled_for_date_start: datetime
-    scheduled_for_date_start: datetime
 
 
 class _GetUnassignedOrdersDataField(BaseModel):
@@ -50,5 +59,16 @@ Assign drivers and orders
 """
 
 
-class AssignDriversAndOrders(SuccessResponse):
-    ...
+class _AssignOrdersToTruckAndDriversDataField(BaseModel):
+    message: constr(min_length=1, strict=True)
+
+    @validator('message')
+    def check_message(cls, value):
+        expected_message = 'Drivers and Orders assignment process is Done!'
+        if value != expected_message:
+            raise ValueError(f'message must be "{expected_message}"')
+        return value
+
+
+class AssignOrdersToTruckAndDrivers(SuccessResponse):
+    data: _AssignOrdersToTruckAndDriversDataField

@@ -5,7 +5,7 @@ from core.http_client import HTTPClient
 from api.response_models.order.driver_assignment_models import (
     GetUnassignedOrders,
     GetTruckOrdersAndDrivers,
-    AssignDriversAndOrders,
+    AssignOrdersToTruckAndDrivers,
 )
 
 
@@ -53,7 +53,7 @@ class DriverAssignmentAPI:
 
         return response, response_payload
 
-    def assign_drivers_and_drivers(self, data: dict, params: dict = None, **kwargs) -> tuple:
+    def assign_orders_to_truck_and_drivers(self, data: dict, params: dict = None, **kwargs) -> tuple:
         if params is None:
             params = {}
 
@@ -63,8 +63,8 @@ class DriverAssignmentAPI:
         response = self.client.post(path, json=data, params=params, **kwargs)
         response_payload = response.content
 
-        if response.status_code == 201:
-            response_payload = AssignDriversAndOrders(**response.json())
+        if response.status_code == 200:
+            response_payload = AssignOrdersToTruckAndDrivers(**response.json())
         elif response.status_code in range(400, 500):
             response_payload = ErrorResponse(**response.json())
 

@@ -61,9 +61,9 @@ class TestGetUnassignedOrders:
         assert model.error.get('detail') == 'Please, provide date_start_time_utc!'
 
 
-class TestAssignDriverAndOrder:
+class TestAssignOrdersToTruckAndDrivers:
     @users(User.SUPERUSER)
-    def test_assignDriverAndOrder_withValidData_returns200AndData(self, client, user, request):
+    def test_assignOrders_withValidData_returns200AndData(self, client, user, request):
         ...
 
 
