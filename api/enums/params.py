@@ -25,4 +25,6 @@ class Param(Enum):
     DATE_START_TIME_UTC = 'date_start_time_utc'
     CUSTOMER_BARCODE = 'customer_barcode'
     ORDER_ID = 'order_id'
+    DRIVER_ID = 'driver_id'
     CONFIG_QR_CODE = 'config_qr_code'
+    ACTION = 'action'

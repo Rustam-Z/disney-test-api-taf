@@ -4,13 +4,13 @@ from api.response_models.response_models import ErrorResponse
 from core.http_client import HTTPClient
 
 
-class StagingAPI:
-    ORDERS = '/staging/'
-    METRO_LIST = '/staging/metro-list/'
-    METRO_ASSIGN = '/staging/metro-assign/'
-    METRO_REMOVE = '/staging/metro-remove/'
-    SUBMIT_ACTION = '/staging/submit-action/'
-    METRO_CONFIG_DETAIL = '/staging/metro-config-detail/'
+class DriverProcessAPI:
+    ORDERS = '/driver-process/'
+    METRO_LIST = '/driver-process/{order_id}/order-metros/'  # Is it order id?
+    READER_METRO_SCAN = '/driver-process/reader-metro-scan/'
+    DRIVER_METRO_SCAN = '/driver-process/driver-metro-scan/'
+    _METRO_TRACKING = '/inventory/metro-tracking/'  # DEPRECATED!!!
+    SUBMIT = '/driver-process/submit/'
 
     def __init__(self, client: HTTPClient):
         self.client = client
@@ -20,8 +20,8 @@ class StagingAPI:
 
     def get_orders(self, params: dict = None, **kwargs) -> tuple:
         """
-        Get all orders, get all orders by facility, get all facility orders by customer.
-        Params: facility, customer_barcode, search, page, page_size.
+        Params: action (pickup_at_facility, delivery_at_customer, delivery_at_facility),
+                date_start_time_utc, driver_id, customer.
         """
         if params is None:
             params = {}
@@ -39,18 +39,12 @@ class StagingAPI:
 
         return response, response_payload
 
-    def get_metros_list(self, params: dict = None, **kwargs) -> tuple:
+    def get_metros_list(self, id: int, **kwargs) -> tuple:
         """
         Get metros list by order.
-        Params: order_id.
         """
-        if params is None:
-            params = {}
-
-        params.update(self.params)
-
-        path = self.METRO_LIST
-        response = self.client.get(path, params=params, **kwargs)
+        path = self.METRO_LIST.format(order_id=id)
+        response = self.client.get(path, params=self.params, **kwargs)
         response_payload = response.content
 
         if response.status_code == 200:
@@ -60,11 +54,8 @@ class StagingAPI:
 
         return response, response_payload
 
-    def assign_metro(self, data: dict, **kwargs) -> tuple:
-        """
-        Assign metro to order by order_id.
-        """
-        path = self.METRO_ASSIGN
+    def reader_metro_scan(self, data: dict, **kwargs) -> tuple:
+        path = self.READER_METRO_SCAN
         response = self.client.post(path, json=data, params=self.params, **kwargs)
         response_payload = response.content
 
@@ -75,11 +66,8 @@ class StagingAPI:
 
         return response, response_payload
 
-    def remove_metro(self, data: dict, **kwargs) -> tuple:
-        """
-        Unassign/remove metro from order by order_id.
-        """
-        path = self.METRO_REMOVE
+    def driver_metro_scan(self, data: dict, **kwargs) -> tuple:
+        path = self.READER_METRO_SCAN
         response = self.client.post(path, json=data, params=self.params, **kwargs)
         response_payload = response.content
 
@@ -90,30 +78,9 @@ class StagingAPI:
 
         return response, response_payload
 
-    def submit_action(self, data: dict, **kwargs) -> tuple:
-        path = self.SUBMIT_ACTION
+    def submit(self, data: dict, **kwargs) -> tuple:
+        path = self.READER_METRO_SCAN
         response = self.client.post(path, json=data, params=self.params, **kwargs)
-        response_payload = response.content
-
-        if response.status_code == 200:
-            response_payload = response.json()
-        elif response.status_code in range(400, 500):
-            response_payload = ErrorResponse(**response.json())
-
-        return response, response_payload
-
-    def get_metro_item_config_detail(self, params: dict = None, **kwargs) -> tuple:
-        """
-        Get metros item configuration details.
-        Params: config_qr_code.
-        """
-        if params is None:
-            params = {}
-
-        params.update(self.params)
-
-        path = self.METRO_CONFIG_DETAIL
-        response = self.client.get(path, params=params, **kwargs)
         response_payload = response.content
 
         if response.status_code == 200:
