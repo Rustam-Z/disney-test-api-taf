@@ -13,7 +13,26 @@ from core.enums.users import User
 
 class TestGetUnassignedOrders:
     @users(User.SUPERUSER)
-    def test_getUnassignedOrders_withNoOrders_returns200AndData(self, client, user):
+    def test_getUnassignedOrders_withNoOrders_returns200AndData(self, client, user, request):
+        # Arrange
+        payload, response, model = request.getfixturevalue('create_fake_facility')(no_of_customers=1)
+        facility_id = model.data.id
+        current_time = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+
+        params = {
+            Param.DATE_START_TIME_UTC.value: current_time,
+            Param.FACILITY.value: facility_id
+        }
+
+        # Act
+        response, model = DriverAssignmentAPI(client).get_unassigned_orders(params=params)
+
+        # Assert
+        APIResponse(response).assert_status(200)
+        assert len(model.data.results) == 0, "Zero orders are expected for facility having no orders."
+
+    @users(User.SUPERUSER)
+    def test_getUnassignedOrders_withNotExistingFacility_returns400AndError(self, client, user):
         # Arrange
         current_time = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%fZ')
         params = {
@@ -25,8 +44,8 @@ class TestGetUnassignedOrders:
         response, model = DriverAssignmentAPI(client).get_unassigned_orders(params=params)
 
         # Assert
-        APIResponse(response).assert_status(200)
-        assert len(model.data.results) == 0, "Zero orders are expected for facility having no orders."
+        APIResponse(response).assert_status(400)
+        assert model.error.get('detail') == 'Facility was not found'
 
     @users(User.SUPERUSER)
     def test_getUnassignedOrders_withExistingOrders_returns200AndData(self, client, user, request):
