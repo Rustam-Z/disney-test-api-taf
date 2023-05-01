@@ -26,3 +26,5 @@ class Section(Enum):
     INVENTORY_LOCATION = 'inventory-location'
     CUSTOMER_CONTACT = 'customer-contact'
     DRIVER_ASSIGNMENT = 'driver-assignment'
+    STAGING = 'staging'
+    DRIVER_PROCESS = 'driver-process'
