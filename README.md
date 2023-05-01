@@ -1,34 +1,21 @@
 # Disney's API Test Automation Framework
 
+
 ## Links
 1. [Disney Postman collection](https://cloudy-spaceship-458806.postman.co/workspace/Disney~a12dcd17-4260-4ca9-98d0-ada0bf3f809f)
 
+
 ## Setup
 1. Install [Python](https://www.python.org/downloads/) >= 3.11 and [Poetry](https://python-poetry.org/docs/).
-2. Install PyCharm / IntelliJ, clone the project.
+2. Install PyCharm, clone the project.
 3. Create poetry virtual environment and install dependencies: `poetry shell` & `poetry install`.
-4. Setup Python interpreter in PyCharm / IntelliJ and configure PyTest as test runner in Settings:
+4. Setup Python interpreter in PyCharm and configure PyTest as test runner in Settings:
    - "Add New Interpreter" → "Add Local Interpreter" → "Poetry environment" → "Existing environment"
    - `[Windows]` Provide the Python path to the virtual environment:
     ```C:\Users\<USER>\AppData\Local\pypoetry\Cache\virtualenvs\ip-manager-taf-api-<HASH>-py3.11\Scripts\python.exe```
 5. `.config.yaml` should be created in root of project. Use `config-template.yaml` as config file template. 
    You need to create users for facility. To create a user you need to create a role. To create a facility you need to create a customer.
 
-## How to run tests?
-Tests can run in DEV, PROD environments. You can change default running env in `.config.yaml` file that you created. Or provide `--env` flag while executing tests. It will override `CONFIG.env`.
-```bash
-python -m pytest tests/ -s
-python -m pytest -n auto --reruns 3 -s --env=dev -v tests/  # Run all available tests.
-python -m pytest -n auto --reruns 3 -s --env=dev -v -m smoke tests/  # Run all smoke tests. Tests with smoke marker.
-
-# Flags
-# `-n auto` = level of parallelism to run multiple tests simultaneously.
-# `--reruns 5` = maximum number of times the tests to run if failed.
-# - `--reruns-delay 1` = amount of seconds to wait before the next re-run.
-# `--lf` or `--last-failed` = to run last failed tests.
-# `-v` = verbose, to get more info.
-# `-m` = mark expression.
-```
 
 ## Configuration 
 1. `.config.yaml` includes `API URLs` for DEV, STAGING and PROD envs. 
@@ -45,27 +32,57 @@ python -m pytest -n auto --reruns 3 -s --env=dev -v -m smoke tests/  # Run all s
    /tests/conftest.py # Change PyTest hooks.
    /paths.py # The paths for common project files. Change here if you edit the name of config file.
    ```
+   
+
+## How to execute tests?
+Tests can run in DEV, PROD environments. You can change default running env in `.config.yaml` file that you created. Or provide `--env` flag while executing tests. It will override `CONFIG.env`.
+```bash
+python -m pytest tests/ -s
+python -m pytest --reruns 3 -s --env=dev -v tests/  # Run all available tests.
+python -m pytest --reruns 3 -s --env=dev -v -m smoke tests/  # Run all smoke tests. Tests with smoke marker.
+
+# Flags
+# `-n auto` = level of parallelism to run multiple tests simultaneously. NOT WORKING TEMPORARY!
+# `--reruns 5` = maximum number of times the tests to run if failed.
+# - `--reruns-delay 1` = amount of seconds to wait before the next re-run.
+# `--lf` or `--last-failed` = to run last failed tests.
+# `-v` = verbose, to get more info.
+# `-m` = mark expression.
+```
+
+
+## How to generate test execution report?
+1. [Install JAVA8 JRE](https://www.oracle.com/java/technologies/javase/javase8u211-later-archive-downloads.html#license-lightbox)
+2. [Install Allure](https://docs.qameta.io/allure/#_installing_a_commandline)
+
+Execute tests and generate `allure_results` directory using the command below.
+```commandline
+python -m pytest --reruns 3 -s --env=dev -v --alluredir=.output/allure_results tests/
+```
+To generate report, execute `generate_test_report.sh`. It will generate test results report in `.output/allure_report` directory.
+
+Or you can manually use the command below, if you don't want to keep the history of test executions.
+```commandline
+allure generate .output/allure_results -o .output/allure_report --clean
+```
+
 
 ## Project structure
-```text
-`\core` includes anything related to framework (HTTP client, API general responses validation, helpers, config).
-`\api` contains anything related to product API models, endpoints, query string params.
-`\tests` contains all tests.
-`\data` includes test data, and fake request models.
-`.config.yaml` config file.
+```
+`\api`: API service layer, contains API related business logic and use cases: API responses & requests models, request endpoints, headers, params.
+`\core`: includes framework related helpers: HTTP client, API responses validators, helpers, config, common enums.
+`\data`: test data layer.
+`\fixtures`: test setup and teardown helpers.
+`\tests`: test layer, actual functional API and UI tests.
 ```
 
-## Markers in code
-You can use search to find these markers.
-```text
-#TODO -> the tasks that need to be done in the future.
-```
 
 ## How to write test for new feature?
 1. Learn new feature, create test scenarios, test cases.
 2. Create success response models in `api/responses`.
 3. Create requests endpoints in `api/requests`. Validate schema depending on status code. 
 4. Write tests in `tests` folder. Some tests require fixtures. Create fixtures inside `tests/fixtures`.
+
 
 ## Models
 ```text
@@ -88,6 +105,7 @@ Other response models are created for successful responses per API.
    - But we validate common error responses such as authorization errors, wrong path errors.
    - **TODO: `message` is not validated separately yet for success, error. It will be done in the future, when backend will support this feature.**
 3. Validate data, and assert result with expected.
+
 
 ## Constraints
 ```text

@@ -18,6 +18,8 @@ jsonpath-ng = "^1.5"
 munch = "^2.5"
 pydantic = {extras = ["email"], version = "^1.10.7"}
 pyjwt = "^2.6.0"
+allure-pytest = "^2.13.1"
+python-decouple = "^3.8"
 pytest-dependency = "^0.5"
 
 [tool.pytest.ini_options]
