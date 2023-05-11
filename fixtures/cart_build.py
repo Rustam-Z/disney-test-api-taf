@@ -2,7 +2,6 @@ import pytest
 
 import data
 from api.endpoints.metro.cart_build_api import CartBuildAPI
-from api.endpoints.facility.facility_api import FacilityAPI
 from api.endpoints.items.inventory_item_type_api import InventoryItemTypeAPI
 from api.endpoints.items.inventory_category_api import InventoryCategoryAPI
 from api.endpoints.items.facility_item_type_api import FacilityItemTypeAPI
@@ -11,8 +10,7 @@ from api.endpoints.metro.metro_item_configuration_api import MetroItemConfigurat
 
 
 @pytest.fixture()
-def create_fake_cart_superuser(client):
-    facility_id = -1
+def create_fake_cart_superuser(client, create_fake_facility):
     category_id = -1
     inventory_item_type_id = -1
     facility_item_type_id = -1
@@ -20,12 +18,13 @@ def create_fake_cart_superuser(client):
     metro_id = -1
 
     def _fixture(**kwargs):
-        # Setup
+        # Arrange
+
         # Create facility
-        facility_payload = data.fake.model.facility()
-        facility_response, facility_model = FacilityAPI(client).create_facility(data=facility_payload)
-        nonlocal facility_id
-        facility_id = facility_model.data.id
+        if 'facility_id' not in kwargs:
+            facility_payload, facility_response, facility_model = create_fake_facility(no_of_customers=1)
+            kwargs['facility_id'] = facility_model.data.id
+        facility_id = kwargs['facility_id']
 
         # Create inventory category
         category_payload = data.fake.model.inventory_category()
@@ -51,14 +50,13 @@ def create_fake_cart_superuser(client):
         payload = data.fake.model.metro_item_configuration(
             facility_id=facility_id,
             facility_item_type_ids=[facility_item_type_id],
-            **kwargs
         )
         response, conf_model = MetroItemConfigurationAPI(client).create_config(data=payload)
         nonlocal metro_item_config_id
         metro_item_config_id = conf_model.data.id
 
         # Create metro
-        payload = data.fake.model.metro(facility_id=facility_id, **kwargs)
+        payload = data.fake.model.metro(facility_id=facility_id)
         response, metro_model = MetroAPI(client).create_metro(data=payload)
         nonlocal metro_id
         metro_id = metro_model.data.id
@@ -80,6 +78,5 @@ def create_fake_cart_superuser(client):
         FacilityItemTypeAPI(client).delete_item_type(id=facility_item_type_id, expect_json=False)
         InventoryItemTypeAPI(client).delete_item_type(id=inventory_item_type_id, expect_json=False)
         InventoryCategoryAPI(client).delete_category(id=category_id, expect_json=False)
-        FacilityAPI(client).delete_facility(id=facility_id, expect_json=False)
     except Exception as e:
         print(f"Error: {e}")

@@ -15,7 +15,7 @@ class TestCreateCart:
         APIResponse(response).assert_status(200)
 
     @users(User.SUPERUSER)
-    def test_createCart_withMetroAndMetroConfigBelongingToDifferentFacility_returns200AndData(self, client, user, request):
+    def test_createCart_withMetroAndMetroConfigBelongingToDifferentFacility_returns400AndError(self, client, user, request):
         # Arrange
         metro_payload, metro_response, metro_model = request.getfixturevalue('create_fake_metro_superuser')()
         conf_payload, conf_response, conf_model = request.getfixturevalue('create_fake_metro_item_configuration_superuser')()

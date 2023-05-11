@@ -18,7 +18,7 @@ class CartBuildAPI:
         response = self.client.post(path, json=data, params=self.params, **kwargs)
         response_payload = response.content
 
-        if response.status_code == 201:
+        if response.status_code == 200:
             response_payload = response.json()
         elif response.status_code in range(400, 500):
             response_payload = ErrorResponse(**response.json())

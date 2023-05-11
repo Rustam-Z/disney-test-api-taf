@@ -4,6 +4,7 @@ from api.response_models.response_models import ErrorResponse
 from core.http_client import HTTPClient
 from api.response_models.staging.staging_models import (
     GetOrders,
+    GetMetroList,
 )
 
 
@@ -42,7 +43,7 @@ class StagingAPI:
 
         return response, response_payload
 
-    def get_metros_list(self, params: dict = None, **kwargs) -> tuple:
+    def get_metro_list(self, params: dict = None, **kwargs) -> tuple:
         """
         Get metros list by order.
         Params: order_id.
@@ -57,7 +58,7 @@ class StagingAPI:
         response_payload = response.content
 
         if response.status_code == 200:
-            response_payload = response.json()
+            response_payload = GetMetroList(**response.json())
         elif response.status_code in range(400, 500):
             response_payload = ErrorResponse(**response.json())
 
