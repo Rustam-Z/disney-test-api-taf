@@ -86,3 +86,15 @@ class TestGetMetroList:
         # Assert
         APIResponse(response).assert_status(200)
         assert len(model.data.results) == 1
+
+    @users(User.SUPERUSER)
+    def test_getMetroList_withWrongOrderID_returns400AndError(self, client, user):
+        # Arrange
+        order_id = data.fake.pyint()
+
+        # Act
+        response, model = DriverProcessAPI(client).get_metro_list(order_id)
+
+        # Assert
+        APIResponse(response).assert_status(400)
+        assert model.error.get('detail') == 'Order Not Found'
