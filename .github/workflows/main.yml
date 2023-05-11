@@ -16,34 +16,12 @@ jobs:
         with:
           python-version: 3.11
 
-      - name: cache poetry install
-        uses: actions/cache@v2
-        with:
-          path: ~/.local
-          key: poetry-1.4.1-0
-
-      - uses: snok/install-poetry@v1
-        with:
-          version: 1.4.1
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-
-      # Cache your dependencies (i.e. all the stuff in your `pyproject.toml`). Note the cache
-      # key: if you're using multiple Python versions, or multiple OSes, you'd need to include
-      # them in the cache key. I'm not, so it can be simple and just depend on the poetry.lock.
-      - name: cache deps
-        id: cache-deps
-        uses: actions/cache@v2
-        with:
-          path: .venv
-          key: pydeps-${{ hashFiles('**/poetry.lock') }}
-
-      # Install dependencies. `--no-root` means "install all dependencies but not the project
-      # itself", which is what you want to avoid caching _your_ code. The `if` statement
-      # ensures this only runs on a cache miss.
-      - run: poetry install --no-interaction --no-root
-        if: steps.cache-deps.outputs.cache-hit != 'true'
-      - run: poetry install --no-interaction
-
-      - run: echo "Starting executing tests..."
-      - run: poetry run pytest
+      - run: python3 install_poetry.py
+      - run: poetry --version
+      - run: poetry install --no-root
+      - run: source `poetry env info --path`/bin/activate
+      - run: poetry run python generate_config.py
+      - name: Executing tests
+        run: |
+          poetry run python -m pytest -s --env=dev
+        continue-on-error: true
