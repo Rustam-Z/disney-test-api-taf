@@ -1,4 +1,5 @@
 from api.endpoints.metro.metro_api import MetroAPI
+from api.enums.metro import MetroProcessStatuses, MetroLaundryStatuses
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
@@ -13,6 +14,8 @@ class TestCreateMetro:
         # Assert
         APIResponse(response).assert_status(201)
         APIResponse(response).assert_models(payload)
+        assert model.data.process_status == MetroProcessStatuses.STAGED_IN_INVENTORY.value
+        assert model.data.laundry_status == MetroLaundryStatuses.NONE.value
 
 
 class TestDeleteMetro:

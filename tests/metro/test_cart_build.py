@@ -1,4 +1,6 @@
 from api.endpoints.metro.cart_build_api import CartBuildAPI
+from api.endpoints.metro.metro_api import MetroAPI
+from api.enums.metro import MetroProcessStatuses, MetroLaundryStatuses
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
@@ -10,9 +12,17 @@ class TestCreateCart:
     def test_createCart_withValidData_returns200AndData(self, client, user, request):
         # Act
         payload, response, model = request.getfixturevalue('create_fake_cart_superuser')()
+        metro_id = model['data']['metro']['id']
 
         # Assert
         APIResponse(response).assert_status(200)
+
+        # Act
+        metro_response, metro_model = MetroAPI(client).get_metro(metro_id)
+
+        # Assert
+        assert metro_model.data.process_status == MetroProcessStatuses.STAGED_IN_INVENTORY.value
+        assert metro_model.data.laundry_status == MetroLaundryStatuses.CLEAN.value
 
     @users(User.SUPERUSER)
     def test_createCart_withMetroAndMetroConfigBelongingToDifferentFacility_returns400AndError(self, client, user, request):
@@ -33,7 +43,7 @@ class TestCreateCart:
 
 class TestGetCart:
     @users(User.SUPERUSER)
-    def test_getCartBySuperuser_returns200AndData(self, client, user, request):
+    def test_getCartBySuperuser_returns200AndData(self, client, user):
         # Act
         response, model = CartBuildAPI(client).get_cart()
 

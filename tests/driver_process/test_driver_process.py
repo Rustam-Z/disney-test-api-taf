@@ -6,7 +6,7 @@ import pytest
 import data
 from api.endpoints.driver_process.driver_process_api import DriverProcessAPI
 from api.endpoints.metro.metro_api import MetroAPI
-from api.enums.metro import MetroProcessStatuses
+from api.enums.metro import MetroProcessStatuses, MetroLaundryStatuses
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
@@ -160,3 +160,50 @@ class TestDriverMetroScan:
 
         # Assert: Metro status should be changed.
         assert metro_model.data.process_status == MetroProcessStatuses.OUT_FOR_DELIVERY.value
+
+
+class TestSubmit:
+    @users(User.SUPERUSER)
+    def test_submit_withValidData_returns200AndData(self, client, user, request):
+        # Arrange
+        setup = request.getfixturevalue('staging')
+        order_id = setup.get('order_id')
+        metro_id = setup.get('metro_id')
+        metro_qr_code = setup.get('metro_qr_code')
+
+        # Reader metro scan.
+        payload = {
+            "reader_name": f"Reader: {data.fake.ean13()}",
+            "mac_address": f"192.168.0.{random.randint(0, 255)}",
+            "tag_reads": [
+                {
+                    "antennaPort": random.randint(1, 9),
+                    "epc": metro_qr_code
+                }
+            ]
+        }
+        DriverProcessAPI(client).reader_metro_scan(payload)
+
+        # Driver metro scan.
+        payload = {
+            "order_id": order_id,
+            "qr_code": metro_qr_code
+        }
+        DriverProcessAPI(client).driver_metro_scan(payload)
+
+        payload = {
+            "order_id": order_id
+        }
+
+        # Act
+        response, model = DriverProcessAPI(client).submit(payload)
+
+        # Assert
+        APIResponse(response).assert_status(200)
+
+        # Act
+        metro_response, metro_model = MetroAPI(client).get_metro(metro_id)
+
+        # Assert: Metro status should be changed.
+        assert metro_model.data.process_status == MetroProcessStatuses.DELIVERED.value
+        assert metro_model.data.laundry_status == MetroLaundryStatuses.CLEAN.value

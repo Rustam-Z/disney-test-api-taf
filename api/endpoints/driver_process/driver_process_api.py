@@ -84,7 +84,7 @@ class DriverProcessAPI:
         return response, response_payload
 
     def submit(self, data: dict, **kwargs) -> tuple:
-        path = self.READER_METRO_SCAN
+        path = self.SUBMIT
         response = self.client.post(path, json=data, params=self.params, **kwargs)
         response_payload = response.content
 
