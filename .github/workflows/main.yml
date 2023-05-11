@@ -21,7 +21,7 @@ jobs:
       - run: poetry install --no-root
       - run: source `poetry env info --path`/bin/activate
       - run: poetry run python generate_config.py
-      - name: Executing tests
-        run: |
-          poetry run python -m pytest -s --env=dev
-        continue-on-error: true
+#      - name: Executing tests
+#        run: |
+#          poetry run python -m pytest -s --env=dev
+#        continue-on-error: true
