@@ -157,25 +157,9 @@ class TestRemoveMetro:
     @users(User.SUPERUSER)
     def test_removeMetro_withValidData_returns200AndData(self, client, user, request):
         # Arrange: create order, assign metros
-
-        # Create order
-        order_payload, order_response, order_model = request.getfixturevalue('create_fake_order_superuser')()
-        facility_id = order_model.data.facility
-        order_id = order_model.data.id
-
-        # Create cart
-        cart_payload, cart_response, cart_model = request.getfixturevalue('create_fake_cart_superuser')(
-            facility_id=facility_id
-        )
-        cart_id = cart_model['data']['id']
-        metro_qr_code = cart_model['data']['metro']['qr_code']
-
-        # Assign order and metro
-        payload = {
-            "metro_qr_code": metro_qr_code,
-            "order_id": order_id
-        }
-        StagingAPI(client).assign_metro(payload)
+        setup = request.getfixturevalue('assign_metro')()
+        cart_id = setup.get('cart_id')
+        order_id = setup.get('order_id')
 
         # Act
         payload = {
@@ -209,25 +193,10 @@ class TestGetMetroList:
     @users(User.SUPERUSER)
     def test_getMetroList_withExistingOrderAndWithMetros_returns200AndData(self, client, user, request):
         # Arrange: create order, assign metros
-
-        # Create order
-        order_payload, order_response, order_model = request.getfixturevalue('create_fake_order_superuser')()
-        facility_id = order_model.data.facility
-        order_id = order_model.data.id
-
-        # Create cart
-        cart_payload, cart_response, cart_model = request.getfixturevalue('create_fake_cart_superuser')(
-            facility_id=facility_id
-        )
-        cart_id = cart_model['data']['id']
-        metro_qr_code = cart_model['data']['metro']['qr_code']
-
-        # Assign order and metro
-        payload = {
-            "metro_qr_code": metro_qr_code,
-            "order_id": order_id
-        }
-        StagingAPI(client).assign_metro(payload)
+        setup = request.getfixturevalue('assign_metro')()
+        cart_id = setup.get('cart_id')
+        order_id = setup.get('order_id')
+        metro_qr_code = setup.get('metro_qr_code')
 
         # Act
         params = {
@@ -259,23 +228,11 @@ class TestGetMetroList:
 class TestSubmitAction:
     @users(User.SUPERUSER)
     def test_submitAction_withValidData_returns200AndData(self, client, user, request):
-        # Arrange: create order, assign metros
-        order_payload, order_response, order_model = request.getfixturevalue('create_fake_order_superuser')()
-        facility_id = order_model.data.facility
-        order_id = order_model.data.id
-
-        cart_payload, cart_response, cart_model = request.getfixturevalue('create_fake_cart_superuser')(
-            facility_id=facility_id
-        )
-        metro_qr_code = cart_model['data']['metro']['qr_code']
-
-        payload = {
-            "metro_qr_code": metro_qr_code,
-            "order_id": order_id
-        }
-        StagingAPI(client).assign_metro(payload)
-
-        customer_response, customer_model = CustomerAPI(client).get_customer(id=order_model.data.customer)
+        # Arrange
+        setup = request.getfixturevalue('assign_metro')()
+        customer_id = setup.get('customer_id')
+        order_id = setup.get('order_id')
+        customer_response, customer_model = CustomerAPI(client).get_customer(customer_id)
         customer_barcode = customer_model.data.barcode
 
         # Act
@@ -309,23 +266,11 @@ class TestSubmitAction:
 
     @users(User.SUPERUSER)
     def test_submitAction_withLongDisneyOrderID_returns400AndError(self, client, user, request):
-        # Arrange: create order, assign metros
-        order_payload, order_response, order_model = request.getfixturevalue('create_fake_order_superuser')()
-        facility_id = order_model.data.facility
-        order_id = order_model.data.id
-
-        cart_payload, cart_response, cart_model = request.getfixturevalue('create_fake_cart_superuser')(
-            facility_id=facility_id
-        )
-        metro_qr_code = cart_model['data']['metro']['qr_code']
-
-        payload = {
-            "metro_qr_code": metro_qr_code,
-            "order_id": order_id
-        }
-        StagingAPI(client).assign_metro(payload)
-
-        customer_response, customer_model = CustomerAPI(client).get_customer(id=order_model.data.customer)
+        # Arrange
+        setup = request.getfixturevalue('assign_metro')()
+        customer_id = setup.get('customer_id')
+        order_id = setup.get('order_id')
+        customer_response, customer_model = CustomerAPI(client).get_customer(customer_id)
         customer_barcode = customer_model.data.barcode
 
         # Act

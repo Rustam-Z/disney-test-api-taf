@@ -2,6 +2,10 @@ from api.enums.params import Param
 from api.enums.sections import Section
 from api.response_models.response_models import ErrorResponse
 from core.http_client import HTTPClient
+from api.response_models.driver_process.driver_process_models import (
+    GetOrders,
+    GetMetroList,
+)
 
 
 class DriverProcessAPI:
@@ -21,7 +25,9 @@ class DriverProcessAPI:
     def get_orders(self, params: dict = None, **kwargs) -> tuple:
         """
         Params: action (pickup_at_facility, delivery_at_customer, delivery_at_facility),
-                date_start_time_utc, driver_id, customer.
+                date_start_time_utc
+                driver_id
+                customer
         """
         if params is None:
             params = {}
@@ -33,13 +39,13 @@ class DriverProcessAPI:
         response_payload = response.content
 
         if response.status_code == 200:
-            response_payload = response.json()
+            response_payload = GetOrders(**response.json())
         elif response.status_code in range(400, 500):
             response_payload = ErrorResponse(**response.json())
 
         return response, response_payload
 
-    def get_metros_list(self, id: int, **kwargs) -> tuple:
+    def get_metro_list(self, id: int, **kwargs) -> tuple:
         """
         Get metros list by order.
         """
@@ -48,7 +54,7 @@ class DriverProcessAPI:
         response_payload = response.content
 
         if response.status_code == 200:
-            response_payload = response.json()
+            response_payload = GetMetroList(**response.json())
         elif response.status_code in range(400, 500):
             response_payload = ErrorResponse(**response.json())
 

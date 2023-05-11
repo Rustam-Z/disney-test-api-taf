@@ -1,0 +1,88 @@
+from datetime import datetime
+
+import pytest
+
+import data
+from api.endpoints.driver_process.driver_process_api import DriverProcessAPI
+from core.asserters import APIResponse
+from core.decorators import users
+from core.enums.users import User
+
+
+class TestGetOrders:
+    @users(User.SUPERUSER)
+    def test_getOrders_withValidDataAndNoOrders_returns200AndData(self, client, user, request):
+        # Arrange
+        setup = request.getfixturevalue('driver_assignment')
+        driver_id = setup.get('driver_id')
+
+        current_time = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+        params = {
+            'action': 'pickup_at_facility',
+            'date_start_time_utc': current_time,
+            'driver_id': driver_id,
+        }
+
+        # Act
+        response, model = DriverProcessAPI(client).get_orders(params)
+
+        # Assert
+        APIResponse(response).assert_status(200)
+        assert len(model.data.results) == 0
+
+    @pytest.mark.skip(reason="From where the order is being fetched?")
+    @users(User.SUPERUSER)
+    def test_getOrders_withValidDataAndExistingOrders_returns200AndData(self, client, user, request):
+        # Arrange
+        driver_assignment_setup = request.getfixturevalue('assign_orders_to_truck_and_drivers')
+        facility_id = driver_assignment_setup.get('facility_id')
+        customer_id = driver_assignment_setup.get('customer_id')
+        driver_id = driver_assignment_setup.get('driver_id')
+        staging_setup = request.getfixturevalue('staging')(facility_id=facility_id, customer_id=customer_id)
+        dropoff_date_start = staging_setup.get('dropoff_date_start')
+
+        params = {
+            'action': 'pickup_at_facility',
+            'date_start_time_utc': dropoff_date_start,
+            'driver_id': driver_id,
+        }
+
+        # Act
+        response, model = DriverProcessAPI(client).get_orders(params)
+
+        # Assert
+        APIResponse(response).assert_status(200)
+        assert len(model.data.results) == 1
+
+    @users(User.SUPERUSER)
+    def test_getOrders_withWrongDriver_returns400AndError(self, client, user):
+        # Arrange
+        current_time = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+
+        params = {
+            'action': 'pickup_at_facility',
+            'date_start_time_utc': current_time,
+            'driver_id': data.fake.pyint(),
+        }
+
+        # Act
+        response, model = DriverProcessAPI(client).get_orders(params)
+
+        # Assert
+        APIResponse(response).assert_status(400)
+        assert model.error.get('detail') == 'Driver Not Found'
+
+
+class TestGetMetroList:
+    @users(User.SUPERUSER)
+    def test_getMetroList_withValidData_returns200AndData(self, client, user, request):
+        # Arrange
+        setup = request.getfixturevalue('staging')
+        order_id = setup.get('order_id')
+
+        # Act
+        response, model = DriverProcessAPI(client).get_metro_list(order_id)
+
+        # Assert
+        APIResponse(response).assert_status(200)
+        assert len(model.data.results) == 1

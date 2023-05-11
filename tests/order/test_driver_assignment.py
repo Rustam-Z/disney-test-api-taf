@@ -108,6 +108,7 @@ class TestAssignOrdersToTruckAndDrivers:
 
         # Assert
         APIResponse(response).assert_status(200)
+        assert model.data.message == 'Drivers and Orders assignment process is Done!'
 
     @pytest.mark.skip
     @users(User.SUPERUSER)
