@@ -10,10 +10,9 @@ from api.response_models.driver_process.driver_process_models import (
 
 class DriverProcessAPI:
     ORDERS = '/driver-process/'
-    METRO_LIST = '/driver-process/{order_id}/order-metros/'  # Is it order id?
+    METRO_LIST = '/driver-process/{order_id}/order-metros/'
     READER_METRO_SCAN = '/driver-process/reader-metro-scan/'
     DRIVER_METRO_SCAN = '/driver-process/driver-metro-scan/'
-    _METRO_TRACKING = '/inventory/metro-tracking/'  # DEPRECATED!!!
     SUBMIT = '/driver-process/submit/'
 
     def __init__(self, client: HTTPClient):
@@ -73,7 +72,7 @@ class DriverProcessAPI:
         return response, response_payload
 
     def driver_metro_scan(self, data: dict, **kwargs) -> tuple:
-        path = self.READER_METRO_SCAN
+        path = self.DRIVER_METRO_SCAN
         response = self.client.post(path, json=data, params=self.params, **kwargs)
         response_payload = response.content
 

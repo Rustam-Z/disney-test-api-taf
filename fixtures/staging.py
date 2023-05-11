@@ -37,6 +37,7 @@ def assign_metro(
             facility_id=facility_id
         )
         cart_id = cart_model['data']['id']
+        metro_id = cart_model['data']['metro']['id']
         metro_qr_code = cart_model['data']['metro']['qr_code']
 
         # Assign metro to order
@@ -51,6 +52,7 @@ def assign_metro(
             'customer_id': customer_id,
             'order_id': order_id,
             'cart_id': cart_id,
+            'metro_id': metro_id,
             'metro_qr_code': metro_qr_code,
             'dropoff_date_start': order_model.data.dropoff_date_start
         }
