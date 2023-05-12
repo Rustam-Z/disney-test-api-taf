@@ -16,20 +16,23 @@ jobs:
         with:
           python-version: 3.11
 
-      - run: python3 install_poetry.py
-      - run: poetry --version
-      - run: poetry install --no-root
-      - run: source `poetry env info --path`/bin/activate
-
-      - run: poetry run python generate_config.py
-
-      - name: Working with ENV variables
+      - name: Install Poetry, install requirements, and activate venv.
         run: |
-          echo "The API key is:${{vars.DEV_FACILITY_ADMIN_EMAIL}}"
-          echo "The API key is:${{secrets.DEV_FACILITY_ADMIN_EMAIL}} ${{secrets.DEV_ENV}}"
-          echo "The API key is:${{env.DEV_FACILITY_ADMIN_EMAIL}}"
-          echo "The API key is:${{main.DEV_FACILITY_ADMIN_EMAIL}}"
-          echo "GitHub actor:${{GITHUB_ACTOR}}"
+          echo "The job was triggered by: $GITHUB_ACTOR"
+          python3 install_poetry.py
+          poetry --version
+          poetry install --no-root
+          source `poetry env info --path`/bin/activate
+
+      - name: Create .config.yaml file.
+        env:
+          DEV_SUPERUSER_EMAIL: ${{ vars.DEV_SUPERUSER_EMAIL }}
+          DEV_FACILITY_ADMIN_EMAIL: ${{ vars.DEV_FACILITY_ADMIN_EMAIL }}
+          DEV_FACILITY_DRIVER_EMAIL: ${{ vars.DEV_FACILITY_DRIVER_EMAIL }}
+          DEV_FACILITY_USER_EMAIL: ${{ vars.DEV_FACILITY_USER_EMAIL }}
+          PASSWORD: ${{ vars.PASSWORD }}
+        run: |
+          poetry run python generate_config.py
 
 #      - name: Executing tests
 #        run: |

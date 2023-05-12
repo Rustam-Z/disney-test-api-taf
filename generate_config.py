@@ -5,13 +5,11 @@ Generates .config yaml file using config-template.yaml for CI/CD.
 import yaml
 import os
 
-
-print(os.environ.get('vars.DEV_FACILITY_ADMIN_EMAIL'))
-print(os.environ.get('vars.DEV_FACILITY_DRIVER_EMAIL'))
-print(os.environ.get('vars.DEV_FACILITY_USER_EMAIL'))
-print(os.environ.get('secrets.PASSWORD'), os.environ.get('env.PASSWORD'))
-print(os.environ.get('secrets.DEV_ENV'))
-
+print(os.environ.get('DEV_SUPERUSER_EMAIL'))
+print(os.environ.get('DEV_FACILITY_ADMIN_EMAIL'))
+print(os.environ.get('DEV_FACILITY_DRIVER_EMAIL'))
+print(os.environ.get('DEV_FACILITY_USER_EMAIL'))
+print(os.environ.get('PASSWORD'))
 
 
 def main() -> None:
