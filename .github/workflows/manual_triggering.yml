@@ -78,5 +78,5 @@ jobs:
           password: ${{secrets.MAIL_PASSWORD}}
           subject: Test execution results job - Disney - DEV env - ${{ steps.version.outputs.datetime }}
           body: Test report - https://rustam-z.github.io/disney-test-api-taf
-          to: zokirovrustam202@gmail.com
+          to: zokirovrustam202@gmail.com,madiyor5552@mail.ru,nnarziev@gmail.com
           from: GitHub Actions AutoTest Executor
