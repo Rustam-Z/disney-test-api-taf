@@ -6,6 +6,9 @@ on:
   schedule:
     - cron: "0 9 * * *"
 
+env:
+  TEST_EXECUTION_ENV: dev
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -24,7 +27,7 @@ jobs:
           poetry install --no-root
           source `poetry env info --path`/bin/activate
 
-      - name: Create .config.yaml file.
+      - name: Generate .config.yaml file.
         env:
           DEV_SUPERUSER_EMAIL: ${{ vars.DEV_SUPERUSER_EMAIL }}
           DEV_FACILITY_ADMIN_EMAIL: ${{ vars.DEV_FACILITY_ADMIN_EMAIL }}
@@ -34,7 +37,8 @@ jobs:
         run: |
           poetry run python generate_config.py
 
-#      - name: Executing tests
-#        run: |
-#          poetry run python -m pytest -s --env=dev
-#        continue-on-error: true
+      - name: Executing tests.
+        run: |
+          echo "Starting regression testing on "$TEST_EXECUTION_ENV" environment..."
+          poetry run python -m pytest -s --env=$TEST_EXECUTION_ENV
+        continue-on-error: true

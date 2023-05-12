@@ -67,6 +67,25 @@ allure generate .output/allure_results -o .output/allure_report --clean
 ```
 
 
+## GitHub actions
+The pipeline is defined in `.github/workflows/main.yml`.
+
+Steps:
+1. Setup: install requirements, and generate config file.
+2. Execute tests
+3. Copy test execution history report
+4. Generate new test execution report
+5. Send email notification
+
+Environment variables for running pipeline:
+```
+DEV_SUPERUSER_EMAIL
+DEV_FACILITY_ADMIN_EMAIL
+DEV_FACILITY_DRIVER_EMAIL
+DEV_FACILITY_USER_EMAIL
+PASSWORD # Password should be the same for all users.
+```
+
 ## Project structure
 ```
 `\api`: API service layer, contains API related business logic and use cases: API responses & requests models, request endpoints, headers, params.
