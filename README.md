@@ -6,9 +6,18 @@
 
 
 ## GitHub actions
-The pipeline is defined in `.github/workflows/main.yml`.
+**Our workflow**
 
+CI pipeline to execute tests on DEV environment, generate Allure test execution report, and send email notification.
 Reports are available in https://rustam-z.github.io/disney-test-api-taf/.
+
+**Workflows**
+1. `.github/workflows/main.yml` runs after each push to main branch, and sends email only to zokirovrustam202@gmail.com.
+2. `.github/workflows/manual_triggering.yml` is triggered manually. 
+   Why do we need it? In case we have a PROD hotfix, and before pushing changes to PROD directly, developers need to push changes to DEV, and execute tests in DEV.
+   And after verifying that we don't have non critical defects, we can merge hotfix to PROD.
+3. `.github/workflows/scheduled.yml` runs daily at 9 AM. And sends emails to zokirovrustam202@gmail.com, madiyor5552@mail.ru, nnarziev@gmail.com.
+
 
 Steps:
 1. Setup: install requirements, and generate config file.

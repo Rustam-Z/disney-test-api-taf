@@ -1,4 +1,4 @@
-name: On Push - CI pipeline to execute tests on DEV environment, generate test execution report, and send email notification.
+name: On Push Event Workflow - DEV environment
 
 on:
   push:
