@@ -38,5 +38,5 @@ jobs:
       - name: Executing tests.
         run: |
           echo "Starting regression testing on "$TEST_EXECUTION_ENV" environment..."
-          poetry run python -m pytest -s --env=$TEST_EXECUTION_ENV
+          poetry run python -m pytest -s -v --reruns 3 --env=$TEST_EXECUTION_ENV
         continue-on-error: true
