@@ -70,6 +70,7 @@ jobs:
           echo "event_name=$GITHUB_EVENT_NAME" >> $GITHUB_OUTPUT
           echo "workflow=$GITHUB_WORKFLOW" >> $GITHUB_OUTPUT
           echo "actor=$GITHUB_ACTOR" >> $GITHUB_OUTPUT
+          echo "run_number=$GITHUB_RUN_NUMBER" >> $GITHUB_OUTPUT
         id: version
 
       - name: Send email notification.
@@ -81,6 +82,6 @@ jobs:
           username: ${{secrets.MAIL_USERNAME}}
           password: ${{secrets.MAIL_PASSWORD}}
           subject: Test execution results job - Disney - DEV env - ${{ steps.version.outputs.datetime }}
-          body: Test report - https://rustam-z.github.io/disney-test-api-taf. Triggered by ${{ steps.version.outputs.event_name }} in ${{ steps.version.outputs.workflow }}. Author ${{ steps.version.outputs.actor }}.
+          body: Test report - https://rustam-z.github.io/disney-test-api-taf/${{ steps.version.outputs.run_number }}. Triggered by ${{ steps.version.outputs.event_name }} in ${{ steps.version.outputs.workflow }}. Author ${{ steps.version.outputs.actor }}.
           to: zokirovrustam202@gmail.com
-          from: GitHub Actions AutoTest Executor
+          from: Disney Test Execution Report
