@@ -67,6 +67,9 @@ jobs:
       - name: Set current date as env variable.
         run: |
           echo "datetime=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_OUTPUT
+          echo "event_name=$GITHUB_EVENT_NAME" >> $GITHUB_OUTPUT
+          echo "workflow=$GITHUB_WORKFLOW" >> $GITHUB_OUTPUT
+          echo "actor=$GITHUB_ACTOR" >> $GITHUB_OUTPUT
         id: version
 
       - name: Send email notification.
@@ -78,6 +81,6 @@ jobs:
           username: ${{secrets.MAIL_USERNAME}}
           password: ${{secrets.MAIL_PASSWORD}}
           subject: Test execution results job - Disney - DEV env - ${{ steps.version.outputs.datetime }}
-          body: Test report - https://rustam-z.github.io/disney-test-api-taf
+          body: Test report - https://rustam-z.github.io/disney-test-api-taf. Triggered by ${{ steps.version.outputs.event_name }} in ${{ steps.version.outputs.workflow }}. Author ${{ steps.version.outputs.actor }}.
           to: zokirovrustam202@gmail.com,madiyor5552@mail.ru,nnarziev@gmail.com
           from: GitHub Actions AutoTest Executor
