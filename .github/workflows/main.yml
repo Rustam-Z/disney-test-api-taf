@@ -1,10 +1,8 @@
-name: Ci pipeline to execute tests on DEV environment, generate test execution report, and send email notification.
+name: On Push - CI pipeline to execute tests on DEV environment, generate test execution report, and send email notification.
 
 on:
   push:
     branches: [main]
-  schedule:
-    - cron: "0 9 * * *"
 
 env:
   TEST_EXECUTION_ENV: dev
