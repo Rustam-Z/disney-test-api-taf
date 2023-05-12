@@ -1,0 +1,41 @@
+name: Manual Trigger Workflow - DEV environment
+
+on:
+  workflow_dispatch:
+
+env:
+  TEST_EXECUTION_ENV: dev
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.11
+
+      - name: Install Poetry, install requirements, and activate venv.
+        run: |
+          echo "The job was triggered by: $GITHUB_ACTOR"
+          python3 install_poetry.py
+          poetry --version
+          poetry install --no-root
+          source `poetry env info --path`/bin/activate
+
+      - name: Generate .config.yaml file.
+        env:
+          DEV_SUPERUSER_EMAIL: ${{ vars.DEV_SUPERUSER_EMAIL }}
+          DEV_FACILITY_ADMIN_EMAIL: ${{ vars.DEV_FACILITY_ADMIN_EMAIL }}
+          DEV_FACILITY_DRIVER_EMAIL: ${{ vars.DEV_FACILITY_DRIVER_EMAIL }}
+          DEV_FACILITY_USER_EMAIL: ${{ vars.DEV_FACILITY_USER_EMAIL }}
+          PASSWORD: ${{ vars.PASSWORD }}
+        run: |
+          poetry run python generate_config.py
+
+      - name: Executing tests.
+        run: |
+          echo "Starting regression testing on "$TEST_EXECUTION_ENV" environment..."
+          poetry run python -m pytest -s --env=$TEST_EXECUTION_ENV
+        continue-on-error: true
