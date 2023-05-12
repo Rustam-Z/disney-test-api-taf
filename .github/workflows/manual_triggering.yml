@@ -63,14 +63,12 @@ jobs:
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: allure-history
 
-      - name: Get date.
-        id: date
-        if: ${{ always() }}
-        run: echo "::set-output name=date::$(date + '%Y-%m-%d-%T')"
+      - name: Set current date as env variable.
+        run: |
+          echo "datetime=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_OUTPUT
+        id: version
 
       - name: Send email notification.
-        env:
-          SUBJECT: Test execution results job - Disney - DEV env - ${{ steps.date.outputs.date }}
         if: always()
         uses: dawidd6/action-send-mail@v3
         with:
@@ -78,7 +76,7 @@ jobs:
           server_port: 465
           username: ${{secrets.MAIL_USERNAME}}
           password: ${{secrets.MAIL_PASSWORD}}
-          subject: $SUBJECT
+          subject: Test execution results job - Disney - DEV env - ${{ steps.version.outputs.datetime }}
           body: Test report - https://rustam-z.github.io/disney-test-api-taf
           to: zokirovrustam202@gmail.com
           from: GitHub Actions AutoTest Executor
