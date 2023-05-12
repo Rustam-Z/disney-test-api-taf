@@ -5,7 +5,45 @@
 1. [Disney Postman collection](https://cloudy-spaceship-458806.postman.co/workspace/Disney~a12dcd17-4260-4ca9-98d0-ada0bf3f809f)
 
 
-## Setup
+## GitHub actions
+The pipeline is defined in `.github/workflows/main.yml`.
+
+Reports are available in https://rustam-z.github.io/disney-test-api-taf/.
+
+Steps:
+1. Setup: install requirements, and generate config file.
+2. Execute tests
+3. Copy test execution history report
+4. Generate new test execution report
+5. Deploy report to GitHub pages
+6. Send email notification
+
+Create repository environment variables for running pipeline:
+```
+DEV_SUPERUSER_EMAIL
+DEV_FACILITY_ADMIN_EMAIL
+DEV_FACILITY_DRIVER_EMAIL
+DEV_FACILITY_USER_EMAIL
+PASSWORD # Password should be the same for all users.
+```
+
+**How to execute tests manually within GitHub actions?**
+
+<img src="assets/img/gh-actions.jpg" width="800px">
+
+
+**Sending test report emails**
+How to get email password?
+1. Go to your Google account and setup two-step verification.
+2. Go to https://myaccount.google.com/u/1/apppasswords, and create new app, and copy 16 digit password.
+
+Create repository secrets:
+```
+MAIL_USERNAME
+MAIL_PASSWORD
+```
+
+## Setup project locally
 1. Install [Python](https://www.python.org/downloads/) >= 3.11 and [Poetry](https://python-poetry.org/docs/).
 2. Install PyCharm, clone the project.
 3. Create poetry virtual environment and install dependencies: `poetry shell` & `poetry install`.
@@ -34,7 +72,7 @@
    ```
    
 
-## How to execute tests?
+## How to execute tests locally?
 Tests can run in DEV, PROD environments. You can change default running env in `.config.yaml` file that you created. Or provide `--env` flag while executing tests. It will override `CONFIG.env`.
 ```bash
 python -m pytest tests/ -s
@@ -51,7 +89,7 @@ python -m pytest --reruns 3 -s --env=dev -v -m smoke tests/  # Run all smoke tes
 ```
 
 
-## How to generate test execution report?
+## How to generate test execution report locally?
 1. [Install JAVA8 JRE](https://www.oracle.com/java/technologies/javase/javase8u211-later-archive-downloads.html#license-lightbox)
 2. [Install Allure](https://docs.qameta.io/allure/#_installing_a_commandline)
 
@@ -66,25 +104,6 @@ Or you can manually use the command below, if you don't want to keep the history
 allure generate .output/allure_results -o .output/allure_report --clean
 ```
 
-
-## GitHub actions
-The pipeline is defined in `.github/workflows/main.yml`.
-
-Steps:
-1. Setup: install requirements, and generate config file.
-2. Execute tests
-3. Copy test execution history report
-4. Generate new test execution report
-5. Send email notification
-
-Environment variables for running pipeline:
-```
-DEV_SUPERUSER_EMAIL
-DEV_FACILITY_ADMIN_EMAIL
-DEV_FACILITY_DRIVER_EMAIL
-DEV_FACILITY_USER_EMAIL
-PASSWORD # Password should be the same for all users.
-```
 
 ## Project structure
 ```
@@ -116,6 +135,7 @@ Common responses models in common_models.py. Ex: AuthErrorResponse.
 Other response models are created for successful responses per API.
 ```
 
+
 ## Response validation plan
 1. Validate HTTP status code
 2. Validate schema: convert response.json() to pydantic model to check data types, and verify that all fields are present. 
@@ -137,6 +157,7 @@ Other response models are created for successful responses per API.
      Web and mobile always use section param.
      So, tests without section param will be considered as NEGATIVE. And we can have separate tests and overwrite API functions. That's okay.
 ```
+
 
 ## TODO
 - What if the script can be crated to populate the database with data, session setup and session teardown.

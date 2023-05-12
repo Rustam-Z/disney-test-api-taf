@@ -38,7 +38,7 @@ jobs:
       - name: Executing tests.
         run: |
           echo "Starting regression testing on "$TEST_EXECUTION_ENV" environment..."
-          poetry run python -m pytest -s -v --reruns 3 --env=$TEST_EXECUTION_ENV --alluredir=allure-results
+          poetry run python -m pytest -s -v --reruns 3 --env=$TEST_EXECUTION_ENV --alluredir=allure-results tests/user/test_token.py
         continue-on-error: true
 
       - name: Get Allure history.
@@ -63,3 +63,23 @@ jobs:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: allure-history
+
+      - name: Get date.
+        id: date
+        if: ${{ always() }}
+        run: echo "::set-output name=date::$(date + '%Y-%m-%d-%T')"
+
+      - name: Send email notification.
+        env:
+          DATE_TIME: ${{ steps.date.outputs.date }}
+        if: always()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{secrets.MAIL_USERNAME}}
+          password: ${{secrets.MAIL_PASSWORD}}
+          subject: Test execution results job - "$TEST_EXECUTION_ENV environment" - $DATE_TIME
+          body: Test report - https://rustam-z.github.io/disney-test-api-taf
+          to: zokirovrustam202@gmail.com
+          from: AutoTest Executor
