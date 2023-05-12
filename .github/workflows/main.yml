@@ -20,7 +20,16 @@ jobs:
       - run: poetry --version
       - run: poetry install --no-root
       - run: source `poetry env info --path`/bin/activate
+
       - run: poetry run python generate_config.py
+
+      - name: Working with ENV variables
+        run: |
+          echo "The API key is:${{vars.DEV_FACILITY_ADMIN_EMAIL}}"
+          echo "The API key is:${{secrets.DEV_FACILITY_ADMIN_EMAIL}} ${{secrets.DEV_ENV}}"
+          echo "The API key is:${{env.DEV_FACILITY_ADMIN_EMAIL}}"
+          echo "The API key is:${{main.DEV_FACILITY_ADMIN_EMAIL}}"
+          echo "GitHub actor:${{GITHUB_ACTOR}}"
 
 #      - name: Executing tests
 #        run: |
