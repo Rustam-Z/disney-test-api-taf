@@ -3,6 +3,9 @@
 
 ## Links
 1. [Disney Postman collection](https://cloudy-spaceship-458806.postman.co/workspace/Disney~a12dcd17-4260-4ca9-98d0-ada0bf3f809f)
+2. [Notion Disney Collection](https://www.notion.so/comston/2ca60b96ae994ababcc74007b2256a08?v=a92e71c35ae8499d926d3d0415c27952), to access that you need access to team@comston.app.
+3. [YouTube video describing test execution GitHub Actions workflows](https://youtu.be/ruxS4wmWszU)
+4. [Test execution reports](https://rustam-z.github.io/disney-test-api-taf/)
 
 
 ## GitHub actions
