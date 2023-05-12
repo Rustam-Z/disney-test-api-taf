@@ -33,6 +33,7 @@ PASSWORD # Password should be the same for all users.
 
 
 **Sending test report emails**
+
 How to get email password?
 1. Go to your Google account and setup two-step verification.
 2. Go to https://myaccount.google.com/u/1/apppasswords, and create new app, and copy 16 digit password.

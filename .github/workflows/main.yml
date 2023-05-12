@@ -82,4 +82,4 @@ jobs:
           subject: $SUBJECT
           body: Test report - https://rustam-z.github.io/disney-test-api-taf
           to: zokirovrustam202@gmail.com
-          from: AutoTest Executor
+          from: GitHub Actions AutoTest Executor
