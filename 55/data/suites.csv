@@ -1,0 +1,27 @@
+"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
+"passed","Fri May 12 10:28:35 GMT 2023","Fri May 12 10:28:35 GMT 2023","370","tests.user","test_token","TestLogin","","","test_loginUser_withValidCredentials_returns200AndTokens[User.NONE-User.SUPERUSER]","
+        GIVEN valid email and valid password,
+        WHEN POST /user/token/ request is executed,
+        THEN response code should be 200,
+        AND response body should contain access and refresh tokens.
+        "
+"passed","Fri May 12 10:28:37 GMT 2023","Fri May 12 10:28:37 GMT 2023","367","tests.user","test_token","TestRefreshToken","","","test_getNewAccessToken_withValidRefreshToken_returns200AndTokens[User.NONE-User.FACILITY_ADMIN]",""
+"passed","Fri May 12 10:28:35 GMT 2023","Fri May 12 10:28:36 GMT 2023","371","tests.user","test_token","TestLogin","","","test_loginUser_withValidEmailAndWrongPassword_returns401AndError[User.NONE-User.FACILITY_ADMIN]","
+        GIVEN valid email and valid password,
+        WHEN POST /user/token/ request is executed,
+        THEN response code should be 200,
+        AND response body contains access and refresh tokens.
+        "
+"passed","Fri May 12 10:28:36 GMT 2023","Fri May 12 10:28:36 GMT 2023","356","tests.user","test_token","TestLogin","","","test_loginUser_withWrongEmailAndWrongPassword_returns401AndError[User.NONE-christine60@example.com-+7hcN9)r)r]",""
+"passed","Fri May 12 10:28:37 GMT 2023","Fri May 12 10:28:37 GMT 2023","14","tests.user","test_token","TestRefreshToken","","","test_getNewAccessToken_withWrongRefreshToken_returns401AndError[User.NONE]",""
+"passed","Fri May 12 10:28:36 GMT 2023","Fri May 12 10:28:37 GMT 2023","357","tests.user","test_token","TestLogin","","","test_loginUser_withWrongEmailAndWrongPassword_returns401AndError[User.NONE-Jonathan Walker-j7)EGKaP#f]",""
+"passed","Fri May 12 10:28:37 GMT 2023","Fri May 12 10:28:37 GMT 2023","11","tests.user","test_token","TestLogin","","","test_loginUser_withEmptyFields_returns400AndError[User.NONE-%*4aTFtb!r- -error1]",""
+"passed","Fri May 12 10:28:37 GMT 2023","Fri May 12 10:28:37 GMT 2023","367","tests.user","test_token","TestRefreshToken","","","test_getNewAccessToken_withValidRefreshToken_returns200AndTokens[User.NONE-User.SUPERUSER]",""
+"passed","Fri May 12 10:28:35 GMT 2023","Fri May 12 10:28:35 GMT 2023","514","tests.user","test_token","TestLogin","","","test_loginUser_withValidCredentials_returns200AndTokens[User.NONE-User.FACILITY_ADMIN]","
+        GIVEN valid email and valid password,
+        WHEN POST /user/token/ request is executed,
+        THEN response code should be 200,
+        AND response body should contain access and refresh tokens.
+        "
+"passed","Fri May 12 10:28:37 GMT 2023","Fri May 12 10:28:37 GMT 2023","16","tests.user","test_token","TestLogin","","","test_loginUser_withEmptyFields_returns400AndError[User.NONE- - -error2]",""
+"passed","Fri May 12 10:28:37 GMT 2023","Fri May 12 10:28:37 GMT 2023","11","tests.user","test_token","TestLogin","","","test_loginUser_withEmptyFields_returns400AndError[User.NONE- -J00#EbN6*U-error0]",""
