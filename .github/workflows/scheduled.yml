@@ -1,8 +1,8 @@
-name: Scheduled Workflow at 10:11 AM GMT +5 - DEV environment
+name: Scheduled Workflow at 11 AM GMT +5 - DEV environment
 
 on:
   schedule: 
-    - cron: '11 5 * * *'
+    - cron: '0 6 * * *'
 
 env:
   TEST_EXECUTION_ENV: dev
