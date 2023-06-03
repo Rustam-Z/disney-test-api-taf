@@ -41,7 +41,7 @@ class TestCreateCart:
 
         # Assert
         APIResponse(response).assert_status(200)
-        assert model.get('data').get('is_rebuild') == True
+        assert model.get('data').get('is_rebuild') is True
 
     @users(User.SUPERUSER)
     def test_createCart_withMetroAndMetroConfigBelongingToDifferentFacility_returns400AndError(self, client, user, request):
