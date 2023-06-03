@@ -25,6 +25,25 @@ class TestCreateCart:
         assert metro_model.data.laundry_status == MetroLaundryStatuses.CLEAN.value
 
     @users(User.SUPERUSER)
+    def test_cartRebuild_withValidData_returns200AndData(self, client, user, request):
+        # Arrange
+        payload, response, model = request.getfixturevalue('create_fake_cart_superuser')()
+        metro_qr_code = model['data']['metro']['qr_code']
+        metro_config_qr_code = model['data']['metro_config']['qr_code']
+
+        # Act
+        payload = data.fake.model.cart(
+            metro_qr_code=metro_qr_code,
+            metro_config_qr_code=metro_config_qr_code,
+            is_rebuild=True
+        )
+        response, model = CartBuildAPI(client).create_cart(data=payload)
+
+        # Assert
+        APIResponse(response).assert_status(200)
+        assert model.get('data').get('is_rebuild') == True
+
+    @users(User.SUPERUSER)
     def test_createCart_withMetroAndMetroConfigBelongingToDifferentFacility_returns400AndError(self, client, user, request):
         # Arrange
         metro_payload, metro_response, metro_model = request.getfixturevalue('create_fake_metro_superuser')()
