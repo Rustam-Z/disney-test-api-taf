@@ -39,6 +39,7 @@ def assign_metro(
         cart_id = cart_model['data']['id']
         metro_id = cart_model['data']['metro']['id']
         metro_qr_code = cart_model['data']['metro']['qr_code']
+        metro_config_qr_code = cart_model['data']['metro_config']['qr_code']
 
         # Assign metro to order
         payload = {
@@ -54,6 +55,7 @@ def assign_metro(
             'cart_id': cart_id,
             'metro_id': metro_id,
             'metro_qr_code': metro_qr_code,
+            'metro_config_qr_code': metro_config_qr_code,
             'dropoff_date_start': order_model.data.dropoff_date_start
         }
 
