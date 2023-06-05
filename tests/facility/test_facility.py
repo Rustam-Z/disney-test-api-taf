@@ -122,10 +122,19 @@ class TestUpdateFacility:
         assert existing_facility_id == model.data.id, 'Old ID and new ID are not matching.'
         assert payload.get('status') == model.data.status
 
-    @pytest.mark.skip(reason="TODO")
     @users(User.SUPERUSER)
-    def test_updateFacility_byValidIDWithExistingName_returns400AndError(self, client, user):
-        ...
+    def test_updateFacility_byValidIDWithExistingName_returns400AndError(self, client, user, request):
+        # Arrange
+        facility1_payload, facility1_response, facility1_model = request.getfixturevalue('create_fake_facility')()
+        facility2_payload, facility2_response, facility2_model = request.getfixturevalue('create_fake_facility')()
+        existing_facility_id = facility2_model.data.id
+
+        # Act
+        payload = data.fake.model.facility(name=facility1_model.data.name)
+        response, model = FacilityAPI(client).update_facility(id=existing_facility_id, data=payload)
+
+        # Assert
+        APIResponse(response).assert_status(400)
 
 
 class TestDeleteFacility:
