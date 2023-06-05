@@ -38,7 +38,7 @@ jobs:
       - name: Executing tests.
         run: |
           echo "Starting regression testing on "$TEST_EXECUTION_ENV" environment..."
-          poetry run python -m pytest -s -v --reruns 3 --env=$TEST_EXECUTION_ENV --alluredir=allure-results
+          poetry run python -m pytest -s -v --reruns 3 --env=$TEST_EXECUTION_ENV --alluredir=allure-results tests/user/test_token.py
         continue-on-error: true
 
       - name: Get Allure history.
@@ -75,13 +75,13 @@ jobs:
 
       - name: Send email notification.
         if: always()
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 465
-          username: ${{secrets.MAIL_USERNAME}}
-          password: ${{secrets.MAIL_PASSWORD}}
-          subject: Test execution results job - Disney - DEV env - ${{ steps.version.outputs.datetime }}
-          body: Test report - https://rustam-z.github.io/disney-test-api-taf/${{ steps.version.outputs.run_number }}. Triggered by ${{ steps.version.outputs.event_name }} in ${{ steps.version.outputs.workflow }}. Author ${{ steps.version.outputs.actor }}.
-          to: zokirovrustam202@gmail.com
-          from: Disney Test Execution Report
+        run: |
+          poetry run python send_notification.py \
+            --username=${{secrets.MAIL_USERNAME}} \
+            --password=${{secrets.MAIL_PASSWORD}} \
+            --env=$TEST_EXECUTION_ENV \
+            --run_number=${{ steps.version.outputs.run_number }} \
+            --event_name=${{ steps.version.outputs.event_name }} \
+            --workflow=${{ steps.version.outputs.workflow }} \
+            --actor=${{ steps.version.outputs.actor }} \
+            --receivers=zokirovrustam202@gmail.com

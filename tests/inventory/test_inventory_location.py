@@ -1,3 +1,5 @@
+import pytest
+
 import data
 from api.endpoints.inventory.inventory_location_api import InventoryLocationAPI
 from api.enums.errors import ErrorDetail
@@ -7,26 +9,30 @@ from core.enums.users import User
 
 
 class TestCreateInventoryLocation:
+    @pytest.mark.parametrize('location_type', ['exit', 'clear_metro', 'enter'])
     @users(User.SUPERUSER)
-    def test_createInventoryLocationExit_withValidData_returns201AndData(self, client, user, request):
-        # Act
-        payload, response, model = request.getfixturevalue('create_fake_inventory_location_superuser')()
-
-        # Assert
-        APIResponse(response).assert_status(201)
-        APIResponse(response).assert_models(payload)
-
-    @users(User.SUPERUSER)
-    def test_createInventoryLocationClear_withValidData_returns201AndData(self, client, user, request):
+    def test_createInventoryLocation_withValidData_returns201AndData(self, client, user, request, location_type):
         # Act
         payload, response, model = request.getfixturevalue('create_fake_inventory_location_superuser')(
-            inventory_location="clear"
+            location_type=location_type
         )
 
         # Assert
         APIResponse(response).assert_status(201)
         APIResponse(response).assert_models(payload)
-        assert model.data.inventory_location == 'clear'
+        assert model.data.type == location_type
+
+    @users(User.SUPERUSER)
+    def test_createInventoryLocation_withWrongData_returns400AndError(self, client, user):
+        # Arrange
+        wrong_location_type = data.fake.pystr()
+
+        # Act
+        payload = data.fake.model.inventory_location(location_type=wrong_location_type)
+        response, model = InventoryLocationAPI(client).create_inventory_location(data=payload)
+
+        # Assert
+        APIResponse(response).assert_status(400)
 
 
 class TestGetAllInventoryLocations:
