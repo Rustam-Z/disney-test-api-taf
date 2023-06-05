@@ -9,9 +9,7 @@ import smtplib
 import ssl
 from email.message import EmailMessage
 
-
-print(os.listdir('allure-report'))
-
+# Initializing global variables.
 EMAIL_SENDER = os.environ.get('EMAIL_SENDER')
 EMAIL_PASSWORD = os.environ.get('EMAIL_PASSWORD')
 EMAIL_RECEIVERS = os.environ.get('EMAIL_RECEIVERS')
@@ -42,7 +40,7 @@ def get_metrics() -> str:
         csv_reader = csv.reader(csv_file)
         for row in csv_reader:
             data.append(row)
-
+    print(f">> Metrics: {data}")
     passed = 0
     failed = 0
     for metric in zip(*data):

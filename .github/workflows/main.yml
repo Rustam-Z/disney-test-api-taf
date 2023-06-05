@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 env:
-  TEST_EXECUTION_ENV: DEV
+  TEST_EXECUTION_ENV: dev
 
 jobs:
   test:
@@ -38,7 +38,7 @@ jobs:
       - name: Executing tests.
         run: |
           echo "Starting regression testing on "$TEST_EXECUTION_ENV" environment..."
-          poetry run python -m pytest -s -v --reruns 3 --env=$TEST_EXECUTION_ENV --alluredir=allure-results tests/user/test_token.py
+          poetry run python -m pytest -s -v --reruns 3 --env=$TEST_EXECUTION_ENV --alluredir=allure-results
         continue-on-error: true
 
       - name: Get Allure history.
