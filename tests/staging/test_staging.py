@@ -70,16 +70,19 @@ class TestGetOrders:
         APIResponse(response).assert_status(400)
         assert model.error.get('detail') == 'Facility was not found'
 
-    @pytest.mark.skip
     @users(User.SUPERUSER)
-    def test_getOrders_forFacilityByCustomer_returns200AndData(self, client, user):
+    def test_getOrders_forFacilityByCustomer_returns200AndData(self, client, user, request):
         # Arrange
-        params = {
-            Param.FACILITY.value: ...,
-            Param.CUSTOMER_BARCODE.value: ...
-        }
+        order_payload, order_response, order_model = request.getfixturevalue('create_fake_order_superuser')()
+        facility_id = order_model.data.facility
+        customer_id = order_model.data.customer
+        customer_response, customer_model = CustomerAPI(client).get_customer(id=customer_id)
 
         # Act
+        params = {
+            Param.FACILITY.value: facility_id,
+            Param.CUSTOMER_BARCODE.value: customer_model.data.barcode
+        }
         response, model = StagingAPI(client).get_orders(params)
 
         # Assert

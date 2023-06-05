@@ -3,6 +3,7 @@ TODO: test pagination in get all users
 """
 import pytest
 
+import data
 from api.endpoints.user.users_api import UsersAPI
 from api.enums.errors import ErrorDetail
 from core.asserters import APIResponse
@@ -76,14 +77,19 @@ class TestGetUser:
 
 
 class TestUpdateUser:
-    @pytest.mark.skip(reason='TODO')
     @users(User.SUPERUSER)
     def test_updateUserBySuperUser_withValidData_returns200AndData(self, client, user, request):
-        # Create a user
-        # Get a user
-        # Change the response body
-        # Verify that status is 200 and the data was altered
-        ...
+        # Arrange
+        payload, response, model = request.getfixturevalue('create_fake_user_superuser')()
+        existing_id = model.data.id
+        request_payload = data.fake.model.user()
+
+        # Act
+        response, model = UsersAPI(client).update_user(id=existing_id, data=request_payload)
+
+        # Assert
+        APIResponse(response).assert_status(200)
+        assert model.data.id == existing_id, 'IDs are not matching.'
 
 
 class TestDeleteUser:

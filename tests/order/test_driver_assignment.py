@@ -1,7 +1,5 @@
 from datetime import datetime
 
-import pytest
-
 import data
 from api.endpoints.customer.customer_api import CustomerAPI
 from api.endpoints.order.driver_assignment import DriverAssignmentAPI
@@ -110,10 +108,38 @@ class TestAssignOrdersToTruckAndDrivers:
         APIResponse(response).assert_status(200)
         assert model.data.message == 'Drivers and Orders assignment process is Done!'
 
-    @pytest.mark.skip
     @users(User.SUPERUSER)
     def test_unassignOrders_withValidData_returns200AndData(self, client, user, request):
-        ...
+        # Arrange
+        setup = request.getfixturevalue('assign_orders_to_truck_and_drivers')
+        facility_id = setup.get('facility_id')
+        truck_id = setup.get('truck_id')
+        driver_id = setup.get('driver_id')
+        order_id = setup.get('order_id')
+        dropoff_date_start = setup.get('dropoff_date_start')
+
+        # Act
+        params = {
+            Param.DATE_START_TIME_UTC.value: dropoff_date_start,
+            Param.FACILITY.value: facility_id
+        }
+        payload = data.fake.model.driver_assignment_to_one_order(
+            truck=truck_id,
+            drivers=[driver_id],
+            assigned_orders=[],
+            unassigned_orders=[order_id],
+        )
+        response, model = DriverAssignmentAPI(client).assign_orders_to_truck_and_drivers(params=params, data=payload)
+
+        # Assert
+        APIResponse(response).assert_status(200)
+        assert model.data.message == 'Drivers and Orders assignment process is Done!'
+
+        # Act
+        unassigned_orders_response, unassigned_orders_model = DriverAssignmentAPI(client).get_unassigned_orders(params=params)
+
+        # Assert
+        assert order_id in [order.id for order in unassigned_orders_model.data.results]
 
 
 class TestGetTruckOrdersAndDrivers:
@@ -140,29 +166,19 @@ class TestGetTruckOrdersAndDrivers:
     @users(User.SUPERUSER)
     def test_getTruckOrdersAndDrivers_withAssignedOrders_returns200AndData(self, client, user, request):
         # Arrange
-        setup = request.getfixturevalue('driver_assignment')
+        setup = request.getfixturevalue('assign_orders_to_truck_and_drivers')
         facility_id = setup.get('facility_id')
         customer_id = setup.get('customer_id')
         truck_id = setup.get('truck_id')
         driver_id = setup.get('driver_id')
         order_id = setup.get('order_id')
         dropoff_date_start = setup.get('dropoff_date_start')
+
+        # Act: Get orders, trucks and drivers.
         params = {
             Param.DATE_START_TIME_UTC.value: dropoff_date_start,
             Param.FACILITY.value: facility_id
         }
-
-        # Act: Assign orders to truck and drivers.
-        payload = data.fake.model.driver_assignment_to_one_order(
-            truck=truck_id,
-            drivers=[driver_id],
-            assigned_orders=[order_id],
-            unassigned_orders=[],
-        )
-        assignment_response, assignment_model = DriverAssignmentAPI(client).assign_orders_to_truck_and_drivers(params=params, data=payload)
-        APIResponse(assignment_response).assert_status(200)
-
-        # Act: Get orders, trucks and drivers.
         response, model = DriverAssignmentAPI(client).get_truck_orders_and_drivers(params=params)
 
         # Assert

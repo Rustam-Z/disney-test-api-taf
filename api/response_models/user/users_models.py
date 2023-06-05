@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from pydantic import BaseModel, StrictInt, constr, StrictStr, StrictBool
 
@@ -11,12 +11,19 @@ class _User(BaseModel):
     first_name: constr(min_length=1, strict=True)
     last_name: constr(min_length=1, strict=True)
     title: constr(min_length=1, strict=True)
-    role: StrictInt
+    role: Union[StrictInt, None]
     email: constr(min_length=1, strict=True)
     phone_number: constr(min_length=1, strict=True)
     is_staff: StrictBool
     is_active: StrictBool
     is_superuser: StrictBool
+    created_by: Optional[dict]
+    updated_by: Optional[dict]
+    has_daily_report_access: StrictBool
+    has_weekly_report_access: StrictBool
+    has_monthly_report_access: StrictBool
+    groups: Optional[list]
+    user_permissions: Optional[list]
 
 
 class _RoleField(BaseModel):

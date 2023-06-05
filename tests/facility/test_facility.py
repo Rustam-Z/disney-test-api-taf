@@ -174,7 +174,7 @@ class TestFacilityAuth:
         OnlySuperuserCanPerformErrorResponse(**response.json())
 
     @users(User.NONE)
-    def test_createCustomer_unauthRequest_returns400AndError(self, client, user):
+    def test_createFacility_unauthRequest_returns400AndError(self, client, user):
         # Act
         response, model = FacilityAPI(client).create_facility(data={})
 
@@ -183,7 +183,7 @@ class TestFacilityAuth:
         AuthErrorResponse(**response.json())
 
     @users(User.NONE)
-    def test_getCustomer_unauthRequest_returns400AndError(self, client, user):
+    def test_getFacility_unauthRequest_returns400AndError(self, client, user):
         # Act
         response, model = FacilityAPI(client).get_facility(id=0)
 
@@ -192,7 +192,7 @@ class TestFacilityAuth:
         AuthErrorResponse(**response.json())
 
     @users(User.NONE)
-    def test_getCustomers_unauthRequest_returns400AndError(self, client, user):
+    def test_getFacilities_unauthRequest_returns400AndError(self, client, user):
         # Act
         response, model = FacilityAPI(client).get_all_facilities()
 
@@ -201,7 +201,7 @@ class TestFacilityAuth:
         AuthErrorResponse(**response.json())
 
     @users(User.NONE)
-    def test_updateCustomer_unauthRequest_returns400AndError(self, client, user):
+    def test_updateFacility_unauthRequest_returns400AndError(self, client, user):
         # Act
         response, model = FacilityAPI(client).update_facility(id=0, data={})
 
@@ -209,15 +209,14 @@ class TestFacilityAuth:
         APIResponse(response).assert_status(400)
         AuthErrorResponse(**response.json())
 
-    @pytest.mark.skip(reason="User should be created with no view permission automatically")
-    @users(User.FACILITY_USER)
-    def test_userWithNoPermissionToView_returns403AndError(self, client, user):
-        ...
+    @users(User.NONE)
+    def test_deleteFacility_unauthRequest_returns400AndError(self, client, user):
+        # Act
+        response, model = FacilityAPI(client).delete_facility(id=0)
 
-    @pytest.mark.skip(reason="User should be created with no edit permission automatically")
-    @users(User.FACILITY_USER)
-    def test_userWithNoPermissionToEdit_returns403AndError(self, client, user):
-        ...
+        # Assert
+        APIResponse(response).assert_status(400)
+        AuthErrorResponse(**response.json())
 
 
 class TestFacilityWithoutSectionParam:

@@ -201,26 +201,14 @@ class TestCustomerAuth:
         APIResponse(response).assert_status(400)
         AuthErrorResponse(**response.json())
 
-    @pytest.mark.skip(reason="Facility user should be created automatically")
-    @users(User.FACILITY_USER)
-    def test_request_withNoViewPermissionUser_returns403AndError(self, client, user):
+    @users(User.NONE)
+    def test_deleteCustomer_unauthRequest_returns400AndError(self, client, user):
         # Act
-        response, model = CustomerAPI(client).get_customer(id=0)
+        response, model = CustomerAPI(client).delete_customer(id=0)
 
         # Assert
-        APIResponse(response).assert_status(403)
-
-    @pytest.mark.skip(reason="Facility user should be created automatically")
-    @users(User.FACILITY_USER)
-    def test_request_withNoEditPermissionUser_returns403AndError(self, client, user):
-        # Arrange
-        payload = data.fake.model.customer()
-
-        # Act
-        response, model = CustomerAPI(client).create_customer(data=payload)
-
-        # Assert
-        APIResponse(response).assert_status(403)
+        APIResponse(response).assert_status(400)
+        AuthErrorResponse(**response.json())
 
 
 class TestCustomerWithoutSectionParam:
