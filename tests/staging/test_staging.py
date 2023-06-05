@@ -1,8 +1,10 @@
-import pytest
-
 import data
 from api.endpoints.customer.customer_api import CustomerAPI
+from api.endpoints.metro.metro_api import MetroAPI
+from api.endpoints.order.order_api import OrderAPI
 from api.endpoints.staging.staging_api import StagingAPI
+from api.enums.metro import MetroProcessStatuses
+from api.enums.order import OrderStatuses
 from api.enums.params import Param
 from core.asserters import APIResponse
 from core.decorators import users
@@ -235,6 +237,7 @@ class TestSubmitAction:
         setup = request.getfixturevalue('assign_metro')()
         customer_id = setup.get('customer_id')
         order_id = setup.get('order_id')
+        metro_id = setup.get('metro_id')
         customer_response, customer_model = CustomerAPI(client).get_customer(customer_id)
         customer_barcode = customer_model.data.barcode
 
@@ -248,6 +251,18 @@ class TestSubmitAction:
 
         # Assert
         APIResponse(response).assert_status(200)
+
+        # Act
+        metro_response, metro_model = MetroAPI(client).get_metro(metro_id)
+
+        # Assert: Metro status should be changed.
+        assert metro_model.data.process_status == MetroProcessStatuses.READY_FOR_DELIVERY.value
+
+        # Act
+        order_response, order_model = OrderAPI(client).get_order(order_id)
+
+        # Assert
+        assert order_model.data.status == OrderStatuses.READY_FOR_DELIVERY.value
 
     @users(User.SUPERUSER)
     def test_submitAction_withDifferentCustomerBarcode_returns400AndError(self, client, user, request):

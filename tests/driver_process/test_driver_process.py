@@ -6,7 +6,9 @@ import pytest
 import data
 from api.endpoints.driver_process.driver_process_api import DriverProcessAPI
 from api.endpoints.metro.metro_api import MetroAPI
+from api.endpoints.order.order_api import OrderAPI
 from api.enums.metro import MetroProcessStatuses, MetroLaundryStatuses
+from api.enums.order import OrderStatuses
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
@@ -110,6 +112,7 @@ class TestReaderMetroScan:
         setup = request.getfixturevalue('staging')
         metro_qr_code = setup.get('metro_qr_code')
         metro_id = setup.get('metro_id')
+        order_id = setup.get('order_id')
 
         payload = {
             "reader_name": f"Reader: {data.fake.ean13()}",
@@ -133,6 +136,12 @@ class TestReaderMetroScan:
 
         # Assert: Metro status should be changed.
         assert metro_model.data.process_status == MetroProcessStatuses.READY_FOR_DELIVERY.value
+
+        # Act
+        order_response, order_model = OrderAPI(client).get_order(order_id)
+
+        # Assert
+        assert order_model.data.status == OrderStatuses.READY_FOR_DELIVERY.value
 
 
 class TestDriverMetroScan:

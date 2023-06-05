@@ -8,13 +8,25 @@ from core.enums.users import User
 
 class TestCreateInventoryLocation:
     @users(User.SUPERUSER)
-    def test_createInventoryLocation_withValidData_returns201AndData(self, client, user, request):
+    def test_createInventoryLocationExit_withValidData_returns201AndData(self, client, user, request):
         # Act
         payload, response, model = request.getfixturevalue('create_fake_inventory_location_superuser')()
 
         # Assert
         APIResponse(response).assert_status(201)
         APIResponse(response).assert_models(payload)
+
+    @users(User.SUPERUSER)
+    def test_createInventoryLocationClear_withValidData_returns201AndData(self, client, user, request):
+        # Act
+        payload, response, model = request.getfixturevalue('create_fake_inventory_location_superuser')(
+            inventory_location="clear"
+        )
+
+        # Assert
+        APIResponse(response).assert_status(201)
+        APIResponse(response).assert_models(payload)
+        assert model.data.inventory_location == 'clear'
 
 
 class TestGetAllInventoryLocations:

@@ -257,7 +257,7 @@ class RequestModelsFaker:
         data.update(kwargs)
         return data
 
-    def inventory_location(self, facility_id: int = None, **kwargs) -> dict:
+    def inventory_location(self, facility_id: int = None, location_type: str = "exit", **kwargs) -> dict:
         name = self.fake.name()
         address = f"{random.randint(0,255)}.{random.randint(0,255)}.{random.randint(0,255)}.{random.randint(0,255)}"
         antenna = random.randint(0, 7)
@@ -268,7 +268,7 @@ class RequestModelsFaker:
             "reader_name": name,
             "mac_address": address,
             "antenna_port": f"{antenna},{antenna+1},{antenna+2}",
-            "type": "exit",
+            "type": location_type,  # exit, clear
         }
         data.update(kwargs)
         return data
