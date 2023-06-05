@@ -20,7 +20,7 @@ WORKFLOW = os.environ.get('WORKFLOW')
 ACTOR = os.environ.get('ACTOR')
 
 # Email subject and body templates.
-SUBJECT = 'Disney Test Execution Report - {env} Environment - API Regression - {time}'
+SUBJECT = 'Disney Test Execution Report - {env} Environment - {time}'
 BODY = """
 Test report - https://rustam-z.github.io/disney-test-api-taf/{run_number}. 
 Triggered by {event_name} in {workflow}. 
@@ -54,7 +54,7 @@ def get_metrics() -> str:
 
 
 def send_email(email_receiver):
-    time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    time = datetime.now().strftime("%d/%m/%Y %H:%M")
     test_metrics = get_metrics()
 
     subject = SUBJECT.format(time=time, env=ENV)

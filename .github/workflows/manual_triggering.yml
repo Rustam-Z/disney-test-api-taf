@@ -1,4 +1,4 @@
-name: Manual Trigger Workflow - DEV environment
+name: Manual Trigger — DEV environment — API Regression
 
 on:
   workflow_dispatch:
@@ -65,7 +65,6 @@ jobs:
 
       - name: Set current date as env variable.
         run: |
-          echo "datetime=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_OUTPUT
           echo "event_name=$GITHUB_EVENT_NAME" >> $GITHUB_OUTPUT
           echo "workflow=$GITHUB_WORKFLOW" >> $GITHUB_OUTPUT
           echo "actor=$GITHUB_ACTOR" >> $GITHUB_OUTPUT
@@ -73,14 +72,14 @@ jobs:
         id: version
 
       - name: Send email notification.
-        if: always()
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 465
-          username: ${{secrets.MAIL_USERNAME}}
-          password: ${{secrets.MAIL_PASSWORD}}
-          subject: Test execution results job - Disney - DEV env - ${{ steps.version.outputs.datetime }}
-          body: Test report - https://rustam-z.github.io/disney-test-api-taf/${{ steps.version.outputs.run_number }}. Triggered by ${{ steps.version.outputs.event_name }} in ${{ steps.version.outputs.workflow }}. Author ${{ steps.version.outputs.actor }}.
-          to: zokirovrustam202@gmail.com,madiyor5552@mail.ru,nnarziev@gmail.com
-          from: Disney Test Execution Report
+        env:
+          EMAIL_SENDER: ${{secrets.MAIL_USERNAME}}
+          EMAIL_PASSWORD: ${{secrets.MAIL_PASSWORD}}
+          EMAIL_RECEIVERS: zokirovrustam202@gmail.com,madiyor5552@mail.ru,nnarziev@gmail.com
+          ENV: DEV
+          RUN_NUMBER: ${{ steps.version.outputs.run_number }}
+          EVENT_NAME: ${{ steps.version.outputs.event_name }}
+          WORKFLOW: ${{ steps.version.outputs.workflow }}
+          ACTOR: ${{ steps.version.outputs.actor }}
+        run: |
+          poetry run python send_notification.py

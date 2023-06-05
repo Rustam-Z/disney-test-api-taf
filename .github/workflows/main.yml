@@ -1,4 +1,4 @@
-name: On Push Event Workflow - DEV environment
+name: On Push Event Workflow — DEV Environment — API Regression
 
 on:
   push:
