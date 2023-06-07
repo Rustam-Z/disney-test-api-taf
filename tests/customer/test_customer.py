@@ -159,7 +159,8 @@ class TestCustomerAuth:
     @users(User.FACILITY_ADMIN)
     def test_createCustomer_notSuperUser_returns403AndError(self, client, user):
         # Act
-        response, model = CustomerAPI(client).create_customer(data={})
+        payload = data.fake.model.customer()
+        response, model = CustomerAPI(client).create_customer(data=payload)
 
         # Assert
         APIResponse(response).assert_status(403)

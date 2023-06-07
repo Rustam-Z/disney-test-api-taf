@@ -19,7 +19,7 @@ jobs:
       - name: Install Poetry, install requirements, and activate venv.
         run: |
           echo "The job was triggered by: $GITHUB_ACTOR"
-          python3 install_poetry.py
+          python3 core/helpers/install_poetry.py
           poetry --version
           poetry install --no-root
           source `poetry env info --path`/bin/activate

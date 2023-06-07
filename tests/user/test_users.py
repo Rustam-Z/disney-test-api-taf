@@ -1,7 +1,6 @@
 """
 TODO: test pagination in get all users
 """
-import pytest
 
 import data
 from api.endpoints.user.users_api import UsersAPI

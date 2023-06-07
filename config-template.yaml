@@ -18,21 +18,3 @@ dev:
     facility_user:
       - email: ""
         password: ""
-
-prod:
-  hosts:
-    api: disney-backend.azurewebsites.net
-    web: disney-laundry.netlify.app
-  users:
-    superuser:
-      - email: ""
-        password: ""
-    facility_admin:
-      - email: ""
-        password: ""
-    facility_driver:
-      - email: ""
-        password: ""
-    facility_user:
-      - email: ""
-        password: ""

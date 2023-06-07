@@ -100,7 +100,7 @@ class RequestModelsFaker:
             "last_name": self.fake.last_name(),
             "title": self.fake.name(),
             "role": role_id,
-            "email": self.fake.email(),
+            "email": f'aqa_test_user_{self.fake.email()}',
             "phone_number": self.fake.custom_phone_number(),
             "password": self.fake.password(),
         }
