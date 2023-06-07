@@ -33,10 +33,7 @@ Steps:
 Create repository environment variables for running pipeline:
 ```
 DEV_SUPERUSER_EMAIL
-DEV_FACILITY_ADMIN_EMAIL
-DEV_FACILITY_DRIVER_EMAIL
-DEV_FACILITY_USER_EMAIL
-PASSWORD # Password should be the same for all users.
+DEV_SUPERUSER_PASSWORD
 ```
 
 **How to execute tests manually within GitHub actions?**
@@ -64,8 +61,9 @@ MAIL_PASSWORD
    - "Add New Interpreter" → "Add Local Interpreter" → "Poetry environment" → "Existing environment"
    - `[Windows]` Provide the Python path to the virtual environment:
     ```C:\Users\<USER>\AppData\Local\pypoetry\Cache\virtualenvs\ip-manager-taf-api-<HASH>-py3.11\Scripts\python.exe```
-5. `.config.yaml` should be created in root of project. Use `config-template.yaml` as config file template. 
-   You need to create users for facility. To create a user you need to create a role. To create a facility you need to create a customer.
+5. `.config.yaml` should be created in root of project. Run `generate_config.py` file to generate config file automatically. 
+   But you need to have `.env` with SUPERUSER credentials. Use `env-template` to create `.env` file.
+   - Or if you want to create data manually use `config-template.yaml` as config file template. You need to create users for facility. To create a user you need to create a role. To create a facility you need to create a customer.
 
 
 ## Configuration 

@@ -24,13 +24,10 @@ jobs:
           poetry install --no-root
           source `poetry env info --path`/bin/activate
 
-      - name: Generate .config.yaml file.
+      - name: Generate .config.yaml with data.
         env:
           DEV_SUPERUSER_EMAIL: ${{ vars.DEV_SUPERUSER_EMAIL }}
-          DEV_FACILITY_ADMIN_EMAIL: ${{ vars.DEV_FACILITY_ADMIN_EMAIL }}
-          DEV_FACILITY_DRIVER_EMAIL: ${{ vars.DEV_FACILITY_DRIVER_EMAIL }}
-          DEV_FACILITY_USER_EMAIL: ${{ vars.DEV_FACILITY_USER_EMAIL }}
-          PASSWORD: ${{ vars.PASSWORD }}
+          DEV_SUPERUSER_PASSWORD: ${{ vars.DEV_SUPERUSER_PASSWORD }}
         run: |
           poetry run python generate_config.py
 
