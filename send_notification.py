@@ -25,6 +25,7 @@ BODY = """
 Test report - https://rustam-z.github.io/disney-test-api-taf/{run_number}. 
 Triggered by {event_name} in {workflow}. 
 Author: {actor}.
+
 Metrics:
 {test_metrics}
 """
