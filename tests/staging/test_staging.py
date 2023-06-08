@@ -102,7 +102,7 @@ class TestAssignMetro:
         cart_payload, cart_response, cart_model = request.getfixturevalue('create_fake_cart_superuser')(
             facility_id=facility_id
         )
-        metro_qr_code = cart_model['data']['metro']['qr_code']
+        metro_qr_code = cart_model.data.metro.qr_code
 
         # Act
         payload = {
@@ -113,8 +113,8 @@ class TestAssignMetro:
 
         # Assert
         APIResponse(response).assert_status(200)
-        assert model['data']['order_id'] == order_id
-        assert model['data']['metro_qr_code'] == metro_qr_code
+        assert model.data.order_id == order_id
+        assert model.data.metro_qr_code == metro_qr_code
 
     @users(User.SUPERUSER)
     def test_assignMetro_withMetroWithoutCartBuild_returns400AndError(self, client, user, request):
@@ -251,6 +251,7 @@ class TestSubmitAction:
 
         # Assert
         APIResponse(response).assert_status(200)
+        APIResponse(response).assert_models(payload)
 
         # Act
         metro_response, metro_model = MetroAPI(client).get_metro(metro_id)

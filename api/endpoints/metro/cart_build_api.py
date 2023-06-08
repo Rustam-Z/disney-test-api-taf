@@ -1,5 +1,6 @@
 from api.enums.params import Param
 from api.enums.sections import Section
+from api.response_models.metro.cart_build_models import GetCartSuccessResponse, CreateCartSuccessResponse
 from core.http_client import HTTPClient
 from api.response_models.response_models import ErrorResponse
 
@@ -19,7 +20,7 @@ class CartBuildAPI:
         response_payload = response.content
 
         if response.status_code == 200:
-            response_payload = response.json()
+            response_payload = CreateCartSuccessResponse(**response.json())
         elif response.status_code in range(400, 500):
             response_payload = ErrorResponse(**response.json())
 
@@ -31,7 +32,7 @@ class CartBuildAPI:
         response_payload = response.content
 
         if response.status_code == 200:
-            response_payload = response.json()
+            response_payload = GetCartSuccessResponse(**response.json())
         elif response.status_code in range(400, 500):
             response_payload = ErrorResponse(**response.json())
 

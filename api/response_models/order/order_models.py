@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List, Optional
 
 from pydantic import BaseModel, StrictInt, constr, StrictStr
@@ -35,7 +36,7 @@ class _OrderComplex(_Order):
     customer: _CustomerField
     out_for_delivery_date: Optional[StrictStr]
     dropoff_metros_count: StrictInt
-    created_at: constr(min_length=1, strict=True)
+    created_at: datetime
 
 
 """

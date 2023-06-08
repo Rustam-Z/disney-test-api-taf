@@ -36,10 +36,10 @@ def assign_metro(
         cart_payload, cart_response, cart_model = create_fake_cart_superuser(
             facility_id=facility_id
         )
-        cart_id = cart_model['data']['id']
-        metro_id = cart_model['data']['metro']['id']
-        metro_qr_code = cart_model['data']['metro']['qr_code']
-        metro_config_qr_code = cart_model['data']['metro_config']['qr_code']
+        cart_id = cart_model.data.id
+        metro_id = cart_model.data.metro.id
+        metro_qr_code = cart_model.data.metro.qr_code
+        metro_config_qr_code = cart_model.data.metro_config.qr_code
 
         # Assign metro to order
         payload = {

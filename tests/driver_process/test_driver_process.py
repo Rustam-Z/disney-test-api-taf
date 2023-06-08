@@ -130,6 +130,7 @@ class TestReaderMetroScan:
 
         # Assert
         APIResponse(response).assert_status(200)
+        APIResponse(response).assert_models(payload)
 
         # Act
         metro_response, metro_model = MetroAPI(client).get_metro(metro_id)
@@ -163,6 +164,7 @@ class TestDriverMetroScan:
 
         # Assert
         APIResponse(response).assert_status(200)
+        APIResponse(response).assert_models(payload)
 
         # Act
         metro_response, metro_model = MetroAPI(client).get_metro(metro_id)
@@ -209,6 +211,7 @@ class TestSubmit:
 
         # Assert
         APIResponse(response).assert_status(200)
+        assert model.get('data').get('order_id') == order_id
 
         # Act
         metro_response, metro_model = MetroAPI(client).get_metro(metro_id)

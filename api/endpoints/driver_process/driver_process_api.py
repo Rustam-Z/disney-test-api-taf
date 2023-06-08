@@ -5,6 +5,8 @@ from core.http_client import HTTPClient
 from api.response_models.driver_process.driver_process_models import (
     GetOrders,
     GetMetroList,
+    ReaderMetroScan,
+    DriverMetroScan,
 )
 
 
@@ -65,7 +67,7 @@ class DriverProcessAPI:
         response_payload = response.content
 
         if response.status_code == 200:
-            response_payload = response.json()
+            response_payload = ReaderMetroScan(**response.json())
         elif response.status_code in range(400, 500):
             response_payload = ErrorResponse(**response.json())
 
@@ -77,7 +79,7 @@ class DriverProcessAPI:
         response_payload = response.content
 
         if response.status_code == 200:
-            response_payload = response.json()
+            response_payload = DriverMetroScan(**response.json())
         elif response.status_code in range(400, 500):
             response_payload = ErrorResponse(**response.json())
 

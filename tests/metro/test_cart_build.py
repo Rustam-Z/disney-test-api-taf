@@ -1,12 +1,10 @@
+import data
 from api.endpoints.metro.cart_build_api import CartBuildAPI
 from api.endpoints.metro.metro_api import MetroAPI
-from api.endpoints.staging.staging_api import StagingAPI
 from api.enums.metro import MetroProcessStatuses, MetroLaundryStatuses
-from api.enums.params import Param
 from core.asserters import APIResponse
 from core.decorators import users
 from core.enums.users import User
-import data
 
 
 class TestCreateCart:
@@ -14,7 +12,7 @@ class TestCreateCart:
     def test_createCart_withValidData_returns200AndData(self, client, user, request):
         # Act
         payload, response, model = request.getfixturevalue('create_fake_cart_superuser')()
-        metro_id = model['data']['metro']['id']
+        metro_id = model.data.metro.id
 
         # Assert
         APIResponse(response).assert_status(200)
@@ -46,8 +44,8 @@ class TestCreateCart:
     def test_cartRebuild_withValidData_returns200AndData(self, client, user, request):
         # Arrange
         payload, response, model = request.getfixturevalue('create_fake_cart_superuser')()
-        metro_qr_code = model['data']['metro']['qr_code']
-        metro_config_qr_code = model['data']['metro_config']['qr_code']
+        metro_qr_code = model.data.metro.qr_code
+        metro_config_qr_code = model.data.metro_config.qr_code
 
         # Act
         payload = data.fake.model.cart(
@@ -83,9 +81,13 @@ class TestCreateCart:
 
 class TestGetCart:
     @users(User.SUPERUSER)
-    def test_getCartBySuperuser_returns200AndData(self, client, user):
+    def test_getCartBySuperuser_returns200AndData(self, client, user, request):
+        # Arrange
+        request.getfixturevalue('create_fake_cart_superuser')()
+
         # Act
         response, model = CartBuildAPI(client).get_cart()
 
         # Assert
         APIResponse(response).assert_status(200)
+        assert len(model.data.results) > 0

@@ -7,7 +7,7 @@ from api.response_models.response_models import SuccessResponse
 
 
 """
-Get orders
+Get orders.
 """
 
 
@@ -31,7 +31,7 @@ class GetOrders(SuccessResponse):
 
 
 """
-Get metros list
+Get metros list.
 """
 
 
@@ -60,3 +60,32 @@ class _GetMetroDataField(BaseModel):
 
 class GetMetroList(SuccessResponse):
     data: _GetMetroDataField
+
+
+"""
+Assign metro.
+"""
+
+
+class _AssignMetroDataField(BaseModel):
+    order_id: StrictInt
+    metro_qr_code: constr(min_length=1, strict=True)
+
+
+class AssignMetro(SuccessResponse):
+    data: _AssignMetroDataField
+
+
+"""
+Submit action.
+"""
+
+
+class _SubmitActionDataField(BaseModel):
+    customer_barcode: constr(min_length=1, strict=True)
+    disney_order_id: constr(min_length=1, strict=True)
+    order_id: StrictInt
+
+
+class SubmitAction(SuccessResponse):
+    data: _SubmitActionDataField

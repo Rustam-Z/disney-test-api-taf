@@ -1,13 +1,14 @@
 from datetime import datetime
 from typing import List, Optional
+from ipaddress import IPv4Address
 
-from pydantic import BaseModel, StrictInt, constr, StrictStr, StrictBool
+from pydantic import BaseModel, StrictInt, constr, StrictStr, StrictBool, validator, Field
 
 from api.response_models.response_models import SuccessResponse
 
 
 """
-Get orders
+Get orders.
 """
 
 
@@ -37,7 +38,7 @@ class GetOrders(SuccessResponse):
 
 
 """
-Get metro list
+Get metro list.
 """
 
 
@@ -56,3 +57,45 @@ class _GetMetroListDataField(BaseModel):
 
 class GetMetroList(SuccessResponse):
     data: _GetMetroListDataField
+
+
+"""
+Reader metro scan.
+"""
+
+
+class TagRead(BaseModel):
+    antennaPort: int
+    epc: str
+
+
+class _ReaderMetroScanDataField(BaseModel):
+    mac_address: IPv4Address = Field(..., description="IP address in IPv4 format")
+    reader_name: constr(min_length=1, strict=True)
+    tag_reads: list[TagRead]
+
+    @validator('mac_address')
+    def validate_mac_address(cls, value):
+        try:
+            IPv4Address(value)
+        except ValueError:
+            raise ValueError('Invalid IP address')
+        return value
+
+
+class ReaderMetroScan(SuccessResponse):
+    data: _ReaderMetroScanDataField
+
+
+"""
+Driver metro scan.
+"""
+
+
+class DriverMetroScanDataField(BaseModel):
+    order_id: StrictInt
+    qr_code: constr(min_length=1, strict=True)
+
+
+class DriverMetroScan(SuccessResponse):
+    data: DriverMetroScanDataField

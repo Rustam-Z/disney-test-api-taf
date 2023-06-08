@@ -5,6 +5,7 @@ from core.http_client import HTTPClient
 from api.response_models.staging.staging_models import (
     GetOrders,
     GetMetroList,
+    AssignMetro, SubmitAction,
 )
 
 
@@ -73,7 +74,7 @@ class StagingAPI:
         response_payload = response.content
 
         if response.status_code == 200:
-            response_payload = response.json()
+            response_payload = AssignMetro(**response.json())
         elif response.status_code in range(400, 500):
             response_payload = ErrorResponse(**response.json())
 
@@ -100,7 +101,7 @@ class StagingAPI:
         response_payload = response.content
 
         if response.status_code == 200:
-            response_payload = response.json()
+            response_payload = SubmitAction(**response.json())
         elif response.status_code in range(400, 500):
             response_payload = ErrorResponse(**response.json())
 
