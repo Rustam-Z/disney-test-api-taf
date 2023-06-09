@@ -10,19 +10,23 @@ def create_fake_customer(client):
     The decorator to create a fake entity (customer).
 
     Example usage:
-        Use `request` argument in your tests.
-        payload, response, model = request.getfixturevalue('create_fake_customer')()
+        First way:
+            Use `request` argument in your tests.
+            payload, response, model = request.getfixturevalue('create_fake_customer')()
+        Second way:
+            Add create_fake_customer as argument.
+            Call create_fake_customer() inside test in arrange step.
     """
     customer_id = -1
 
     def _fixture(**kwargs):
         # Create customer
-        payload = data.fake.model.customer(**kwargs)
-        response, model = CustomerAPI(client).create_customer(data=payload)
+        request_payload = data.fake.model.customer(**kwargs)
+        response, model = CustomerAPI(client).create_customer(data=request_payload)
         nonlocal customer_id
         customer_id = model.data.id
 
-        return payload, response, model
+        return request_payload, response, model
 
     yield _fixture
 

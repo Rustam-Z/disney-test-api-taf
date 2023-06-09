@@ -22,14 +22,14 @@ class TestCreateCustomer:
     @users(User.SUPERUSER)
     def test_createCustomer_withValidData_returns201AndData(self, client, user):
         # Arrange
-        payload = data.fake.model.customer()
+        request_payload = data.fake.model.customer()
 
         # Act
-        response, model = CustomerAPI(client).create_customer(data=payload)
+        response, model = CustomerAPI(client).create_customer(data=request_payload)
 
         # Assert
         APIResponse(response).assert_status(201)
-        APIResponse(response).assert_models(payload)
+        APIResponse(response).assert_models(request_payload)
 
         # Cleanup
         try:
@@ -63,14 +63,14 @@ class TestCreateCustomer:
     ])
     @users(User.SUPERUSER)
     def test_createCustomer_withExistingNameAndBarcode_returns400AndError(
-        self, client, user, request, existing_data, error,
+        self, client, user, existing_data, error, create_fake_customer
     ):
         # Arrange
-        request.getfixturevalue('create_fake_customer')(**existing_data)
+        create_fake_customer(**existing_data)
 
         # Act
-        payload = data.fake.model.customer(**existing_data)
-        response, model = CustomerAPI(client).create_customer(data=payload)
+        request_payload = data.fake.model.customer(**existing_data)
+        response, model = CustomerAPI(client).create_customer(data=request_payload)
 
         # Assert
         APIResponse(response).assert_status(400)
@@ -79,8 +79,8 @@ class TestCreateCustomer:
     @users(User.FACILITY_USER, User.FACILITY_ADMIN)
     def test_createCustomer_notSuperuser_returns403AndError(self, client, user):
         # Act
-        payload = data.fake.model.customer()
-        response, model = CustomerAPI(client).create_customer(data=payload)
+        request_payload = data.fake.model.customer()
+        response, model = CustomerAPI(client).create_customer(data=request_payload)
 
         # Assert
         APIResponse(response).assert_status(403)
@@ -89,9 +89,9 @@ class TestCreateCustomer:
 
 class TestGetAllCustomers:
     @users(User.SUPERUSER)
-    def test_getAllCustomers_returns200AndData(self, client, user, request):
+    def test_getAllCustomers_returns200AndData(self, client, user, create_fake_customer):
         # Arrange
-        request.getfixturevalue('create_fake_customer')()
+        create_fake_customer()
 
         # Act
         response, model = CustomerAPI(client).get_all_customers()
@@ -104,10 +104,10 @@ class TestGetAllCustomers:
 
 class TestGetCustomer:
     @users(User.SUPERUSER)
-    def test_getCustomer_withValidID_returns200AndData(self, client, user, request):
+    def test_getCustomer_withValidID_returns200AndData(self, client, user, create_fake_customer):
         # Arrange
-        payload, response, model = request.getfixturevalue('create_fake_customer')()
-        customer_id = model.data.id
+        setup_payload, setup_response, setup_model = create_fake_customer()
+        customer_id = setup_model.data.id
 
         # Act
         response, model = CustomerAPI(client).get_customer(id=customer_id)
@@ -131,44 +131,46 @@ class TestGetCustomer:
 
 class TestUpdateCustomer:
     @users(User.SUPERUSER)
-    def test_updateCustomer_withValidID_returns200AndData(self, client, user, request):
+    def test_updateCustomer_withValidID_returns200AndData(self, client, user, create_fake_customer):
         # Arrange
-        payload, response, model = request.getfixturevalue('create_fake_customer')()
-        customer_id = model.data.id
+        setup_payload, setup_response, setup_model = create_fake_customer()
+        customer_id = setup_model.data.id
 
         # Act
-        payload = data.fake.model.customer()
-        response, model = CustomerAPI(client).update_customer(id=customer_id, data=payload)
+        request_payload = data.fake.model.customer()
+        response, model = CustomerAPI(client).update_customer(id=customer_id, data=request_payload)
 
         # Assert
         APIResponse(response).assert_status(200)
-        APIResponse(response).assert_models(payload)
+        APIResponse(response).assert_models(request_payload)
         assert customer_id == model.data.id, 'Old ID and new ID are not matching after UPDATE.'
 
     @users(User.SUPERUSER)
-    def test_updateCustomer_updateStatusToInactive_returns200AndData(self, client, user, request):
+    def test_updateCustomer_updateStatusToInactive_returns200AndData(self, client, user, create_fake_customer):
         # Arrange
-        payload, response, model = request.getfixturevalue('create_fake_customer')()
-        customer_id = model.data.id
+        setup_payload, setup_response, setup_model = create_fake_customer()
+        customer_id = setup_model.data.id
 
         # Act
-        payload = {'status': 'inactive'}
-        response, model = CustomerAPI(client).update_customer(id=customer_id, data=payload)
+        request_payload = {
+            'status': 'inactive'
+        }
+        response, model = CustomerAPI(client).update_customer(id=customer_id, data=request_payload)
 
         # Assert
         APIResponse(response).assert_status(200)
         assert model.data.id == customer_id, 'Old ID and new ID are not matching after UPDATE.'
-        assert model.data.status == payload.get('status')
+        assert model.data.status == request_payload.get('status')
 
     @users(User.SUPERUSER)
-    def test_updateCustomer_withExistingNameAndBarcode_returns400AndError(self, client, user, request):
+    def test_updateCustomer_withExistingNameAndBarcode_returns400AndError(self, client, user, create_fake_customer):
         # Arrange
-        payload, response, model_1 = request.getfixturevalue('create_fake_customer')()
-        payload, response, model_2 = request.getfixturevalue('create_fake_customer')()
+        setup_payload_1, setup_response_1, setup_model_1 = create_fake_customer()
+        setup_payload_2, setup_response_2, setup_model_2 = create_fake_customer()
 
         # Act
-        payload = data.fake.model.customer(name=model_1.data.name, barcode=model_1.data.barcode)
-        response, model = CustomerAPI(client).update_customer(id=model_2.data.id, data=payload)
+        request_payload = data.fake.model.customer(name=setup_model_1.data.name, barcode=setup_model_1.data.barcode)
+        response, model = CustomerAPI(client).update_customer(id=setup_model_2.data.id, data=request_payload)
 
         # Assert
         APIResponse(response).assert_status(400)
@@ -183,8 +185,8 @@ class TestUpdateCustomer:
         customer_id = data.fake.uuid4()
 
         # Act
-        payload = data.fake.model.customer()
-        response, model = CustomerAPI(client).update_customer(id=customer_id, data=payload)
+        request_payload = data.fake.model.customer()
+        response, model = CustomerAPI(client).update_customer(id=customer_id, data=request_payload)
 
         # Assert
         APIResponse(response).assert_status(404)
@@ -196,8 +198,8 @@ class TestUpdateCustomer:
         customer_id = data.fake.ean()
 
         # Act
-        payload = data.fake.model.customer()
-        response, model = CustomerAPI(client).update_customer(id=customer_id, data=payload)
+        request_payload = data.fake.model.customer()
+        response, model = CustomerAPI(client).update_customer(id=customer_id, data=request_payload)
 
         # Assert
         APIResponse(response).assert_status(403)
@@ -206,12 +208,13 @@ class TestUpdateCustomer:
 
 class TestDeleteCustomer:
     @users(User.SUPERUSER)
-    def test_deleteCustomer_withValidID_returns204(self, client, user, request):
+    def test_deleteCustomer_withValidID_returns204(self, client, user, create_fake_customer):
         # Arrange
-        payload, response, model = request.getfixturevalue('create_fake_customer')()
+        setup_payload, setup_response, setup_model = create_fake_customer()
+        customer_id = setup_model.data.id
 
         # Act
-        response, model = CustomerAPI(client).delete_customer(id=model.data.id)
+        response, model = CustomerAPI(client).delete_customer(id=customer_id)
 
         # Assert
         APIResponse(response).assert_status(204)
