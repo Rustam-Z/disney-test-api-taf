@@ -126,13 +126,6 @@ allure generate .output/allure_results -o .output/allure_report --clean
 ```
 
 
-## How to write test for new feature?
-1. Learn new feature, create test scenarios, test cases.
-2. Create success response models in `api/responses`.
-3. Create requests endpoints in `api/requests`. Validate schema depending on status code. 
-4. Write tests in `tests` folder. Some tests require fixtures. Create fixtures inside `tests/fixtures`.
-
-
 ## Models
 ```text
 Request models -> fake request models are inside test data layer.
@@ -157,30 +150,44 @@ Other response models are created for successful responses per API.
 3. Validate data, and assert result with expected.
 
 
-## Constraints
+## How to write tests?
+- CREATE
+  - Create with/without superuser 
+  - Happy path with valid data
+  - Negative test cases with wrong data
+  - Test Authz: people who don't have access
+- UPDATE
+  - Update with/without superuser
+  - Happy path with valid data and existing ID
+  - Negative test cases with wrong data 
+  - Negative test case with not existing ID
+  - Test Authz: people who don't have access
+- GET DETAIL
+  - Get with/without superuser
+  - Happy path with existing ID
+  - Negative test case with not existing ID
+  - Test Authz: people who don't have access
+- GET ALL
+  - get_all_* but populate with data before fetching and validate if data is there
+  - test pagination in get_all_*
+- DELETE
+  - Delete with/without superuser
+  - Happy path: delete existing object, and delete one more time in the same test
+  - Delete not existing as separate test
+  - Test Authz: people who don't have access
+- Auths: test all endpoints with User.NONE
+- Endpoints with section
+  - All positive cases, should include the section. Web and mobile always use section param.
+  - So, tests without section param will be considered as NEGATIVE.
+
 ```text
 1. @mobile() # Fixture for mobile which uses `/?is_for_mobile=true`
-2. @users() # Authentication -> auth, unauth requests. Users should be created automatically by superuser. 
-   - How the new user is created? Superuser creates facility, new role, then new user. Then config.users is updated. Users should be created by pytest hook.
-3. Endpoints, endpoints with section, request & response model.
-   - Endpoints with section and without section how should be tested that we have error?
-     All positive cases, should include the section.
-     Web and mobile always use section param.
-     So, tests without section param will be considered as NEGATIVE. And we can have separate tests and overwrite API functions. That's okay.
+2. @users() # Authentication -> auth, unauth requests.
 ```
-
 
 ## TODO
 - What if the script can be crated to populate the database with data, session setup and session teardown.
   - It can be used by fixtures to make the setup and teardown faster.
   - The fixtures will use get_all_* instead of creation. We don't need local teardown. OR we can create some config file?
-  - Because, the models starting from metro item configuration need to create at least 4-5 other models.
-- Superuser creates smth class, pass facility id if needed, if not passed then facility will be created too.
-- Tests:
-  - get_all_* but populate with data before fetching and validate if data is there
-  - test pagination in get_all_*
-  - Create models without superuser too
-    - Negative tests with creation and update
-    - Update with/without superuser
-  - Delete not existing as separate test
-  - Authz
+  - It is like global caching.
+- Fixtures: Superuser creates smth class, pass facility id if needed, if not passed then facility will be created too.
