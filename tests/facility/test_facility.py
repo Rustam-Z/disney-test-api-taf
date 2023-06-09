@@ -119,8 +119,8 @@ class TestUpdateFacility:
 
         # Assert
         APIResponse(response).assert_status(200)
-        assert existing_facility_id == model.data.id, 'Old ID and new ID are not matching.'
-        assert payload.get('status') == model.data.status
+        assert model.data.id == existing_facility_id, 'Old ID and new ID are not matching.'
+        assert model.data.status == payload.get('status')
 
     @users(User.SUPERUSER)
     def test_updateFacility_byValidIDWithExistingName_returns400AndError(self, client, user, request):

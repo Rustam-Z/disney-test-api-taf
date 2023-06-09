@@ -53,7 +53,7 @@ class TestCreateCart:
             metro_config_qr_code=metro_config_qr_code,
             is_rebuild=True
         )
-        response, model = CartBuildAPI(client).create_cart(data=payload)
+        response, model = CartBuildAPI(client).rebuild_cart(data=payload)
 
         # Assert
         APIResponse(response).assert_status(200)

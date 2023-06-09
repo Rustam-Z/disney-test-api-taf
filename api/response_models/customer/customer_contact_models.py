@@ -16,6 +16,7 @@ class _CustomerContact(BaseModel):
     has_dropoff_access: StrictBool
     has_invoice_access: StrictBool
 
+
 class _FacilityField(BaseModel):
     id: StrictInt
     name: constr(min_length=1, strict=True)

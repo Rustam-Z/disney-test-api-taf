@@ -1,7 +1,6 @@
 """
 TODO:
-    - test pagination in get all customers, test creating without mandatory fields.
-    - add test to check status update.
+    - test pagination in get all customers
 """
 import pytest
 
@@ -21,7 +20,7 @@ from api.response_models.common_models import (
 
 class TestCreateCustomer:
     @users(User.SUPERUSER)
-    def test_createCustomer_withValidData_returns201AndData(self, client, user, request):
+    def test_createCustomer_withValidData_returns201AndData(self, client, user):
         # Arrange
         payload = data.fake.model.customer()
 
@@ -38,6 +37,18 @@ class TestCreateCustomer:
         except Exception:
             return None
 
+    @pytest.mark.parametrize('request_payload', [
+        data.fake.model.customer(main_phone_number=data.fake.pystr()),  # Wrong data
+        data.fake.model.customer().pop('name'),  # Removing mandatory param
+    ])
+    @users(User.SUPERUSER)
+    def test_createCustomer_withWrongData_returns400AndError(self, client, user, request_payload):
+        # Act
+        response, model = CustomerAPI(client).create_customer(data=request_payload)
+
+        # Assert
+        APIResponse(response).assert_status(400)
+
     @pytest.mark.parametrize('existing_data, error', [
         ({'name': data.fake.name(), 'barcode': data.fake.ean13()}, {
             'name': ['customer with this name already exists.'],
@@ -52,8 +63,7 @@ class TestCreateCustomer:
     ])
     @users(User.SUPERUSER)
     def test_createCustomer_withExistingNameAndBarcode_returns400AndError(
-        self, client, user, request,
-        existing_data, error,
+        self, client, user, request, existing_data, error,
     ):
         # Arrange
         request.getfixturevalue('create_fake_customer')(**existing_data)
@@ -66,15 +76,30 @@ class TestCreateCustomer:
         APIResponse(response).assert_status(400)
         assert model.error == error
 
+    @users(User.FACILITY_USER, User.FACILITY_ADMIN)
+    def test_createCustomer_notSuperuser_returns403AndError(self, client, user):
+        # Act
+        payload = data.fake.model.customer()
+        response, model = CustomerAPI(client).create_customer(data=payload)
+
+        # Assert
+        APIResponse(response).assert_status(403)
+        NoPermissionErrorResponse(**response.json())
+
 
 class TestGetAllCustomers:
     @users(User.SUPERUSER)
-    def test_getAllCustomers_returns200AndData(self, client, user):
+    def test_getAllCustomers_returns200AndData(self, client, user, request):
+        # Arrange
+        request.getfixturevalue('create_fake_customer')()
+
         # Act
         response, model = CustomerAPI(client).get_all_customers()
 
         # Assert
         APIResponse(response).assert_status(200)
+        assert model.data.count > 0
+        assert len(model.data.results) > 0
 
 
 class TestGetCustomer:
@@ -91,6 +116,18 @@ class TestGetCustomer:
         APIResponse(response).assert_status(200)
         assert model.data.id == customer_id, 'IDs are not matching.'
 
+    @users(User.SUPERUSER)
+    def test_getCustomer_withWrongID_returns404AndError(self, client, user):
+        # Arrange
+        customer_id = data.fake.ean()
+
+        # Act
+        response, model = CustomerAPI(client).get_customer(id=customer_id)
+
+        # Assert
+        APIResponse(response).assert_status(404)
+        assert model.error.get('detail') == 'Not found.'
+
 
 class TestUpdateCustomer:
     @users(User.SUPERUSER)
@@ -106,7 +143,22 @@ class TestUpdateCustomer:
         # Assert
         APIResponse(response).assert_status(200)
         APIResponse(response).assert_models(payload)
-        assert customer_id == model.data.id, 'Old ID and new ID are not matching. Data was changed for wrong ID.'
+        assert customer_id == model.data.id, 'Old ID and new ID are not matching after UPDATE.'
+
+    @users(User.SUPERUSER)
+    def test_updateCustomer_updateStatusToInactive_returns200AndData(self, client, user, request):
+        # Arrange
+        payload, response, model = request.getfixturevalue('create_fake_customer')()
+        customer_id = model.data.id
+
+        # Act
+        payload = {'status': 'inactive'}
+        response, model = CustomerAPI(client).update_customer(id=customer_id, data=payload)
+
+        # Assert
+        APIResponse(response).assert_status(200)
+        assert model.data.id == customer_id, 'Old ID and new ID are not matching after UPDATE.'
+        assert model.data.status == payload.get('status')
 
     @users(User.SUPERUSER)
     def test_updateCustomer_withExistingNameAndBarcode_returns400AndError(self, client, user, request):
@@ -125,6 +177,32 @@ class TestUpdateCustomer:
             'barcode': ['customer with this barcode already exists.']
         }
 
+    @users(User.SUPERUSER)
+    def test_updateCustomer_withWrongID_returns404AndError(self, client, user):
+        # Arrange
+        customer_id = data.fake.uuid4()
+
+        # Act
+        payload = data.fake.model.customer()
+        response, model = CustomerAPI(client).update_customer(id=customer_id, data=payload)
+
+        # Assert
+        APIResponse(response).assert_status(404)
+        assert model.error.get('detail') == 'Not found.'
+
+    @users(User.FACILITY_USER, User.FACILITY_ADMIN)
+    def test_updateCustomer_notSuperuser_returns403AndError(self, client, user):
+        # Arrange
+        customer_id = data.fake.ean()
+
+        # Act
+        payload = data.fake.model.customer()
+        response, model = CustomerAPI(client).update_customer(id=customer_id, data=payload)
+
+        # Assert
+        APIResponse(response).assert_status(403)
+        NoPermissionErrorResponse(**response.json())
+
 
 class TestDeleteCustomer:
     @users(User.SUPERUSER)
@@ -139,7 +217,7 @@ class TestDeleteCustomer:
         APIResponse(response).assert_status(204)
 
     @users(User.SUPERUSER)
-    def test_deleteCustomer_withInvalidID_returns404AndError(self, client, user):
+    def test_deleteCustomer_withWrongID_returns404AndError(self, client, user):
         # Arrange
         not_existing_id = data.fake.uuid4()
 
@@ -153,21 +231,11 @@ class TestDeleteCustomer:
 
 class TestCustomerAuth:
     """
-    Test authentication and authorization.
+    Test authentication.
     """
 
-    @users(User.FACILITY_ADMIN)
-    def test_createCustomer_notSuperUser_returns403AndError(self, client, user):
-        # Act
-        payload = data.fake.model.customer()
-        response, model = CustomerAPI(client).create_customer(data=payload)
-
-        # Assert
-        APIResponse(response).assert_status(403)
-        NoPermissionErrorResponse(**response.json())
-
     @users(User.NONE)
-    def test_createCustomer_unauthRequest_returns400AndError(self, client, user):
+    def test_createCustomer_withoutAuthorization_returns400AndError(self, client, user):
         # Act
         response, model = CustomerAPI(client).create_customer(data={})
 
@@ -176,7 +244,7 @@ class TestCustomerAuth:
         AuthErrorResponse(**response.json())
 
     @users(User.NONE)
-    def test_getCustomer_unauthRequest_returns400AndError(self, client, user):
+    def test_getCustomer_withoutAuthorization_returns400AndError(self, client, user):
         # Act
         response, model = CustomerAPI(client).get_customer(id=0)
 
@@ -185,7 +253,7 @@ class TestCustomerAuth:
         AuthErrorResponse(**response.json())
 
     @users(User.NONE)
-    def test_getCustomers_unauthRequest_returns400AndError(self, client, user):
+    def test_getCustomers_withoutAuthorization_returns400AndError(self, client, user):
         # Act
         response, model = CustomerAPI(client).get_all_customers()
 
@@ -194,7 +262,7 @@ class TestCustomerAuth:
         AuthErrorResponse(**response.json())
 
     @users(User.NONE)
-    def test_updateCustomer_unauthRequest_returns400AndError(self, client, user):
+    def test_updateCustomer_withoutAuthorization_returns400AndError(self, client, user):
         # Act
         response, model = CustomerAPI(client).update_customer(id=0, data={})
 
@@ -203,7 +271,7 @@ class TestCustomerAuth:
         AuthErrorResponse(**response.json())
 
     @users(User.NONE)
-    def test_deleteCustomer_unauthRequest_returns400AndError(self, client, user):
+    def test_deleteCustomer_withoutAuthorization_returns400AndError(self, client, user):
         # Act
         response, model = CustomerAPI(client).delete_customer(id=0)
 

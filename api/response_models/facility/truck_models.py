@@ -35,6 +35,8 @@ class GetTruckSuccessResponse(SuccessResponse):
 """
 Get all trucks
 """
+
+
 class _GetAllTrucksDataField(BaseModel):
     count: StrictInt
     next: Optional[StrictStr]

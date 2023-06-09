@@ -28,3 +28,4 @@ class Section(Enum):
     DRIVER_ASSIGNMENT = 'driver-assignment'
     STAGING = 'staging'
     DRIVER_PROCESS = 'driver-process'
+    DASHBOARD = 'dashboard'
