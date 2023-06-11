@@ -3,7 +3,7 @@ import random
 import pytest
 
 import data
-from api.endpoints.order.driver_assignment import DriverAssignmentAPI
+from api.endpoints.order.driver_assignment_api import DriverAssignmentAPI
 from api.enums.params import Param
 
 

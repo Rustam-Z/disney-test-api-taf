@@ -2,7 +2,7 @@ from datetime import datetime
 
 import data
 from api.endpoints.customer.customer_api import CustomerAPI
-from api.endpoints.order.driver_assignment import DriverAssignmentAPI
+from api.endpoints.order.driver_assignment_api import DriverAssignmentAPI
 from api.enums.params import Param
 from core.asserters import APIResponse
 from core.decorators import users
