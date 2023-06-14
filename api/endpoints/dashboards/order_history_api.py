@@ -24,7 +24,7 @@ class OrderHistoryDashboardAPI:
         params.update(self.params)  # Create query string params dict.
 
         path = f'{self.ORDER_HISTORY_LOGS}order-history'
-        response = self.client.get(path, params=self.params, **kwargs)
+        response = self.client.get(path, params=params, **kwargs)
         response_payload = response.content
 
         if response.status_code == 200:
@@ -45,7 +45,7 @@ class OrderHistoryDashboardAPI:
         params.update(self.params)  # Create query string params dict.
 
         path = f'{self.ORDER_HISTORY_LOGS}order-history-chart'
-        response = self.client.get(path, params=self.params, **kwargs)
+        response = self.client.get(path, params=params, **kwargs)
         response_payload = response.content
 
         if response.status_code == 200:
@@ -55,16 +55,7 @@ class OrderHistoryDashboardAPI:
 
         return response, response_payload
 
-    def get_order_metros(self, order_id: int, params: dict = None, **kwargs) -> tuple:
-        """
-        Params:
-        facility
-        """
-        if params is None:
-            params = {}
-
-        params.update(self.params)  # Create query string params dict.
-
+    def get_order_metros(self, order_id: int, **kwargs) -> tuple:
         path = f'{self.ORDER_HISTORY_LOGS}{order_id}/order-metros'
         response = self.client.get(path, params=self.params, **kwargs)
         response_payload = response.content
@@ -76,16 +67,7 @@ class OrderHistoryDashboardAPI:
 
         return response, response_payload
 
-    def get_order_item_types(self, order_id: int, params: dict = None, **kwargs) -> tuple:
-        """
-        Params:
-        facility
-        """
-        if params is None:
-            params = {}
-
-        params.update(self.params)  # Create query string params dict.
-
+    def get_order_item_types(self, order_id: int, **kwargs) -> tuple:
         path = f'{self.ORDER_HISTORY_LOGS}{order_id}/order-item-types'
         response = self.client.get(path, params=self.params, **kwargs)
         response_payload = response.content

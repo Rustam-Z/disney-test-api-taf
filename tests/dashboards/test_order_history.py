@@ -20,7 +20,7 @@ class TestGetOrderHistory:
 
         # Assert
         APIResponse(response).assert_status(200)
-        assert len(model['data']['results']) >= 1
+        assert len(model['data']['results']) == 0
 
 
 class TestGetOrderHistoryChart:
@@ -46,14 +46,10 @@ class TestGetOrderMetros:
         # TODO: check statuses and time by using submit actions
         # Arrange
         setup = assign_metro()
-        facility_id = setup.get('facility_id')
         order_id = setup.get('order_id')
 
         # Act
-        params = {
-            Param.FACILITY.value: facility_id
-        }
-        response, model = OrderHistoryDashboardAPI(client).get_order_metros(order_id, params)
+        response, model = OrderHistoryDashboardAPI(client).get_order_metros(order_id)
 
         # Assert
         APIResponse(response).assert_status(200)
@@ -65,14 +61,10 @@ class TestGetOrderItemTypes:
     def test_getOrderItemTypes_withValidData_returns200AndData(self, client, user, assign_metro):
         # Arrange
         setup = assign_metro()
-        facility_id = setup.get('facility_id')
         order_id = setup.get('order_id')
 
         # Act
-        params = {
-            Param.FACILITY.value: facility_id
-        }
-        response, model = OrderHistoryDashboardAPI(client).get_order_item_types(order_id, params)
+        response, model = OrderHistoryDashboardAPI(client).get_order_item_types(order_id)
 
         # Assert
         APIResponse(response).assert_status(200)
