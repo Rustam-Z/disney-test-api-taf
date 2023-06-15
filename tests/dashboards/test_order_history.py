@@ -22,6 +22,23 @@ class TestGetOrderHistory:
         APIResponse(response).assert_status(200)
         assert len(model['data']['results']) == 0
 
+    @users(User.SUPERUSER)
+    def test_getOrderHistory_withValidData_returns200AndData(self, client, user, deliver_order):
+        # Arrange
+        facility_id = deliver_order.get('facility_id')
+
+        # Act
+        params = {
+            Param.FACILITY.value: facility_id
+        }
+        response, model = OrderHistoryDashboardAPI(client).get_order_history(params)
+
+        # Assert
+        APIResponse(response).assert_status(200)
+        assert len(model['data']['results']) == 1
+        assert model['data']['results'][0]['id'] == deliver_order.get('model')['data']['order_id'], \
+            "Order IDs are not matching"
+
 
 class TestGetOrderHistoryChart:
     @users(User.SUPERUSER)
@@ -43,7 +60,6 @@ class TestGetOrderHistoryChart:
 class TestGetOrderMetros:
     @users(User.SUPERUSER)
     def test_getOrderMetros_withValidData_returns200AndData(self, client, user, assign_metro):
-        # TODO: check statuses and time by using submit actions
         # Arrange
         setup = assign_metro()
         order_id = setup.get('order_id')

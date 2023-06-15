@@ -4,6 +4,7 @@ import pytest
 
 import data
 from api.endpoints.customer.customer_api import CustomerAPI
+from api.endpoints.driver_process.driver_process_api import DriverProcessAPI
 from api.endpoints.staging.staging_api import StagingAPI
 
 
@@ -79,3 +80,45 @@ def staging(client, request):
     StagingAPI(client).submit_action(payload)
 
     return setup
+
+
+@pytest.fixture()
+def deliver_order(client, request):
+    setup = request.getfixturevalue('staging')
+    order_id = setup.get('order_id')
+    metro_qr_code = setup.get('metro_qr_code')
+
+    # Reader metro scan.
+    payload = {
+        "reader_name": f"Reader: {data.fake.ean13()}",
+        "mac_address": f"192.168.0.{random.randint(0, 255)}",
+        "tag_reads": [
+            {
+                "antennaPort": random.randint(1, 9),
+                "epc": metro_qr_code
+            }
+        ]
+    }
+    DriverProcessAPI(client).reader_metro_scan(payload)
+
+    # Driver metro scan.
+    payload = {
+        "order_id": order_id,
+        "qr_code": metro_qr_code
+    }
+    DriverProcessAPI(client).driver_metro_scan(payload)
+
+    payload = {
+        "order_id": order_id
+    }
+
+    # Act
+    response, model = DriverProcessAPI(client).submit(payload)
+
+    setup.update({
+        'response': response,
+        'model': model,
+    })
+
+    return setup
+
