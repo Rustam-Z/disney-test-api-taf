@@ -7,7 +7,7 @@ from core.enums.users import User
 
 class TestGetOrderHistory:
     @users(User.SUPERUSER)
-    def test_getOrderHistory_withValidData_returns200AndData(self, client, user, create_fake_order_superuser):
+    def test_getOrderHistory_withNotDeliveredOrder_returns200AndData(self, client, user, create_fake_order_superuser):
         # Arrange
         setup_payload, setup_response, setup_model = create_fake_order_superuser()
         facility_id = setup_model.data.facility
@@ -23,7 +23,7 @@ class TestGetOrderHistory:
         assert len(model['data']['results']) == 0
 
     @users(User.SUPERUSER)
-    def test_getOrderHistory_withValidData_returns200AndData(self, client, user, deliver_order):
+    def test_getOrderHistory_withDeliveredOrder_returns200AndData(self, client, user, deliver_order):
         # Arrange
         facility_id = deliver_order.get('facility_id')
 
@@ -42,10 +42,24 @@ class TestGetOrderHistory:
 
 class TestGetOrderHistoryChart:
     @users(User.SUPERUSER)
-    def test_getOrderHistoryChart_withValidData_returns200AndData(self, client, user, create_fake_facility):
+    def test_getOrderHistoryChart_withEmptyHistory_returns200AndData(self, client, user, create_fake_facility):
         # Arrange
         setup_payload, setup_response, setup_model = create_fake_facility()
         facility_id = setup_model.data.id
+
+        # Act
+        params = {
+            Param.FACILITY.value: facility_id
+        }
+        response, model = OrderHistoryDashboardAPI(client).get_order_history_chart(params)
+
+        # Assert
+        APIResponse(response).assert_status(200)
+
+    @users(User.SUPERUSER)
+    def test_getOrderHistoryChart_withExistingOrders_returns200AndData(self, client, user, deliver_order):
+        # Arrange
+        facility_id = deliver_order.get('facility_id')
 
         # Act
         params = {

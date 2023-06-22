@@ -24,6 +24,8 @@ class InventoryDashboardAPI:
         metro_config_ids[]: int
         metro_config_ids[]: int
         filter_by_all: bool
+
+        If filter_by_all is selected no need to select item type and metro config
         """
         if params is None:
             params = {}

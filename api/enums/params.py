@@ -28,3 +28,8 @@ class Param(Enum):
     DRIVER_ID = 'driver_id'
     CONFIG_QR_CODE = 'config_qr_code'
     ACTION = 'action'
+
+    # Dashboard
+    INVENTORY_BASE_FILTER = 'inventory_base_filter'
+    DAILY_INVENTORY_TYPE = 'daily_inventory_type'
+    FREQUENCY = 'frequency'

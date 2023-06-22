@@ -13,20 +13,16 @@ def create_fake_facility_item_type_superuser(
     facility_item_id = -1
 
     def _fixture(**kwargs):
-        # Create facility
-        facility_payload, facility_response, facility_model = create_fake_facility()
-        facility_id = facility_model.data.id
+        if 'facility_id' not in kwargs:
+            facility_payload, facility_response, facility_model = create_fake_facility(no_of_customers=1)
+            kwargs['facility_id'] = facility_model.data.id
 
         # Create inventory item type
         inventory_item_payload, inventory_item_response, inventory_item_model = create_fake_inventory_item_type()
         inventory_item_type_id = inventory_item_model.data.id
 
         # Create facility item type
-        payload = data.fake.model.facility_item_type(
-            item_type_id=inventory_item_type_id,
-            facility_id=facility_id,
-            **kwargs
-        )
+        payload = data.fake.model.facility_item_type(item_type_id=inventory_item_type_id, **kwargs)
         response, model = FacilityItemTypeAPI(client).create_item_type(data=payload)
         nonlocal facility_item_id
         facility_item_id = model.data.id
