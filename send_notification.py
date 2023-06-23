@@ -41,16 +41,22 @@ def get_metrics() -> str:
         csv_reader = csv.reader(csv_file)
         for row in csv_reader:
             data.append(row)
+
     print(f">> Metrics: {data}")
+
     passed = 0
     failed = 0
+    skipped = 0
     for metric in zip(*data):
         if metric[0] == 'PASSED':
             passed += int(metric[1])
-        elif metric[0] in ['FAILED', 'BROKEN']:
+        elif metric[0] == 'SKIPPED':
+            skipped += int(metric[1])
+        elif metric[0] in ['FAILED', 'BROKEN', 'UNKNOWN']:
             failed += int(metric[1])
 
     return f'Failed tests: {failed} \n' \
+           f'Skipped tests: {skipped} \n' \
            f'Passed tests: {passed}'
 
 
