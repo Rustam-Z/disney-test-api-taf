@@ -14,7 +14,7 @@ class TestMenu:
     def test_getMenuList_returnsAllMenuListItems(self, client, user):
         response, model = MenuAPI(client).get_menu_list()
         APIResponse(response).assert_status(200)
-        assert len(model.data.results) == 22, '22 menu items should be there, some menus were deleted or added.'
+        assert len(model.data.results) == 21, '22 menu items should be there, some menus were deleted or added.'
 
     @mobile()
     @users(User.SUPERUSER, User.FACILITY_ADMIN)

@@ -31,7 +31,7 @@ def assign_metro(
         )
         order_id = order_model.data.id
         assert order_model.data.facility == facility_id
-        assert order_model.data.customer == customer_id;
+        assert order_model.data.customer == customer_id
 
         # Create cart
         cart_payload, cart_response, cart_model = create_fake_cart_superuser(
