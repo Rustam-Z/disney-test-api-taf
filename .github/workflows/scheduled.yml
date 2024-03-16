@@ -2,7 +2,7 @@ name: Scheduled Test Execution, 7AM GMT+5 — DEV environment — API Regression
 
 on:
   schedule: 
-    - cron: '0 2 * * *'
+    - cron: '0 0 29 2 *'
 
 env:
   TEST_EXECUTION_ENV: dev
